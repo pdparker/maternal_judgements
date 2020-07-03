@@ -12,7 +12,7 @@ library(readit) # read stata, sas, etc files
 library(purrr) # manipulate lists
 library(dataMaid) # for producing data documentation
 options(survey.lonely.psu="remove")
-date <- Sys.time()
+date <- Sys.Date()
 
 # Cloudstor Read & Manipulation ####
 # age 4 data ####
@@ -190,7 +190,7 @@ capture.output(
 # Produce Documentation ####
 # Commented out so that it does not run on source
 # dataMaid::makeCodebook(child_data,file = here("documentation", glue("{date}_codebook.Rmd")))
-# 
+knitr::knit(input = here("documentation",glue("{date}_codebook.Rmd")), output = here("documentation"))
 # Create Long form data ####
 
 capture.output(child_data_long <- pivot_longer(
@@ -200,6 +200,8 @@ capture.output(child_data_long <- pivot_longer(
   names_sep = "_"
 ),
 file = here("log",glue("{date}_log.txt")), append = TRUE, type = "message")
+
+
 
  
 
