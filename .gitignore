@@ -12,7 +12,6 @@ data/*
 log/*.*
 documentation/*.Rmd
 documentation/*.tex
-documentation/*.pdf
 documentation/*.md
 
 # User-specific files
