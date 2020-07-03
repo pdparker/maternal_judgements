@@ -190,7 +190,13 @@ capture.output(
 # Produce Documentation ####
 # Commented out so that it does not run on source
 # dataMaid::makeCodebook(child_data,file = here("documentation", glue("{date}_codebook.Rmd")))
-knitr::knit(input = here("documentation",glue("{date}_codebook.Rmd")), output = here("documentation"))
+codebook_out <- readLines(here("documentation", glue("{date}_codebook.Rmd"))) %>%
+  str_replace(., "output:.+", "output: rmarkdown::github_document")
+writeLines(codebook_out, here("documentation", glue("{date}_codebook.Rmd")) )
+
+knitr::knit(input = here("documentation",glue("{date}_codebook.Rmd")), 
+            output = here(glue("README.md"))
+            )
 # Create Long form data ####
 
 capture.output(child_data_long <- pivot_longer(
