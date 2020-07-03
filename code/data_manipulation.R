@@ -190,16 +190,16 @@ capture.output(
 # Produce Documentation ####
 # Commented out so that it does not run on source
 # dataMaid::makeCodebook(child_data,file = here("documentation", glue("{date}_codebook.Rmd")))
-# dataMaid::makeDataReport(child_data,file = here("documentation", glue("{date}_report.Rmd")))
 # 
 # Create Long form data ####
 
-child_data_long <- pivot_longer(
+capture.output(child_data_long <- pivot_longer(
   data = child_data,
   cols = y3_grade:y3_read.sch,
   names_to = c("year", ".value"),
   names_sep = "_"
-)
+),
+file = here("log",glue("{date}_log.txt")), append = TRUE, type = "message")
 
  
 
