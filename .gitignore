@@ -5,6 +5,13 @@
 
 # Session Data files
 .RData
+.rda
+
+# Folders
+data/*
+log/*.*
+documentation/*.Rmd
+documentation/*.tex
 
 # User-specific files
 .Ruserdata
