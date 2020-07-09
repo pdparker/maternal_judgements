@@ -11,15 +11,32 @@ library(tidylog) # for getting logs of data manipulation
 library(readit) # read stata, sas, etc files
 library(purrr) # manipulate lists
 library(dataMaid) # for producing data documentation
+library(fs) # file and directory manipulation
+library(Amelia) # for imputation
+library(survey) # for dealing with weights and strata
 options(survey.lonely.psu="remove")
 date <- Sys.Date()
+
+# Custom functions ####
+z <- function(z){ (z - mean(z,na.rm=TRUE))/(sd(z,na.rm=TRUE))}
+
+div <- function(x,num = 100) {x/num}
+#remove log made on same day as this is called by source
+path <- dir_info(here("log"),regexp = ".txt") %>%
+  mutate(path = str_extract(path,"[0-9]{4}-[0-9]{2}-[0-9]{2}") ) 
+  
+if(path$path == date){
+  file_delete(here("log",glue("{path$path}_log.txt")))
+}  
+
+
 
 # Cloudstor Read & Manipulation ####
 # age 4 data ####
 capture.output(data_age_4 <- readit("~/Dropbox/Databases/LSAC/Wave 6 GR CD/Confidentialised/SAS/lsacgrk4.sas7bdat") %>%
   select(cid = hicid, ses = csep, geo = csos,
         indig1 =zf12m2, indig2 = zf12cm, gender = zf02m1,
-         lang = cf11m2, parent_gender = zf02m2) %>%
+        iq = cppvt, lang = cf11m2, parent_gender = zf02m2) %>%
   mutate(geo = ifelse(geo < 1, 'urban', 'rural'),
          lang = ifelse(lang == '1201', 'eng', 'other'),
          indig = case_when(
@@ -172,41 +189,103 @@ capture.output(child_admin <- readit("~/Dropbox/Databases/LSAC/Wave 6 GR CD/NAPL
   ), 
   file = here("log",glue("{date}_log.txt")), append = TRUE, type = "message")
 # Administrative data: school ####
-capture.output(school_admin <- readit("~/Dropbox/Databases/LSAC/Wave 6 GR CD/MySchool/lsac_myschool_gr.sas7bdat") %>%
+capture.output(school_admin_2008 <- readit("~/Dropbox/Databases/LSAC/Wave 6 GR CD/MySchool/lsac_myschool_gr.sas7bdat") %>%
   filter(calendar_year == 2008 & HICID %in% data_age_4$cid) %>%
   select(cid = HICID, y3_sid = School_ID,
-         y3_math.sch = y3_N_SN_Mean_NAPLANScore,
-         y3_read.sch = y3_R_SN_Mean_NAPLANScore), 
+         y3_math.sch = y3.n_SN_Mean.nAPLANScore,
+         y3_read.sch = y3_R_SN_Mean.nAPLANScore), 
   file = here("log",glue("{date}_log.txt")), append = TRUE, type = "message")
+
+capture.output(school_admin_2010 <- readit("~/Dropbox/Databases/LSAC/Wave 6 GR CD/MySchool/lsac_myschool_gr.sas7bdat") %>%
+                 filter(calendar_year == 2010 & HICID %in% data_age_4$cid) %>%
+                 select(cid = HICID, y5_sid = School_ID,
+                        y5_math.sch = y5.n_SN_Mean.nAPLANScore,
+                        y5_read.sch = y5_R_SN_Mean.nAPLANScore), 
+               file = here("log",glue("{date}_log.txt")), append = TRUE, type = "message")
+
+capture.output(school_admin_2012 <- readit("~/Dropbox/Databases/LSAC/Wave 6 GR CD/MySchool/lsac_myschool_gr.sas7bdat") %>%
+                 filter(calendar_year == 2012 & HICID %in% data_age_4$cid) %>%
+                 select(cid = HICID, y7_sid = School_ID,
+                        y7_math.sch = y7.n_SN_Mean.nAPLANScore,
+                        y7_read.sch = y7_R_SN_Mean.nAPLANScore), 
+               file = here("log",glue("{date}_log.txt")), append = TRUE, type = "message")
 # Merge child survey data with administrative data####
 capture.output(
   child_data <- reduce(list(data_age_4,data_age_8,data_age_10,data_age_12,
-                            child_admin,school_admin),
+                            child_admin,school_admin_2008, school_admin_2010, school_admin_2012),
                        left_join, by = "cid") %>%
-    #focus on children with known qualities at age 8 (i.e., remove home schooled children)
-    filter(y3_grade == 19 & !is.na(y3_stratum) & !is.na(y3_sid) & y3_status != 4) %>%
+    #focus on children with known qualities at age 8 (i.e., remove home schooled children) and drop fathers
+    filter(y3_grade == 19 & !is.na(y3_stratum) & !is.na(y3_sid) & y3_status != 4 & parent_gender == 'mother') %>%
     select(-starts_with("cohort")),
   file = here("log",glue("{date}_log.txt")), append = TRUE, type = "message")
+
 # Produce Documentation ####
 # Commented out so that it does not run on source
-# dataMaid::makeCodebook(child_data,file = here("documentation", glue("{date}_codebook.Rmd")))
-codebook_out <- readLines(here("documentation", glue("{date}_codebook.Rmd"))) %>%
-  str_replace(., "output:.+", "output: rmarkdown::github_document")
-writeLines(codebook_out, here("documentation", glue("{date}_codebook.Rmd")) )
+# dataMaid::makeCodebook(child_data,file = here("documentation", glue("{date}_codebook.Rmd")), replace=TRUE)
 
-knitr::knit(input = here("documentation",glue("{date}_codebook.Rmd")), 
-            output = here(glue("README.md"))
-            )
-# Create Long form data ####
 
-capture.output(child_data_long <- pivot_longer(
-  data = child_data,
-  cols = y3_grade:y3_read.sch,
-  names_to = c("year", ".value"),
-  names_sep = "_"
-),
-file = here("log",glue("{date}_log.txt")), append = TRUE, type = "message")
+# Imputations & subsequent manipulation ####
+# as.data.frame added because Amelian does not like tidyverse
+set.seed(42)
+child_data_imp <- amelia(as.data.frame(child_data),m = 10, idvars = c('cid', 'y3_sid', 'y5_sid', 'y7_sid',
+                                                                          'y3_weight', 'parent_gender',
+                                                                          'y3_state', 'y3_stratum',
+                                                                      "y3_grade", "y5_grade",
+                                                                      "y3_status","y5_status","y7_status"),
+                               noms = c('geo', 'indig', 'gender', 'lang'),
+                               ords = c('y3_math.judgement', 'y3_math.interest', 'y5_math.judgement', 'y5_math.interest', 'y7_math.interest', 'y7_math.judgement',
+                                        'y3_read.judgement', 'y3_read.interest', 'y5_read.judgement', 'y5_read.interest', 'y7_read.interest', 'y7_read.judgement')
+)
 
+# Commented out as I dont wont to run this on source
+# png(filename = here("figures", "missmap.png"))
+# missmap(child_data_imp)
+# dev.off()
+
+# Manipulate to create within variables ####
+tmp <- child_data_imp$imputations
+class(tmp) <- "list"
+tmp <- bind_rows(tmp, .id = "imputation") %>%
+  mutate(across(ends_with('sch'), .fns = div)) %>%
+  mutate(across(ends_with('math'), .fns = div)) %>%
+  mutate(across(ends_with('read'), .fns = div)) %>%
+  mutate(
+    #Within centered math and reading
+    y3_math_w = y3_math - (y3_math+y5_math+y7_math)/3,
+    y5_math_w = y5_math - (y3_math+y5_math+y7_math)/3,
+    y7_math_w = y7_math - (y3_math+y5_math+y7_math)/3,
+    y3_read_w = y3_read - (y3_read+y5_read+y7_read)/3,
+    y5_read_w = y5_read - (y3_read+y5_read+y7_read)/3,
+    y7_read_w = y7_read - (y3_read+y5_read+y7_read)/3) %>%
+  mutate(across(ends_with("interest"), list(n = as.numeric), .names = "{col}.{fn}")) %>%
+  mutate(across(ends_with("judgement"), list(n = as.numeric), .names = "{col}.{fn}")) 
+
+child_data_imp <-  mitools::imputationList(tmp %>% group_split(imputation))
+
+# Save as survey object ####
+child_data_svy <- svydesign(ids = ~y3_sid,strata = ~y3_stratum, weights = ~y3_weight, nest = TRUE, 
+                      data = child_data_imp)
+
+
+# stack all waves
+capture.output(child_data_long <- tmp %>%
+  dplyr::select(-ends_with("sid"),-ends_with("_w"), -ends_with("status")) %>%
+  group_by(imputation) %>%
+  pivot_longer(
+    cols = y3_grade:y7_read.judgement.n,
+    names_to = c("year", ".value"),
+    names_sep = "_"
+  ) %>%
+  ungroup %>%
+  group_by(cid) %>%
+  arrange(year) %>%
+  mutate(across(math.interest:read, list(l = dplyr::lag(.)), .names =  "{col}.{fn}")) %>%
+  ungroup(),
+  file = here("log",glue("{date}_log.txt")), append = TRUE, type = "message")
+
+
+
+child_data_imp_long <-  mitools::imputationList(child_data_long %>% group_split(imputation))
 
 
  
