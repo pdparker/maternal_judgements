@@ -46,7 +46,7 @@ plan <- drake_plan(
   )
 )
 
-vis_drake_graph(plan,targets_only = TRUE)
+vis_drake_graph(plan,targets_only = TRUE, file= "dependency.html")
 make(plan)
 
 
