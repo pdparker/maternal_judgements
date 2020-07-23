@@ -1,0 +1,1342 @@
+Mplus VERSION 8.4 (Mac)
+MUTHEN & MUTHEN
+07/23/2020   4:14 PM
+
+INPUT INSTRUCTIONS
+
+  TITLE: Mediation Mod for Math: Free Cross Paths
+  DATA: FILE = "../../data/mplus_data.dat";
+  VARIABLE:
+  NAMES = y3_weight y3_math_interest y3_math_judgement y5_math_interest
+       y5_math_judgement y7_math_interest y7_math_judgement y3_math y5_math y7_math
+       y3_math_sch y5_math_sch y7_math_sch y3_read_interest y3_read_judgement
+       y5_read_interest y5_read_judgement y7_read_interest y7_read_judgement y3_read
+       y5_read y7_read y3_read_sch y5_read_sch y7_read_sch gender ses geo indig lang
+       y3_sid;
+  MISSING=.;
+
+  USEVARIABLES ARE  y3_read_judgement y5_read_judgement y7_read_judgement
+  				  y3_read_interest y5_read_interest y7_read_interest
+  				  y3_read y5_read y7_read
+  				  gender ses geo indig lang;
+
+  WEIGHT ARE y3_weight;
+
+  CLUSTER y3_sid;
+
+  CATEGORICAL ARE
+  	y5_read_judgement y7_read_judgement
+  	y5_read_interest y7_read_interest;
+
+  DEFINE:
+  STANDARDIZE y3_read y5_read y7_read ses;
+
+
+  ANALYSIS: ESTIMATOR = WLSMV; TYPE = COMPLEX; PARAMETERIZATION = THETA;
+
+  MODEL:
+  y7_read_judgement ON y5_read_judgement y5_read_interest y5_read;
+  y7_read_interest  ON y5_read_judgement y5_read_interest y5_read;
+  y7_read           ON y5_read_judgement y5_read_interest y5_read;
+
+  y5_read_judgement ON y3_read_judgement y3_read_interest y3_read;
+  y5_read_interest  ON y3_read_judgement y3_read_interest y3_read;
+  y5_read           ON y3_read_judgement y3_read_interest y3_read;
+
+  y7_read_judgement ON y3_read_judgement;
+  y7_read_interest  ON y3_read_interest;
+  y7_read           ON y3_read;
+
+  y7_read_judgement y7_read_interest y7_read WITH
+  	y7_read_judgement y7_read_interest y7_read;
+
+  y5_read_judgement y5_read_interest y5_read WITH
+  	y5_read_judgement y5_read_interest y5_read;
+
+  y3_read_judgement y3_read_interest y3_read WITH
+  	y3_read_judgement y3_read_interest y3_read;
+
+  y3_read_judgement-y7_read ON gender ses geo indig lang;
+
+
+  MODEL INDIRECT:
+  y5_read IND gender;
+  y7_read IND gender;
+
+
+  OUTPUT: stdyx; CINTERVAL; MODINDICES;
+
+
+
+*** WARNING in VARIABLE command
+  Note that only the first 8 characters of variable names are used in the output.
+  Shorten variable names to avoid any confusion.
+*** WARNING
+  Data set contains cases with missing on x-variables.
+  These cases were not included in the analysis.
+  Number of cases with missing on x-variables:  11
+   2 WARNING(S) FOUND IN THE INPUT INSTRUCTIONS
+
+
+
+Mediation Mod for Math: Free Cross Paths
+
+SUMMARY OF ANALYSIS
+
+Number of groups                                                 1
+Number of observations                                        2591
+
+Number of dependent variables                                    9
+Number of independent variables                                  5
+Number of continuous latent variables                            0
+
+Observed dependent variables
+
+  Continuous
+   Y3_READ_JU  Y3_READ_IN  Y3_READ     Y5_READ     Y7_READ
+
+  Binary and ordered categorical (ordinal)
+   Y5_READ_    Y7_READ_    Y5_READ_    Y7_READ_
+
+Observed independent variables
+   GENDER      SES         GEO         INDIG       LANG
+
+Variables with special functions
+
+  Cluster variable      Y3_SID
+  Weight variable       Y3_WEIGH
+
+Estimator                                                    WLSMV
+Maximum number of iterations                                  1000
+Convergence criterion                                    0.500D-04
+Maximum number of steepest descent iterations                   20
+Maximum number of iterations for H1                           2000
+Convergence criterion for H1                             0.100D-03
+Parameterization                                             THETA
+Link                                                        PROBIT
+
+Input data file(s)
+  ../../data/mplus_data.dat
+
+Input data format  FREE
+
+
+SUMMARY OF DATA
+
+     Number of missing data patterns            62
+     Number of clusters                       1608
+
+
+
+COVARIANCE COVERAGE OF DATA
+
+Minimum covariance coverage value   0.100
+
+
+     PROPORTION OF DATA PRESENT
+
+
+           Covariance Coverage
+              Y3_READ_      Y5_READ_      Y7_READ_      Y3_READ_      Y5_READ_
+              ________      ________      ________      ________      ________
+ Y3_READ_       0.995
+ Y5_READ_       0.937         0.941
+ Y7_READ_       0.880         0.860         0.883
+ Y3_READ_       0.989         0.936         0.877         0.993
+ Y5_READ_       0.936         0.927         0.859         0.936         0.940
+ Y7_READ_       0.888         0.867         0.869         0.887         0.870
+ Y3_READ        0.971         0.919         0.863         0.969         0.919
+ Y5_READ        0.945         0.901         0.842         0.942         0.900
+ Y7_READ        0.882         0.848         0.817         0.879         0.847
+
+
+           Covariance Coverage
+              Y7_READ_      Y3_READ       Y5_READ       Y7_READ
+              ________      ________      ________      ________
+ Y7_READ_       0.892
+ Y3_READ        0.871         0.975
+ Y5_READ        0.850         0.927         0.949
+ Y7_READ        0.824         0.868         0.851         0.885
+
+
+UNIVARIATE PROPORTIONS AND COUNTS FOR CATEGORICAL VARIABLES
+
+    Y5_READ_
+      Category 1    0.020           48.824
+      Category 2    0.077          185.808
+      Category 3    0.280          676.617
+      Category 4    0.262          632.142
+      Category 5    0.360          869.585
+    Y7_READ_
+      Category 1    0.021           48.070
+      Category 2    0.089          199.517
+      Category 3    0.367          821.390
+      Category 4    0.280          627.479
+      Category 5    0.242          542.947
+    Y5_READ_
+      Category 1    0.083          200.184
+      Category 2    0.372          897.820
+      Category 3    0.545         1313.398
+    Y7_READ_
+      Category 1    0.117          265.068
+      Category 2    0.466         1053.782
+      Category 3    0.417          943.855
+
+
+
+UNIVARIATE SAMPLE STATISTICS
+
+
+     UNIVARIATE HIGHER-ORDER MOMENT DESCRIPTIVE STATISTICS
+
+         Variable/         Mean/     Skewness/   Minimum/ % with                Percentiles
+        Sample Size      Variance    Kurtosis    Maximum  Min/Max      20%/60%    40%/80%    Median
+
+     Y3_READ_JUDGEME       3.834      -0.491       1.000    1.94%       3.000      4.000      4.000
+            2579.000       1.216      -0.786       5.000   37.53%       4.000      5.000
+     Y3_READ_INTERES       2.613      -1.360       1.000    7.15%       2.000      3.000      3.000
+            2574.000       0.385       0.702       3.000   68.03%       3.000      3.000
+     Y3_READ               0.000      -0.145      -4.810    0.12%      -0.771     -0.157      0.065
+            2527.000       1.000       0.827       2.968    0.08%       0.317      0.792
+     Y5_READ               0.000      -0.023      -6.082    0.04%      -0.744     -0.192      0.099
+            2459.000       1.000       0.276       4.069    0.04%       0.404      0.945
+     Y7_READ               0.000      -0.101      -4.152    0.04%      -0.788     -0.176      0.144
+            2292.000       1.000      -0.120       3.182    0.13%       0.370      0.874
+     GENDER                0.520      -0.078       0.000   48.17%       0.000      0.000      1.000
+            2591.000       0.250      -1.994       1.000   51.83%       1.000      1.000
+     SES                   0.000       0.347      -3.721    0.04%      -0.707     -0.220      0.043
+            2591.000       1.000      -0.163       3.143    0.04%       0.323      1.104
+     GEO                   0.652      -0.637       0.000   35.55%       0.000      1.000      1.000
+            2591.000       0.227      -1.594       1.000   64.45%       1.000      1.000
+     INDIG                 0.022       6.594       0.000   98.07%       0.000      0.000      0.000
+            2591.000       0.021      41.479       1.000    1.93%       0.000      0.000
+     LANG                  0.843      -1.887       0.000   12.54%       1.000      1.000      1.000
+            2591.000       0.132       1.561       1.000   87.46%       1.000      1.000
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+
+
+MODEL FIT INFORMATION
+
+Number of Free Parameters                       97
+
+Chi-Square Test of Model Fit
+
+          Value                             10.851*
+          Degrees of Freedom                     6
+          P-Value                           0.0931
+
+*   The chi-square value for MLM, MLMV, MLR, ULSMV, WLSM and WLSMV cannot be used
+    for chi-square difference testing in the regular way.  MLM, MLR and WLSM
+    chi-square difference testing is described on the Mplus website.  MLMV, WLSMV,
+    and ULSMV difference testing is done using the DIFFTEST option.
+
+RMSEA (Root Mean Square Error Of Approximation)
+
+          Estimate                           0.018
+          90 Percent C.I.                    0.000  0.034
+          Probability RMSEA <= .05           1.000
+
+CFI/TLI
+
+          CFI                                0.999
+          TLI                                0.991
+
+Chi-Square Test of Model Fit for the Baseline Model
+
+          Value                           7556.538
+          Degrees of Freedom                    81
+          P-Value                           0.0000
+
+SRMR (Standardized Root Mean Square Residual)
+
+          Value                              0.004
+
+Optimum Function Value for Weighted Least-Squares Estimator
+
+          Value                     0.63800730D-03
+
+
+
+MODEL RESULTS
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+ Y7_READ_ ON
+    Y5_READ_JU         0.306      0.028     10.918      0.000
+    Y5_READ_IN         0.105      0.031      3.443      0.001
+    Y5_READ            0.248      0.034      7.258      0.000
+    Y3_READ_JU         0.278      0.031      9.083      0.000
+    GENDER            -0.132      0.056     -2.373      0.018
+    SES                0.059      0.030      1.969      0.049
+    GEO                0.046      0.058      0.792      0.428
+    INDIG             -0.366      0.216     -1.696      0.090
+    LANG              -0.132      0.089     -1.479      0.139
+
+ Y7_READ_ ON
+    Y5_READ_JU         0.082      0.028      2.897      0.004
+    Y5_READ_IN         0.324      0.031     10.382      0.000
+    Y5_READ            0.110      0.035      3.145      0.002
+    Y3_READ_IN         0.142      0.043      3.282      0.001
+    GENDER            -0.125      0.056     -2.208      0.027
+    SES                0.069      0.031      2.240      0.025
+    GEO               -0.002      0.057     -0.030      0.976
+    INDIG             -0.056      0.178     -0.315      0.753
+    LANG               0.021      0.097      0.216      0.829
+
+ Y7_READ  ON
+    Y5_READ_JU         0.064      0.015      4.434      0.000
+    Y5_READ_IN         0.027      0.017      1.597      0.110
+    Y5_READ            0.496      0.020     24.976      0.000
+    Y3_READ            0.255      0.017     15.163      0.000
+    GENDER            -0.040      0.031     -1.309      0.191
+    SES                0.117      0.016      7.427      0.000
+    GEO               -0.009      0.033     -0.281      0.779
+    INDIG             -0.133      0.101     -1.312      0.190
+    LANG               0.089      0.044      2.050      0.040
+
+ Y5_READ_ ON
+    Y3_READ_JU         0.555      0.026     21.667      0.000
+    Y3_READ_IN         0.091      0.041      2.221      0.026
+    Y3_READ            0.431      0.028     15.515      0.000
+    GENDER            -0.040      0.054     -0.729      0.466
+    SES               -0.093      0.030     -3.125      0.002
+    GEO               -0.090      0.055     -1.627      0.104
+    INDIG             -0.303      0.221     -1.370      0.171
+    LANG              -0.152      0.087     -1.744      0.081
+
+ Y5_READ_ ON
+    Y3_READ_JU         0.178      0.028      6.322      0.000
+    Y3_READ_IN         0.398      0.042      9.538      0.000
+    Y3_READ            0.125      0.034      3.726      0.000
+    GENDER            -0.349      0.056     -6.273      0.000
+    SES                0.010      0.029      0.350      0.726
+    GEO                0.084      0.059      1.441      0.150
+    INDIG              0.070      0.222      0.315      0.752
+    LANG              -0.163      0.089     -1.835      0.067
+
+ Y5_READ  ON
+    Y3_READ_JU         0.140      0.016      8.841      0.000
+    Y3_READ_IN         0.006      0.027      0.223      0.824
+    Y3_READ            0.594      0.016     37.702      0.000
+    GENDER            -0.077      0.032     -2.408      0.016
+    SES                0.127      0.016      7.948      0.000
+    GEO                0.043      0.033      1.285      0.199
+    INDIG             -0.242      0.136     -1.777      0.076
+    LANG              -0.024      0.048     -0.492      0.622
+
+ Y3_READ_ ON
+    GENDER            -0.307      0.047     -6.566      0.000
+    SES                0.114      0.024      4.666      0.000
+    GEO               -0.057      0.051     -1.111      0.267
+    INDIG              0.186      0.156      1.191      0.234
+    LANG              -0.207      0.077     -2.689      0.007
+
+ Y3_READ_ ON
+    GENDER            -0.272      0.028     -9.765      0.000
+    SES                0.012      0.014      0.858      0.391
+    GEO                0.038      0.028      1.346      0.178
+    INDIG              0.223      0.146      1.534      0.125
+    LANG              -0.113      0.044     -2.545      0.011
+
+ Y3_READ  ON
+    GENDER            -0.260      0.040     -6.470      0.000
+    SES                0.320      0.021     14.922      0.000
+    GEO                0.061      0.046      1.343      0.179
+    INDIG             -0.557      0.146     -3.806      0.000
+    LANG              -0.005      0.068     -0.080      0.936
+
+ Y7_READ_ WITH
+    Y7_READ_IN         0.202      0.029      6.989      0.000
+    Y7_READ            0.044      0.014      3.133      0.002
+
+ Y7_READ_ WITH
+    Y7_READ            0.028      0.016      1.755      0.079
+
+ Y5_READ_ WITH
+    Y5_READ_IN         0.104      0.028      3.699      0.000
+    Y5_READ            0.106      0.017      6.079      0.000
+
+ Y5_READ_ WITH
+    Y5_READ            0.043      0.019      2.330      0.020
+
+ Y3_READ_ WITH
+    Y3_READ_IN         0.115      0.015      7.728      0.000
+    Y3_READ            0.538      0.026     20.611      0.000
+
+ Y3_READ_ WITH
+    Y3_READ            0.077      0.012      6.572      0.000
+
+ Intercepts
+    Y3_READ_JU         4.201      0.089     46.962      0.000
+    Y3_READ_IN         2.819      0.057     49.472      0.000
+    Y3_READ            0.108      0.078      1.379      0.168
+    Y5_READ           -0.522      0.107     -4.864      0.000
+    Y7_READ           -0.231      0.068     -3.384      0.001
+
+ Thresholds
+    Y5_READ_$1        -0.644      0.188     -3.429      0.001
+    Y5_READ_$2         0.387      0.171      2.267      0.023
+    Y5_READ_$3         1.733      0.169     10.229      0.000
+    Y5_READ_$4         2.642      0.169     15.667      0.000
+    Y7_READ_$1        -0.995      0.182     -5.484      0.000
+    Y7_READ_$2         0.074      0.163      0.454      0.650
+    Y7_READ_$3         1.653      0.166      9.959      0.000
+    Y7_READ_$4         2.673      0.173     15.433      0.000
+    Y5_READ_$1        -0.091      0.184     -0.497      0.619
+    Y5_READ_$2         1.335      0.182      7.324      0.000
+    Y7_READ_$1        -0.373      0.182     -2.048      0.041
+    Y7_READ_$2         1.213      0.183      6.640      0.000
+
+ Residual Variances
+    Y3_READ_JU         1.170      0.050     23.542      0.000
+    Y3_READ_IN         0.362      0.015     23.625      0.000
+    Y3_READ            0.866      0.025     34.937      0.000
+    Y5_READ            0.436      0.011     37.930      0.000
+    Y7_READ            0.334      0.010     32.151      0.000
+
+
+STANDARDIZED MODEL RESULTS
+
+
+STDYX Standardization
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+ Y7_READ_ ON
+    Y5_READ_JU         0.309      0.027     11.651      0.000
+    Y5_READ_IN         0.087      0.025      3.484      0.000
+    Y5_READ            0.184      0.025      7.396      0.000
+    Y3_READ_JU         0.227      0.025      9.131      0.000
+    GENDER            -0.049      0.021     -2.380      0.017
+    SES                0.044      0.022      1.973      0.048
+    GEO                0.016      0.020      0.793      0.428
+    INDIG             -0.039      0.023     -1.701      0.089
+    LANG              -0.036      0.024     -1.480      0.139
+
+ Y7_READ_ ON
+    Y5_READ_JU         0.098      0.034      2.915      0.004
+    Y5_READ_IN         0.320      0.028     11.356      0.000
+    Y5_READ            0.098      0.031      3.150      0.002
+    Y3_READ_IN         0.078      0.024      3.286      0.001
+    GENDER            -0.055      0.025     -2.209      0.027
+    SES                0.061      0.027      2.243      0.025
+    GEO               -0.001      0.024     -0.030      0.976
+    INDIG             -0.007      0.023     -0.315      0.753
+    LANG               0.007      0.031      0.216      0.829
+
+ Y7_READ  ON
+    Y5_READ_JU         0.088      0.019      4.491      0.000
+    Y5_READ_IN         0.030      0.019      1.602      0.109
+    Y5_READ            0.495      0.018     27.016      0.000
+    Y3_READ            0.254      0.018     14.530      0.000
+    GENDER            -0.020      0.015     -1.311      0.190
+    SES                0.117      0.016      7.500      0.000
+    GEO               -0.004      0.016     -0.281      0.779
+    INDIG             -0.019      0.015     -1.309      0.191
+    LANG               0.032      0.016      2.049      0.041
+
+ Y5_READ_ ON
+    Y3_READ_JU         0.449      0.020     22.729      0.000
+    Y3_READ_IN         0.042      0.019      2.216      0.027
+    Y3_READ            0.316      0.020     16.006      0.000
+    GENDER            -0.015      0.020     -0.729      0.466
+    SES               -0.068      0.022     -3.119      0.002
+    GEO               -0.031      0.019     -1.629      0.103
+    INDIG             -0.032      0.024     -1.371      0.170
+    LANG              -0.041      0.023     -1.744      0.081
+
+ Y5_READ_ ON
+    Y3_READ_JU         0.175      0.028      6.349      0.000
+    Y3_READ_IN         0.221      0.022      9.944      0.000
+    Y3_READ            0.112      0.030      3.760      0.000
+    GENDER            -0.156      0.024     -6.424      0.000
+    SES                0.009      0.026      0.350      0.726
+    GEO                0.036      0.025      1.442      0.149
+    INDIG              0.009      0.029      0.316      0.752
+    LANG              -0.053      0.029     -1.840      0.066
+
+ Y5_READ  ON
+    Y3_READ_JU         0.154      0.018      8.805      0.000
+    Y3_READ_IN         0.004      0.017      0.223      0.824
+    Y3_READ            0.594      0.014     42.167      0.000
+    GENDER            -0.038      0.016     -2.411      0.016
+    SES                0.127      0.016      8.145      0.000
+    GEO                0.020      0.016      1.285      0.199
+    INDIG             -0.035      0.020     -1.782      0.075
+    LANG              -0.009      0.017     -0.493      0.622
+
+ Y3_READ_ ON
+    GENDER            -0.140      0.021     -6.713      0.000
+    SES                0.103      0.022      4.731      0.000
+    GEO               -0.025      0.022     -1.111      0.266
+    INDIG              0.025      0.021      1.193      0.233
+    LANG              -0.068      0.025     -2.699      0.007
+
+ Y3_READ_ ON
+    GENDER            -0.219      0.021    -10.416      0.000
+    SES                0.019      0.022      0.857      0.391
+    GEO                0.029      0.022      1.343      0.179
+    INDIG              0.052      0.034      1.536      0.124
+    LANG              -0.066      0.026     -2.561      0.010
+
+ Y3_READ  ON
+    GENDER            -0.130      0.020     -6.465      0.000
+    SES                0.320      0.020     15.735      0.000
+    GEO                0.029      0.022      1.342      0.179
+    INDIG             -0.081      0.021     -3.835      0.000
+    LANG              -0.002      0.025     -0.080      0.936
+
+ Y7_READ_ WITH
+    Y7_READ_IN         0.202      0.029      6.989      0.000
+    Y7_READ            0.076      0.024      3.167      0.002
+
+ Y7_READ_ WITH
+    Y7_READ            0.048      0.028      1.756      0.079
+
+ Y5_READ_ WITH
+    Y5_READ_IN         0.104      0.028      3.699      0.000
+    Y5_READ            0.160      0.026      6.171      0.000
+
+ Y5_READ_ WITH
+    Y5_READ            0.066      0.028      2.330      0.020
+
+ Y3_READ_ WITH
+    Y3_READ_IN         0.177      0.021      8.551      0.000
+    Y3_READ            0.535      0.015     35.182      0.000
+
+ Y3_READ_ WITH
+    Y3_READ            0.137      0.020      6.887      0.000
+
+ Intercepts
+    Y3_READ_JU         3.817      0.098     38.781      0.000
+    Y3_READ_IN         4.547      0.094     48.305      0.000
+    Y3_READ            0.108      0.078      1.379      0.168
+    Y5_READ           -0.522      0.107     -4.875      0.000
+    Y7_READ           -0.230      0.068     -3.402      0.001
+
+ Thresholds
+    Y5_READ_$1        -0.473      0.140     -3.379      0.001
+    Y5_READ_$2         0.284      0.124      2.287      0.022
+    Y5_READ_$3         1.272      0.120     10.590      0.000
+    Y5_READ_$4         1.940      0.118     16.488      0.000
+    Y7_READ_$1        -0.738      0.138     -5.330      0.000
+    Y7_READ_$2         0.055      0.121      0.455      0.649
+    Y7_READ_$3         1.226      0.116     10.537      0.000
+    Y7_READ_$4         1.982      0.117     16.891      0.000
+    Y5_READ_$1        -0.082      0.165     -0.496      0.620
+    Y5_READ_$2         1.194      0.159      7.513      0.000
+    Y7_READ_$1        -0.330      0.162     -2.030      0.042
+    Y7_READ_$2         1.070      0.156      6.847      0.000
+
+ Residual Variances
+    Y3_READ_JU         0.966      0.008    126.247      0.000
+    Y3_READ_IN         0.942      0.010     90.086      0.000
+    Y3_READ            0.865      0.014     60.102      0.000
+    Y5_READ            0.435      0.012     36.094      0.000
+    Y7_READ            0.332      0.011     29.533      0.000
+
+
+R-SQUARE
+
+    Observed                                        Two-Tailed     Scale
+    Variable        Estimate       S.E.  Est./S.E.    P-Value     Factors
+
+    Y3_READ_           0.034      0.008      4.444      0.000
+    Y5_READ_           0.461      0.016     27.955      0.000      0.745
+    Y7_READ_           0.450      0.020     22.050      0.000      0.768
+    Y3_READ_           0.058      0.010      5.509      0.000
+    Y5_READ_           0.199      0.019     10.693      0.000      0.930
+    Y7_READ_           0.222      0.021     10.481      0.000      0.905
+    Y3_READ            0.135      0.014      9.372      0.000
+    Y5_READ            0.565      0.012     46.956      0.000
+    Y7_READ            0.668      0.011     59.431      0.000
+
+
+QUALITY OF NUMERICAL RESULTS
+
+     Condition Number for the Information Matrix              0.664E-04
+       (ratio of smallest to largest eigenvalue)
+
+
+TOTAL, TOTAL INDIRECT, SPECIFIC INDIRECT, AND DIRECT EFFECTS
+
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+Effects from GENDER to Y5_READ
+
+  Total               -0.276      0.042     -6.562      0.000
+  Total indirect      -0.199      0.028     -7.066      0.000
+
+  Specific indirect 1
+    Y5_READ
+    Y3_READ_
+    GENDER            -0.043      0.008     -5.412      0.000
+
+  Specific indirect 2
+    Y5_READ
+    Y3_READ_
+    GENDER            -0.002      0.007     -0.223      0.824
+
+  Specific indirect 3
+    Y5_READ
+    Y3_READ
+    GENDER            -0.154      0.024     -6.407      0.000
+
+  Direct
+    Y5_READ
+    GENDER            -0.077      0.032     -2.408      0.016
+
+
+Effects from GENDER to Y7_READ
+
+  Total               -0.280      0.043     -6.579      0.000
+  Total indirect      -0.240      0.033     -7.301      0.000
+
+  Specific indirect 1
+    Y7_READ
+    Y5_READ_
+    GENDER            -0.003      0.004     -0.724      0.469
+
+  Specific indirect 2
+    Y7_READ
+    Y5_READ_
+    GENDER            -0.009      0.006     -1.539      0.124
+
+  Specific indirect 3
+    Y7_READ
+    Y3_READ
+    GENDER            -0.066      0.011     -5.933      0.000
+
+  Specific indirect 4
+    Y7_READ
+    Y5_READ
+    GENDER            -0.038      0.016     -2.389      0.017
+
+  Specific indirect 5
+    Y7_READ
+    Y5_READ_
+    Y3_READ_
+    GENDER            -0.011      0.003     -3.660      0.000
+
+  Specific indirect 6
+    Y7_READ
+    Y5_READ_
+    Y3_READ_
+    GENDER            -0.002      0.001     -1.974      0.048
+
+  Specific indirect 7
+    Y7_READ
+    Y5_READ_
+    Y3_READ
+    GENDER            -0.007      0.002     -3.536      0.000
+
+  Specific indirect 8
+    Y7_READ
+    Y5_READ_
+    Y3_READ_
+    GENDER            -0.001      0.001     -1.524      0.128
+
+  Specific indirect 9
+    Y7_READ
+    Y5_READ_
+    Y3_READ_
+    GENDER            -0.003      0.002     -1.586      0.113
+
+  Specific indirect 10
+    Y7_READ
+    Y5_READ_
+    Y3_READ
+    GENDER            -0.001      0.001     -1.429      0.153
+
+  Specific indirect 11
+    Y7_READ
+    Y5_READ
+    Y3_READ_
+    GENDER            -0.021      0.004     -5.323      0.000
+
+  Specific indirect 12
+    Y7_READ
+    Y5_READ
+    Y3_READ_
+    GENDER            -0.001      0.004     -0.223      0.823
+
+  Specific indirect 13
+    Y7_READ
+    Y5_READ
+    Y3_READ
+    GENDER            -0.077      0.012     -6.216      0.000
+
+  Direct
+    Y7_READ
+    GENDER            -0.040      0.031     -1.309      0.191
+
+
+
+STANDARDIZED TOTAL, TOTAL INDIRECT, SPECIFIC INDIRECT, AND DIRECT EFFECTS
+
+
+STDYX Standardization
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+Effects from GENDER to Y5_READ
+
+  Total               -0.138      0.021     -6.594      0.000
+  Total indirect      -0.099      0.014     -7.093      0.000
+
+  Specific indirect 1
+    Y5_READ
+    Y3_READ_
+    GENDER            -0.022      0.004     -5.444      0.000
+
+  Specific indirect 2
+    Y5_READ
+    Y3_READ_
+    GENDER            -0.001      0.004     -0.223      0.824
+
+  Specific indirect 3
+    Y5_READ
+    Y3_READ
+    GENDER            -0.077      0.012     -6.419      0.000
+
+  Direct
+    Y5_READ
+    GENDER            -0.038      0.016     -2.411      0.016
+
+
+Effects from GENDER to Y7_READ
+
+  Total               -0.140      0.021     -6.672      0.000
+  Total indirect      -0.120      0.016     -7.374      0.000
+
+  Specific indirect 1
+    Y7_READ
+    Y5_READ_
+    GENDER            -0.001      0.002     -0.724      0.469
+
+  Specific indirect 2
+    Y7_READ
+    Y5_READ_
+    GENDER            -0.005      0.003     -1.541      0.123
+
+  Specific indirect 3
+    Y7_READ
+    Y3_READ
+    GENDER            -0.033      0.006     -5.921      0.000
+
+  Specific indirect 4
+    Y7_READ
+    Y5_READ
+    GENDER            -0.019      0.008     -2.393      0.017
+
+  Specific indirect 5
+    Y7_READ
+    Y5_READ_
+    Y3_READ_
+    GENDER            -0.005      0.001     -3.687      0.000
+
+  Specific indirect 6
+    Y7_READ
+    Y5_READ_
+    Y3_READ_
+    GENDER            -0.001      0.000     -1.978      0.048
+
+  Specific indirect 7
+    Y7_READ
+    Y5_READ_
+    Y3_READ
+    GENDER            -0.004      0.001     -3.570      0.000
+
+  Specific indirect 8
+    Y7_READ
+    Y5_READ_
+    Y3_READ_
+    GENDER            -0.001      0.000     -1.526      0.127
+
+  Specific indirect 9
+    Y7_READ
+    Y5_READ_
+    Y3_READ_
+    GENDER            -0.001      0.001     -1.588      0.112
+
+  Specific indirect 10
+    Y7_READ
+    Y5_READ_
+    Y3_READ
+    GENDER             0.000      0.000     -1.432      0.152
+
+  Specific indirect 11
+    Y7_READ
+    Y5_READ
+    Y3_READ_
+    GENDER            -0.011      0.002     -5.326      0.000
+
+  Specific indirect 12
+    Y7_READ
+    Y5_READ
+    Y3_READ_
+    GENDER             0.000      0.002     -0.223      0.823
+
+  Specific indirect 13
+    Y7_READ
+    Y5_READ
+    Y3_READ
+    GENDER            -0.038      0.006     -6.254      0.000
+
+  Direct
+    Y7_READ
+    GENDER            -0.020      0.015     -1.311      0.190
+
+
+
+
+CONFIDENCE INTERVALS OF MODEL RESULTS
+
+                  Lower .5%  Lower 2.5%    Lower 5%    Estimate    Upper 5%  Upper 2.5%   Upper .5%
+
+ Y7_READ_ ON
+    Y5_READ_JU       0.234       0.251       0.260       0.306       0.352       0.361       0.378
+    Y5_READ_IN       0.027       0.045       0.055       0.105       0.156       0.165       0.184
+    Y5_READ          0.160       0.181       0.192       0.248       0.304       0.315       0.336
+    Y3_READ_JU       0.199       0.218       0.228       0.278       0.328       0.338       0.357
+    GENDER          -0.276      -0.242      -0.224      -0.132      -0.041      -0.023       0.011
+    SES             -0.018       0.000       0.010       0.059       0.109       0.118       0.137
+    GEO             -0.103      -0.068      -0.049       0.046       0.141       0.160       0.195
+    INDIG           -0.921      -0.788      -0.720      -0.366      -0.011       0.057       0.190
+    LANG            -0.361      -0.307      -0.278      -0.132       0.015       0.043       0.098
+
+ Y7_READ_ ON
+    Y5_READ_JU       0.009       0.026       0.035       0.082       0.128       0.137       0.154
+    Y5_READ_IN       0.244       0.263       0.273       0.324       0.376       0.386       0.405
+    Y5_READ          0.020       0.042       0.053       0.110       0.168       0.179       0.201
+    Y3_READ_IN       0.031       0.057       0.071       0.142       0.213       0.227       0.254
+    GENDER          -0.270      -0.235      -0.217      -0.125      -0.032      -0.014       0.021
+    SES             -0.010       0.009       0.018       0.069       0.120       0.129       0.148
+    GEO             -0.149      -0.114      -0.096      -0.002       0.093       0.111       0.146
+    INDIG           -0.515      -0.405      -0.349      -0.056       0.237       0.293       0.402
+    LANG            -0.229      -0.169      -0.139       0.021       0.181       0.211       0.271
+
+ Y7_READ  ON
+    Y5_READ_JU       0.027       0.036       0.041       0.064       0.088       0.093       0.102
+    Y5_READ_IN      -0.016      -0.006      -0.001       0.027       0.054       0.060       0.070
+    Y5_READ          0.445       0.457       0.463       0.496       0.529       0.535       0.547
+    Y3_READ          0.212       0.222       0.227       0.255       0.283       0.288       0.298
+    GENDER          -0.119      -0.100      -0.090      -0.040       0.010       0.020       0.039
+    SES              0.077       0.086       0.091       0.117       0.143       0.148       0.158
+    GEO             -0.094      -0.074      -0.064      -0.009       0.045       0.055       0.076
+    INDIG           -0.394      -0.332      -0.300      -0.133       0.034       0.066       0.128
+    LANG            -0.023       0.004       0.018       0.089       0.161       0.175       0.202
+
+ Y5_READ_ ON
+    Y3_READ_JU       0.489       0.505       0.513       0.555       0.598       0.606       0.621
+    Y3_READ_IN      -0.015       0.011       0.024       0.091       0.159       0.172       0.197
+    Y3_READ          0.359       0.376       0.385       0.431       0.476       0.485       0.502
+    GENDER          -0.179      -0.146      -0.129      -0.040       0.050       0.067       0.100
+    SES             -0.169      -0.151      -0.141      -0.093      -0.044      -0.035      -0.016
+    GEO             -0.232      -0.198      -0.181      -0.090       0.001       0.018       0.052
+    INDIG           -0.874      -0.738      -0.668      -0.303       0.061       0.131       0.267
+    LANG            -0.378      -0.324      -0.296      -0.152      -0.009       0.019       0.073
+
+ Y5_READ_ ON
+    Y3_READ_JU       0.105       0.123       0.131       0.178       0.224       0.233       0.250
+    Y3_READ_IN       0.291       0.316       0.330       0.398       0.467       0.480       0.506
+    Y3_READ          0.039       0.059       0.070       0.125       0.180       0.191       0.211
+    GENDER          -0.492      -0.458      -0.440      -0.349      -0.257      -0.240      -0.205
+    SES             -0.064      -0.046      -0.037       0.010       0.057       0.066       0.084
+    GEO             -0.066      -0.030      -0.012       0.084       0.181       0.199       0.235
+    INDIG           -0.501      -0.365      -0.295       0.070       0.435       0.505       0.641
+    LANG            -0.391      -0.337      -0.309      -0.163      -0.017       0.011       0.066
+
+ Y5_READ  ON
+    Y3_READ_JU       0.099       0.109       0.114       0.140       0.166       0.171       0.181
+    Y3_READ_IN      -0.064      -0.047      -0.039       0.006       0.051       0.059       0.076
+    Y3_READ          0.553       0.563       0.568       0.594       0.620       0.625       0.635
+    GENDER          -0.159      -0.140      -0.129      -0.077      -0.024      -0.014       0.005
+    SES              0.086       0.096       0.101       0.127       0.153       0.158       0.168
+    GEO             -0.043      -0.022      -0.012       0.043       0.097       0.108       0.128
+    INDIG           -0.594      -0.510      -0.467      -0.242      -0.018       0.025       0.109
+    LANG            -0.147      -0.117      -0.102      -0.024       0.055       0.070       0.100
+
+ Y3_READ_ ON
+    GENDER          -0.428      -0.399      -0.385      -0.307      -0.230      -0.216      -0.187
+    SES              0.051       0.066       0.074       0.114       0.154       0.161       0.176
+    GEO             -0.188      -0.157      -0.141      -0.057       0.027       0.043       0.075
+    INDIG           -0.216      -0.120      -0.071       0.186       0.443       0.492       0.589
+    LANG            -0.405      -0.358      -0.334      -0.207      -0.080      -0.056      -0.009
+
+ Y3_READ_ ON
+    GENDER          -0.344      -0.327      -0.318      -0.272      -0.226      -0.217      -0.200
+    SES             -0.023      -0.015      -0.011       0.012       0.034       0.038       0.047
+    GEO             -0.035      -0.017      -0.008       0.038       0.084       0.093       0.110
+    INDIG           -0.152      -0.062      -0.016       0.223       0.463       0.509       0.599
+    LANG            -0.228      -0.200      -0.186      -0.113      -0.040      -0.026       0.001
+
+ Y3_READ  ON
+    GENDER          -0.364      -0.339      -0.326      -0.260      -0.194      -0.181      -0.157
+    SES              0.265       0.278       0.284       0.320       0.355       0.362       0.375
+    GEO             -0.056      -0.028      -0.014       0.061       0.137       0.151       0.179
+    INDIG           -0.935      -0.844      -0.798      -0.557      -0.317      -0.270      -0.180
+    LANG            -0.181      -0.139      -0.118      -0.005       0.107       0.128       0.170
+
+ Y7_READ_ WITH
+    Y7_READ_IN       0.127       0.145       0.154       0.202       0.249       0.258       0.276
+    Y7_READ          0.008       0.017       0.021       0.044       0.067       0.072       0.081
+
+ Y7_READ_ WITH
+    Y7_READ         -0.013      -0.003       0.002       0.028       0.054       0.059       0.069
+
+ Y5_READ_ WITH
+    Y5_READ_IN       0.032       0.049       0.058       0.104       0.151       0.159       0.177
+    Y5_READ          0.061       0.072       0.077       0.106       0.134       0.140       0.150
+
+ Y5_READ_ WITH
+    Y5_READ         -0.005       0.007       0.013       0.043       0.074       0.080       0.092
+
+ Y3_READ_ WITH
+    Y3_READ_IN       0.077       0.086       0.091       0.115       0.140       0.144       0.153
+    Y3_READ          0.471       0.487       0.495       0.538       0.581       0.589       0.605
+
+ Y3_READ_ WITH
+    Y3_READ          0.047       0.054       0.057       0.077       0.096       0.100       0.107
+
+ Intercepts
+    Y3_READ_         3.970       4.025       4.054       4.201       4.348       4.376       4.431
+    Y3_READ_         2.673       2.708       2.726       2.819       2.913       2.931       2.966
+    Y3_READ         -0.094      -0.046      -0.021       0.108       0.237       0.262       0.310
+    Y5_READ         -0.799      -0.733      -0.699      -0.522      -0.346      -0.312      -0.246
+    Y7_READ         -0.407      -0.365      -0.344      -0.231      -0.119      -0.097      -0.055
+
+ Thresholds
+    Y5_READ_        -1.127      -1.011      -0.952      -0.644      -0.335      -0.276      -0.160
+    Y5_READ_        -0.053       0.052       0.106       0.387       0.667       0.721       0.826
+    Y5_READ_         1.297       1.401       1.454       1.733       2.012       2.065       2.169
+    Y5_READ_         2.208       2.312       2.365       2.642       2.920       2.973       3.077
+    Y7_READ_        -1.463      -1.351      -1.294      -0.995      -0.697      -0.640      -0.528
+    Y7_READ_        -0.346      -0.246      -0.194       0.074       0.342       0.394       0.494
+    Y7_READ_         1.225       1.328       1.380       1.653       1.926       1.978       2.080
+    Y7_READ_         2.227       2.333       2.388       2.673       2.958       3.012       3.119
+    Y5_READ_        -0.564      -0.451      -0.393      -0.091       0.211       0.269       0.382
+    Y5_READ_         0.865       0.977       1.035       1.335       1.634       1.692       1.804
+    Y7_READ_        -0.843      -0.731      -0.673      -0.373      -0.074      -0.016       0.096
+    Y7_READ_         0.742       0.855       0.912       1.213       1.513       1.571       1.683
+
+ Residual Variances
+    Y3_READ_         1.042       1.073       1.088       1.170       1.252       1.267       1.298
+    Y3_READ_         0.323       0.332       0.337       0.362       0.388       0.392       0.402
+    Y3_READ          0.802       0.818       0.825       0.866       0.907       0.915       0.930
+    Y5_READ          0.406       0.413       0.417       0.436       0.454       0.458       0.465
+    Y7_READ          0.307       0.314       0.317       0.334       0.351       0.355       0.361
+
+
+CONFIDENCE INTERVALS OF STANDARDIZED MODEL RESULTS
+
+
+STDYX Standardization
+
+                  Lower .5%  Lower 2.5%    Lower 5%    Estimate    Upper 5%  Upper 2.5%   Upper .5%
+
+ Y7_READ_ ON
+    Y5_READ_JU       0.241       0.257       0.266       0.309       0.353       0.361       0.378
+    Y5_READ_IN       0.023       0.038       0.046       0.087       0.128       0.136       0.152
+    Y5_READ          0.120       0.135       0.143       0.184       0.225       0.233       0.248
+    Y3_READ_JU       0.163       0.178       0.186       0.227       0.268       0.276       0.291
+    GENDER          -0.102      -0.090      -0.083      -0.049      -0.015      -0.009       0.004
+    SES             -0.013       0.000       0.007       0.044       0.081       0.088       0.101
+    GEO             -0.036      -0.024      -0.017       0.016       0.050       0.056       0.069
+    INDIG           -0.099      -0.085      -0.077      -0.039      -0.001       0.006       0.020
+    LANG            -0.097      -0.083      -0.075      -0.036       0.004       0.012       0.026
+
+ Y7_READ_ ON
+    Y5_READ_JU       0.011       0.032       0.043       0.098       0.153       0.164       0.185
+    Y5_READ_IN       0.247       0.265       0.274       0.320       0.366       0.375       0.392
+    Y5_READ          0.018       0.037       0.047       0.098       0.148       0.158       0.177
+    Y3_READ_IN       0.017       0.031       0.039       0.078       0.117       0.124       0.139
+    GENDER          -0.119      -0.104      -0.096      -0.055      -0.014      -0.006       0.009
+    SES             -0.009       0.008       0.016       0.061       0.106       0.114       0.131
+    GEO             -0.063      -0.048      -0.040      -0.001       0.039       0.047       0.061
+    INDIG           -0.066      -0.052      -0.045      -0.007       0.030       0.037       0.052
+    LANG            -0.073      -0.054      -0.044       0.007       0.058       0.068       0.087
+
+ Y7_READ  ON
+    Y5_READ_JU       0.037       0.049       0.055       0.088       0.120       0.126       0.138
+    Y5_READ_IN      -0.018      -0.007      -0.001       0.030       0.061       0.066       0.078
+    Y5_READ          0.448       0.459       0.465       0.495       0.525       0.531       0.542
+    Y3_READ          0.209       0.220       0.226       0.254       0.283       0.289       0.299
+    GENDER          -0.059      -0.050      -0.045      -0.020       0.005       0.010       0.019
+    SES              0.077       0.086       0.091       0.117       0.143       0.148       0.157
+    GEO             -0.045      -0.035      -0.030      -0.004       0.021       0.026       0.036
+    INDIG           -0.057      -0.048      -0.043      -0.019       0.005       0.010       0.019
+    LANG            -0.008       0.001       0.006       0.032       0.058       0.063       0.073
+
+ Y5_READ_ ON
+    Y3_READ_JU       0.398       0.410       0.416       0.449       0.481       0.488       0.500
+    Y3_READ_IN      -0.007       0.005       0.011       0.042       0.072       0.078       0.090
+    Y3_READ          0.266       0.278       0.284       0.316       0.349       0.355       0.367
+    GENDER          -0.066      -0.054      -0.047      -0.015       0.018       0.025       0.037
+    SES             -0.124      -0.111      -0.104      -0.068      -0.032      -0.025      -0.012
+    GEO             -0.081      -0.069      -0.063      -0.031       0.000       0.006       0.018
+    INDIG           -0.093      -0.079      -0.071      -0.032       0.006       0.014       0.028
+    LANG            -0.101      -0.086      -0.079      -0.041      -0.002       0.005       0.019
+
+ Y5_READ_ ON
+    Y3_READ_JU       0.104       0.121       0.130       0.175       0.220       0.229       0.246
+    Y3_READ_IN       0.164       0.177       0.184       0.221       0.258       0.265       0.278
+    Y3_READ          0.035       0.054       0.063       0.112       0.161       0.170       0.189
+    GENDER          -0.218      -0.203      -0.196      -0.156      -0.116      -0.108      -0.093
+    SES             -0.057      -0.041      -0.033       0.009       0.051       0.059       0.075
+    GEO             -0.028      -0.013      -0.005       0.036       0.077       0.085       0.100
+    INDIG           -0.065      -0.047      -0.038       0.009       0.056       0.066       0.083
+    LANG            -0.127      -0.109      -0.100      -0.053      -0.006       0.003       0.021
+
+ Y5_READ  ON
+    Y3_READ_JU       0.109       0.120       0.125       0.154       0.183       0.189       0.199
+    Y3_READ_IN      -0.039      -0.029      -0.024       0.004       0.031       0.037       0.047
+    Y3_READ          0.557       0.566       0.571       0.594       0.617       0.621       0.630
+    GENDER          -0.079      -0.070      -0.065      -0.038      -0.012      -0.007       0.003
+    SES              0.087       0.096       0.101       0.127       0.153       0.157       0.167
+    GEO             -0.020      -0.011      -0.006       0.020       0.046       0.051       0.061
+    INDIG           -0.086      -0.074      -0.068      -0.035      -0.003       0.004       0.016
+    LANG            -0.053      -0.043      -0.037      -0.009       0.020       0.025       0.036
+
+ Y3_READ_ ON
+    GENDER          -0.193      -0.180      -0.174      -0.140      -0.105      -0.099      -0.086
+    SES              0.047       0.060       0.067       0.103       0.139       0.146       0.159
+    GEO             -0.081      -0.068      -0.061      -0.025       0.012       0.019       0.032
+    INDIG           -0.028      -0.016      -0.009       0.025       0.058       0.065       0.078
+    LANG            -0.134      -0.118      -0.110      -0.068      -0.027      -0.019      -0.003
+
+ Y3_READ_ ON
+    GENDER          -0.273      -0.261      -0.254      -0.219      -0.185      -0.178      -0.165
+    SES             -0.038      -0.024      -0.017       0.019       0.055       0.062       0.075
+    GEO             -0.027      -0.013      -0.007       0.029       0.065       0.071       0.085
+    INDIG           -0.035      -0.014      -0.004       0.052       0.108       0.119       0.140
+    LANG            -0.133      -0.117      -0.109      -0.066      -0.024      -0.016       0.000
+
+ Y3_READ  ON
+    GENDER          -0.182      -0.169      -0.163      -0.130      -0.097      -0.091      -0.078
+    SES              0.267       0.280       0.286       0.320       0.353       0.359       0.372
+    GEO             -0.027      -0.013      -0.007       0.029       0.065       0.072       0.085
+    INDIG           -0.135      -0.122      -0.116      -0.081      -0.046      -0.040      -0.027
+    LANG            -0.066      -0.051      -0.043      -0.002       0.039       0.047       0.062
+
+ Y7_READ_ WITH
+    Y7_READ_IN       0.127       0.145       0.154       0.202       0.249       0.258       0.276
+    Y7_READ          0.014       0.029       0.037       0.076       0.116       0.124       0.139
+
+ Y7_READ_ WITH
+    Y7_READ         -0.023      -0.006       0.003       0.048       0.094       0.102       0.119
+
+ Y5_READ_ WITH
+    Y5_READ_IN       0.032       0.049       0.058       0.104       0.151       0.159       0.177
+    Y5_READ          0.093       0.109       0.117       0.160       0.203       0.211       0.227
+
+ Y5_READ_ WITH
+    Y5_READ         -0.007       0.010       0.019       0.066       0.112       0.121       0.139
+
+ Y3_READ_ WITH
+    Y3_READ_IN       0.124       0.136       0.143       0.177       0.211       0.217       0.230
+    Y3_READ          0.495       0.505       0.510       0.535       0.560       0.564       0.574
+
+ Y3_READ_ WITH
+    Y3_READ          0.086       0.098       0.104       0.137       0.170       0.176       0.188
+
+ Intercepts
+    Y3_READ_         3.563       3.624       3.655       3.817       3.979       4.010       4.070
+    Y3_READ_         4.304       4.362       4.392       4.547       4.702       4.731       4.789
+    Y3_READ         -0.094      -0.046      -0.021       0.108       0.237       0.262       0.310
+    Y5_READ         -0.798      -0.732      -0.698      -0.522      -0.346      -0.312      -0.246
+    Y7_READ         -0.405      -0.363      -0.342      -0.230      -0.119      -0.098      -0.056
+
+ Thresholds
+    Y5_READ_        -0.833      -0.747      -0.703      -0.473      -0.242      -0.198      -0.112
+    Y5_READ_        -0.036       0.041       0.080       0.284       0.488       0.527       0.604
+    Y5_READ_         0.963       1.037       1.075       1.272       1.470       1.508       1.582
+    Y5_READ_         1.637       1.709       1.746       1.940       2.133       2.171       2.243
+    Y7_READ_        -1.095      -1.010      -0.966      -0.738      -0.510      -0.467      -0.381
+    Y7_READ_        -0.256      -0.182      -0.144       0.055       0.253       0.291       0.366
+    Y7_READ_         0.926       0.998       1.034       1.226       1.417       1.454       1.525
+    Y7_READ_         1.680       1.752       1.789       1.982       2.175       2.212       2.284
+    Y5_READ_        -0.505      -0.404      -0.352      -0.082       0.189       0.241       0.342
+    Y5_READ_         0.785       0.883       0.933       1.194       1.456       1.506       1.604
+    Y7_READ_        -0.748      -0.648      -0.597      -0.330      -0.062      -0.011       0.089
+    Y7_READ_         0.668       0.764       0.813       1.070       1.327       1.376       1.473
+
+ Residual Variances
+    Y3_READ_         0.946       0.951       0.953       0.966       0.979       0.981       0.986
+    Y3_READ_         0.915       0.922       0.925       0.942       0.960       0.963       0.969
+    Y3_READ          0.828       0.837       0.841       0.865       0.889       0.893       0.902
+    Y5_READ          0.404       0.411       0.415       0.435       0.454       0.458       0.466
+    Y7_READ          0.303       0.310       0.313       0.332       0.350       0.354       0.361
+
+
+CONFIDENCE INTERVALS OF TOTAL, TOTAL INDIRECT, SPECIFIC INDIRECT, AND DIRECT EFFECTS
+
+
+                  Lower .5%  Lower 2.5%    Lower 5%    Estimate    Upper 5%  Upper 2.5%   Upper .5%
+
+Effects from GENDER to Y5_READ
+
+  Total             -0.385      -0.359      -0.345      -0.276      -0.207      -0.194      -0.168
+  Total indirect    -0.272      -0.255      -0.246      -0.199      -0.153      -0.144      -0.127
+
+  Specific indirect 1
+    Y5_READ
+    Y3_READ_
+    GENDER          -0.064      -0.059      -0.056      -0.043      -0.030      -0.028      -0.023
+
+  Specific indirect 2
+    Y5_READ
+    Y3_READ_
+    GENDER          -0.021      -0.016      -0.014      -0.002       0.010       0.013       0.017
+
+  Specific indirect 3
+    Y5_READ
+    Y3_READ
+    GENDER          -0.217      -0.202      -0.194      -0.154      -0.115      -0.107      -0.092
+
+  Direct
+    Y5_READ
+    GENDER          -0.159      -0.140      -0.129      -0.077      -0.024      -0.014       0.005
+
+
+Effects from GENDER to Y7_READ
+
+  Total             -0.390      -0.364      -0.350      -0.280      -0.210      -0.197      -0.171
+  Total indirect    -0.325      -0.305      -0.294      -0.240      -0.186      -0.176      -0.156
+
+  Specific indirect 1
+    Y7_READ
+    Y5_READ_
+    GENDER          -0.012      -0.009      -0.008      -0.003       0.003       0.004       0.007
+
+  Specific indirect 2
+    Y7_READ
+    Y5_READ_
+    GENDER          -0.025      -0.021      -0.019      -0.009       0.001       0.003       0.006
+
+  Specific indirect 3
+    Y7_READ
+    Y3_READ
+    GENDER          -0.095      -0.088      -0.085      -0.066      -0.048      -0.044      -0.038
+
+  Specific indirect 4
+    Y7_READ
+    Y5_READ
+    GENDER          -0.079      -0.069      -0.064      -0.038      -0.012      -0.007       0.003
+
+  Specific indirect 5
+    Y7_READ
+    Y5_READ_
+    Y3_READ_
+    GENDER          -0.019      -0.017      -0.016      -0.011      -0.006      -0.005      -0.003
+
+  Specific indirect 6
+    Y7_READ
+    Y5_READ_
+    Y3_READ_
+    GENDER          -0.004      -0.003      -0.003      -0.002       0.000       0.000       0.000
+
+  Specific indirect 7
+    Y7_READ
+    Y5_READ_
+    Y3_READ
+    GENDER          -0.012      -0.011      -0.011      -0.007      -0.004      -0.003      -0.002
+
+  Specific indirect 8
+    Y7_READ
+    Y5_READ_
+    Y3_READ_
+    GENDER          -0.004      -0.003      -0.003      -0.001       0.000       0.000       0.001
+
+  Specific indirect 9
+    Y7_READ
+    Y5_READ_
+    Y3_READ_
+    GENDER          -0.008      -0.007      -0.006      -0.003       0.000       0.001       0.002
+
+  Specific indirect 10
+    Y7_READ
+    Y5_READ_
+    Y3_READ
+    GENDER          -0.002      -0.002      -0.002      -0.001       0.000       0.000       0.001
+
+  Specific indirect 11
+    Y7_READ
+    Y5_READ
+    Y3_READ_
+    GENDER          -0.032      -0.029      -0.028      -0.021      -0.015      -0.014      -0.011
+
+  Specific indirect 12
+    Y7_READ
+    Y5_READ
+    Y3_READ_
+    GENDER          -0.010      -0.008      -0.007      -0.001       0.005       0.006       0.009
+
+  Specific indirect 13
+    Y7_READ
+    Y5_READ
+    Y3_READ
+    GENDER          -0.108      -0.101      -0.097      -0.077      -0.056      -0.052      -0.045
+
+  Direct
+    Y7_READ
+    GENDER          -0.119      -0.100      -0.090      -0.040       0.010       0.020       0.039
+
+
+
+CONFIDENCE INTERVALS OF STANDARDIZED TOTAL, TOTAL INDIRECT, SPECIFIC INDIRECT, AND DIRECT EFFECTS
+
+
+STDYX Standardization
+
+                  Lower .5%  Lower 2.5%    Lower 5%    Estimate    Upper 5%  Upper 2.5%   Upper .5%
+
+Effects from GENDER to Y5_READ
+
+  Total             -0.192      -0.179      -0.172      -0.138      -0.103      -0.097      -0.084
+  Total indirect    -0.136      -0.127      -0.123      -0.099      -0.076      -0.072      -0.063
+
+  Specific indirect 1
+    Y5_READ
+    Y3_READ_
+    GENDER          -0.032      -0.029      -0.028      -0.022      -0.015      -0.014      -0.011
+
+  Specific indirect 2
+    Y5_READ
+    Y3_READ_
+    GENDER          -0.010      -0.008      -0.007      -0.001       0.005       0.006       0.009
+
+  Specific indirect 3
+    Y5_READ
+    Y3_READ
+    GENDER          -0.108      -0.101      -0.097      -0.077      -0.057      -0.054      -0.046
+
+  Direct
+    Y5_READ
+    GENDER          -0.079      -0.070      -0.065      -0.038      -0.012      -0.007       0.003
+
+
+Effects from GENDER to Y7_READ
+
+  Total             -0.193      -0.181      -0.174      -0.140      -0.105      -0.099      -0.086
+  Total indirect    -0.161      -0.151      -0.146      -0.120      -0.093      -0.088      -0.078
+
+  Specific indirect 1
+    Y7_READ
+    Y5_READ_
+    GENDER          -0.006      -0.005      -0.004      -0.001       0.002       0.002       0.003
+
+  Specific indirect 2
+    Y7_READ
+    Y5_READ_
+    GENDER          -0.012      -0.011      -0.010      -0.005       0.000       0.001       0.003
+
+  Specific indirect 3
+    Y7_READ
+    Y3_READ
+    GENDER          -0.047      -0.044      -0.042      -0.033      -0.024      -0.022      -0.019
+
+  Specific indirect 4
+    Y7_READ
+    Y5_READ
+    GENDER          -0.039      -0.035      -0.032      -0.019      -0.006      -0.003       0.001
+
+  Specific indirect 5
+    Y7_READ
+    Y5_READ_
+    Y3_READ_
+    GENDER          -0.009      -0.008      -0.008      -0.005      -0.003      -0.003      -0.002
+
+  Specific indirect 6
+    Y7_READ
+    Y5_READ_
+    Y3_READ_
+    GENDER          -0.002      -0.002      -0.001      -0.001       0.000       0.000       0.000
+
+  Specific indirect 7
+    Y7_READ
+    Y5_READ_
+    Y3_READ
+    GENDER          -0.006      -0.006      -0.005      -0.004      -0.002      -0.002      -0.001
+
+  Specific indirect 8
+    Y7_READ
+    Y5_READ_
+    Y3_READ_
+    GENDER          -0.002      -0.002      -0.002      -0.001       0.000       0.000       0.001
+
+  Specific indirect 9
+    Y7_READ
+    Y5_READ_
+    Y3_READ_
+    GENDER          -0.004      -0.003      -0.003      -0.001       0.000       0.000       0.001
+
+  Specific indirect 10
+    Y7_READ
+    Y5_READ_
+    Y3_READ
+    GENDER          -0.001      -0.001      -0.001       0.000       0.000       0.000       0.000
+
+  Specific indirect 11
+    Y7_READ
+    Y5_READ
+    Y3_READ_
+    GENDER          -0.016      -0.015      -0.014      -0.011      -0.007      -0.007      -0.006
+
+  Specific indirect 12
+    Y7_READ
+    Y5_READ
+    Y3_READ_
+    GENDER          -0.005      -0.004      -0.003       0.000       0.003       0.003       0.004
+
+  Specific indirect 13
+    Y7_READ
+    Y5_READ
+    Y3_READ
+    GENDER          -0.054      -0.050      -0.048      -0.038      -0.028      -0.026      -0.022
+
+  Direct
+    Y7_READ
+    GENDER          -0.059      -0.050      -0.045      -0.020       0.005       0.010       0.019
+
+
+
+
+MODEL MODIFICATION INDICES
+
+NOTE:  Modification indices for direct effects of observed dependent variables
+regressed on covariates and residual covariances among observed dependent
+variables may not be included.  To include these, request MODINDICES (ALL).
+
+Minimum M.I. value for printing the modification index    10.000
+
+                                   M.I.     E.P.C.  Std E.P.C.  StdYX E.P.C.
+
+No modification indices above the minimum value.
+
+
+
+     Beginning Time:  16:14:14
+        Ending Time:  16:14:14
+       Elapsed Time:  00:00:00
+
+
+
+MUTHEN & MUTHEN
+3463 Stoner Ave.
+Los Angeles, CA  90066
+
+Tel: (310) 391-9971
+Fax: (310) 391-8971
+Web: www.StatModel.com
+Support: Support@StatModel.com
+
+Copyright (c) 1998-2019 Muthen & Muthen

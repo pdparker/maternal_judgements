@@ -13,6 +13,7 @@ log/*.*
 documentation/*.Rmd
 documentation/*.tex
 documentation/*.md
+.out
 
 # User-specific files
 .Ruserdata

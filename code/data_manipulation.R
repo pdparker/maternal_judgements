@@ -209,6 +209,7 @@ child_data <- reduce(list(data_age_4,data_age_8,data_age_10,data_age_12,
     filter(y3_grade == 19 & !is.na(y3_stratum) & !is.na(y3_sid) & y3_status != 4 & parent_gender == 'mother') %>%
     dplyr::select(-starts_with("cohort"))
 
+
 # Produce Documentation ####
 # Commented out so that it does not run on source
 # dataMaid::makeCodebook(child_data,file = here("documentation", glue("{date}_codebook.Rmd")), replace=TRUE)
@@ -256,7 +257,7 @@ child_data_svy <- svydesign(ids = ~y3_sid,strata = ~y3_stratum, weights = ~y3_we
 
 # stack all waves
 child_data_long <- tmp %>%
-  dplyr::select(-ends_with("sid"),-ends_with("_w"), -ends_with("status")) %>%
+  dplyr::select(-ends_with("_w"), -ends_with("status")) %>%
   group_by(imputation) %>%
   pivot_longer(
     cols = y3_grade:y7_read.judgement.n,
@@ -264,14 +265,15 @@ child_data_long <- tmp %>%
     names_sep = "_"
   ) %>%
   ungroup %>%
-  #filter(imputation == "imp1") %>%
   arrange(year) %>%
   group_by(cid, imputation) %>%
-  #filter(n() != 1) %>%
-  #mutate(math.interest_lag = dplyr::lag(math.interest))
   mutate(across(matches("interest$|judgement$|math$|read$"), list(l = dplyr::lag),
                 .names = "{col}.{fn}")
          ) %>%
+  mutate(math.interest.l = as.numeric(math.interest.l),
+         math.judgement.l = as.numeric(math.judgement.l),
+         read.interest.l = as.numeric(read.interest.l),
+         read.judgement.l = as.numeric(read.judgement.l)) %>%
   ungroup
 
 child_data_imp_long <-  mitools::imputationList(child_data_long %>% group_split(imputation))

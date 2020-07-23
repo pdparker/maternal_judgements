@@ -1,0 +1,60 @@
+TITLE: Mediation Mod for Math: Free Cross Paths
+DATA: FILE = "../../data/mplus_data.dat";
+VARIABLE: 
+NAMES = y3_weight y3_math_interest y3_math_judgement y5_math_interest
+     y5_math_judgement y7_math_interest y7_math_judgement y3_math y5_math y7_math
+     y3_math_sch y5_math_sch y7_math_sch y3_read_interest y3_read_judgement
+     y5_read_interest y5_read_judgement y7_read_interest y7_read_judgement y3_read
+     y5_read y7_read y3_read_sch y5_read_sch y7_read_sch gender ses geo indig lang
+     y3_sid; 
+MISSING=.;
+
+USEVARIABLES ARE  y3_math_judgement y5_math_judgement y7_math_judgement
+				  y3_math_interest y5_math_interest y7_math_interest
+				  y3_math y5_math y7_math
+				  gender ses geo indig lang;
+
+WEIGHT ARE y3_weight;
+
+CLUSTER y3_sid;
+
+CATEGORICAL ARE 
+	y5_math_judgement y7_math_judgement
+	y5_math_interest y7_math_interest;
+
+DEFINE:
+STANDARDIZE y3_math y5_math y7_math ses;
+
+
+ANALYSIS: ESTIMATOR = WLSMV; TYPE = COMPLEX; PARAMETERIZATION = THETA;
+
+MODEL:
+y7_math_judgement ON y5_math_judgement y5_math_interest y5_math;
+y7_math_interest  ON y5_math_judgement y5_math_interest y5_math;
+y7_math           ON y5_math_judgement y5_math_interest y5_math;
+
+y5_math_judgement ON y3_math_judgement y3_math_interest y3_math;
+y5_math_interest  ON y3_math_judgement y3_math_interest y3_math;
+y5_math           ON y3_math_judgement y3_math_interest y3_math;
+
+y7_math_judgement ON y3_math_judgement;
+y7_math_interest  ON y3_math_interest;
+y7_math           ON y3_math;
+
+y7_math_judgement y7_math_interest y7_math WITH
+	y7_math_judgement y7_math_interest y7_math;
+
+y5_math_judgement y5_math_interest y5_math WITH
+	y5_math_judgement y5_math_interest y5_math;
+
+y3_math_judgement y3_math_interest y3_math WITH
+	y3_math_judgement y3_math_interest y3_math;
+
+y3_math_judgement-y7_math ON gender ses geo indig lang;
+
+MODEL INDIRECT:
+y5_math IND gender;
+y7_math IND gender;
+
+
+OUTPUT: stdyx; CINTERVAL; MODINDICES;

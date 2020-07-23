@@ -7,18 +7,43 @@ library(broom)
 library(mitools)
 library(brms)
 library(plm) 
+library(sjstats)
 # Run cleaning script
 source(here::here("code","data_manipulation.R"))
-
-# Assumption Checking ####
+# Set up data ####
 # Need a single imputation to run Bayes models
 tmp <- child_data_imp$imputations[[1]]
+# Get a year 5 dataset
+tmp_3 <- tmp %>%
+  filter(!is.na(y3_sid))
 # Get a year 5 dataset
 tmp_5 <- tmp %>%
   filter(!is.na(y5_sid))
 # Get a year 7 dataset
 tmp_7 <- tmp %>%
   filter(!is.na(y7_sid))
+# Cluster set-up ####
+
+# Mediation ####
+#Year 3
+m1 <- bf(y3_math.judgement ~ gender,
+         family = cumulative(link = "logit", threshold = "flexible"))
+m2 <- bf(y3_math ~ as.numeric(y3_math.judgement) + gender)
+m3 <- brm(m1 + m2 + set_rescor(FALSE), chains = 2, data = tmp_3, cores = 2)
+summary(m3)
+#Longitudinal
+m4 <- bf(math.judgement ~ gender + math.judgement.l + math.l,
+         family = cumulative(link = "logit", threshold = "flexible"))
+m5 <- bf(math ~ math.judgement + gender + math.judgement.l + math.l)
+m6 <- brm(m4 + m5 + set_rescor(FALSE), chains = 2, data = child_data_long, cores = 2)
+summary(m6)
+
+#Year 5
+m7 <- bf(y5_math.judgement ~ gender, family = cumulative(link = "logit", threshold = "flexible"))
+m8 <- bf(y5_math ~ as.numeric(y5_math.judgement) + gender)
+m9 <- brm(m7 + m8 + set_rescor(FALSE), chains = 2, data = tmp_5, cores = 2)
+summary(m9)
+
 
 #####             Warning: Don't forget that the NAPLAN scores have been devided by 100. Make sure to multiple coefs by 100 to put back on NAPLAN scale     #####
 
@@ -282,7 +307,44 @@ phtest(m_read_w, m_read_r)
 
 
 
+# Longitudinal Models ####
+library(ordinal)
+tmp <- child_data_imp_long$imputations[[1]]
+
+m_math_w <- brm(math.interest~math.l+math.interest.l+math.judgement.l+
+                         (1|cid) + (1|sid), data = tmp, cores = 4, chains = 4,
+                family = cumulative(link = "logit", threshold = "flexible"),
+                control = list(adapt_delta = 0.95))
+summary(m_math_w)
+conditional_effects(m_math_w, effects = "math.judgement.l", categorical = TRUE)
 
 
+m_read_w <- brm(read.interest~read.l+read.interest.l+read.judgement.l+
+                  (1|cid) + (1|sid), data = tmp, cores = 4, chains = 4,
+                family = cumulative(link = "logit", threshold = "flexible"),
+                control = list(adapt_delta = 0.95))
+summary(m_read_w)
+conditional_effects(m_read_w, effects= "read.judgement.l", categorical = TRUE)
+
+m_math_w <- brm(math.interest~math.l+math.interest.l+math.judgement.l+
+                  (1|cid) + (1|sid), data = tmp, cores = 4, chains = 4,
+                family = cumulative(link = "logit", threshold = "flexible"),
+                control = list(adapt_delta = 0.95))
+summary(m_math_w)
+conditional_effects(m_math_w, effects = "math.judgement.l", categorical = TRUE)
 
 
+m_read_a <- brm(read~read.l+read.interest.l+read.judgement.l+
+                  (1|cid) + (1|sid), data = tmp, cores = 4, chains = 4,
+                control = list(adapt_delta = 0.95))
+summary(m_read_a)
+conditional_effects(m_read_a, effects= "read.judgement.l")
+
+m_math_a <- brm_multiple(math~math.l+math.interest.l+math.judgement.l+
+                  (1|cid) + (1|sid), data = as.list(child_data_imp_long$imputations),
+                  cores = 4, chains = 4,
+                control = list(adapt_delta = 0.95))
+summary(m_math_a)
+a <- conditional_effects(m_math_a, effects = "math.judgement.l")
+
+?brm_multiple

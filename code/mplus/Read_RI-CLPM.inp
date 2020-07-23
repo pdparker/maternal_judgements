@@ -1,0 +1,81 @@
+TITLE: Reading RI-CLPM
+DATA: FILE = "../../data/mplus_data.dat";
+VARIABLE: 
+NAMES = y3_weight y3_math_interest y3_math_judgement y5_math_interest
+     y5_math_judgement y7_math_interest y7_math_judgement y3_math y5_math y7_math
+     y3_math_sch y5_math_sch y7_math_sch y3_read_interest y3_read_judgement
+     y5_read_interest y5_read_judgement y7_read_interest y7_read_judgement y3_read
+     y5_read y7_read y3_read_sch y5_read_sch y7_read_sch gender ses geo indig lang
+     y3_sid; 
+MISSING=.;
+
+WEIGHT ARE y3_weight;
+
+CLUSTER = y3_sid;
+
+USEVARIABLES ARE 
+  y3_read y5_read y7_read 
+	y3_read_interest y5_read_interest y7_read_interest
+	y3_read_judgement y5_read_judgement y7_read_judgement;
+
+ANALYSIS: ESTIMATOR = MLR; TYPE = COMPLEX;
+
+
+MODEL:
+!Random Intercept
+ri_read_int BY y3_read_interest@1 y5_read_interest@1 y7_read_interest@1;
+ri_read BY y3_read@1 y5_read@1 y7_read@1;
+ri_read_jud BY y3_read_judgement@1 y5_read_judgement@1 y7_read_judgement@1;
+
+!within person
+cx3 BY y3_read_interest@1; cx5 BY y5_read_interest@1; cx7 BY y7_read_interest@1;
+cy3 BY y3_read@1; cy5 BY y5_read@1; cy7 BY y7_read@1;
+cw3 BY y3_read_judgement@1; cw5 BY y5_read_judgement@1; cw7 BY y7_read_judgement@1;
+
+!constraints loadings
+y3_read_interest@0; y5_read_interest@0; y7_read_interest@0;
+y3_read@0; y5_read@0; y7_read@0;
+y3_read_judgement@0; y5_read_judgement@0; y7_read_judgement@0;
+
+!constraints covariances
+ri_read_int WITH cx3@0 cy3@0 cw3@0;
+ri_read_int WITH cx5@0 cy5@0 cw7@0;
+ri_read_int WITH cx7@0 cy5@0 cw7@0;
+
+ri_read WITH cx3@0 cy3@0 cw3@0;
+ri_read WITH cx5@0 cy5@0 cw7@0;
+ri_read WITH cx7@0 cy5@0 cw7@0;
+
+ri_read_jud WITH cx3@0 cy3@0 cw3@0;
+ri_read_jud WITH cx5@0 cy5@0 cw7@0;
+ri_read_jud WITH cx7@0 cy5@0 cw7@0;
+
+
+!cross-lagged 
+  cx7 ON cx5 (P1); cx5 ON cx3 (P1);
+  cx7 ON cy5 (P2); cx5 ON cy3 (P2);
+  cx7 ON cw5 (P3); cx5 ON cw3 (P3);
+
+  cy7 ON cy5 (P4); cy5 ON cy3 (P4);
+  cy7 ON cx5 (P5); cy5 ON cx3 (P5);
+  cy7 ON cw5 (P6); cy5 ON cw3 (P6);
+
+  cw7 ON cw5 (P7); cw5 ON cw3 (P7);
+  cw7 ON cx5 (P8); cw5 ON cx3 (P8);
+  cw7 ON cy5 (P9); cw5 ON cy3 (P9);
+
+! Residual correlations
+cx3 WITH cy3;
+cx5 WITH cy5;
+cx7 WITH cy7;
+
+cw3 WITH cy3;
+cw5 WITH cy5;
+cw7 WITH cy7;
+
+cw3 WITH cx3;
+cw5 WITH cx5;
+cw7 WITH cx7;
+
+
+OUTPUT: STDYX; CINTERVAL;
