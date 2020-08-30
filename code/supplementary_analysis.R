@@ -8,20 +8,46 @@ library(mitools)
 library(brms)
 library(plm) 
 library(sjstats)
-# Run cleaning script
-source(here::here("code","data_manipulation.R"))
-# Set up data ####
-# Need a single imputation to run Bayes models
-tmp <- child_data_imp$imputations[[1]]
-# Get a year 5 dataset
-tmp_3 <- tmp %>%
-  filter(!is.na(y3_sid))
-# Get a year 5 dataset
-tmp_5 <- tmp %>%
-  filter(!is.na(y5_sid))
-# Get a year 7 dataset
-tmp_7 <- tmp %>%
-  filter(!is.na(y7_sid))
+
+loadd(data_imp_mod)
+
+supplement_data <- function(data = data_imp_mod){
+  # Set up data ####
+  # Need a single imputation to run Bayes models
+  single_imp <- data$child_data_imp[[1]][[1]]
+  # Single longitudinal imputation
+  single_imp_long <- data$child_data_imp_long[[1]][[1]]
+  # Get a year 5 dataset
+  imp_y3 <- single_imp %>%
+    filter(!is.na(y3_sid))
+  # Get a year 5 dataset
+  imp_y5 <- single_imp %>%
+    filter(!is.na(y5_sid))
+  # Get a year 7 dataset
+  imp_y7 <- single_imp %>%
+    filter(!is.na(y7_sid))
+  
+  return(list(single_imp = single_imp,single_imp_long = single_imp_long,
+              imp_y3 = imp_y3, imp_y5 = imp_y5, imp_y7 = imp_y7)
+         )
+}
+
+m.a <- bf(math.judgement ~ as.numeric(math.judgement.l) +
+            as.numeric(math.l) + as.numeric(math.interest.l) +
+            iq + scale(ses) + geo + indig + lang + gender,
+         family = cumulative(link = "logit", threshold = "flexible"))
+m.b <- bf(math ~ as.numeric(math.judgement.l) +
+            as.numeric(math.l) + as.numeric(math.interest.l) +
+            iq + scale(ses) + geo + indig + lang + gender)
+m.c <- bf(math.interest ~ as.numeric(math.judgement.l) +
+            as.numeric(math.l) + as.numeric(math.interest.l) +
+            iq + scale(ses) + geo + indig + lang + gender,
+          family = cumulative(link = "logit", threshold = "flexible"))
+m.d <- brm(m.a + m.b + m.c, chains = 4,
+           data = single_imp_long, cores = 4)
+summary(m.d)
+
+
 # Cluster set-up ####
 
 # Mediation ####
@@ -35,7 +61,7 @@ summary(m3)
 m4 <- bf(math.judgement ~ gender + math.judgement.l + math.l,
          family = cumulative(link = "logit", threshold = "flexible"))
 m5 <- bf(math ~ math.judgement + gender + math.judgement.l + math.l)
-m6 <- brm(m4 + m5 + set_rescor(FALSE), chains = 2, data = child_data_long, cores = 2)
+m6 <- brm(m4 + m5 + set_rescor(FALSE), chains = 4, data = child_data_long, cores = 4)
 summary(m6)
 
 #Year 5

@@ -1,0 +1,83 @@
+---
+title: "Suplementary Materials: Maternal Judgements of Child Numeracy and Reading Ability Predict Gains in Academic Achievement and Interest"
+output: 
+  hrbrthemes::ipsum:
+    toc: true
+---
+```{r include=FALSE, message=FALSE,warning=FALSE, echo=FALSE}
+source(here::here("code","extract_indirect.R"))
+library(DT)
+library(hrbrthemes)
+library(tidyverse)
+library(drake)
+update_geom_font_defaults(font_rc)
+```
+
+# Full Results for Between Person Model: Reading
+```{r, message=FALSE, warning=FALSE, cache=FALSE, echo=FALSE}
+loadd(mplus_out)
+mplus_out$mediation_read.out$parameters$ci.unstandardized %>%
+  as_tibble() %>%
+  filter(str_detect(paramHeader,"ON")) %>%
+  mutate(Outcome = str_remove(paramHeader,"\\..+")) %>%
+  dplyr::select(Outcome, Predictor = param, 
+         Est = est, `-95 CI` = `low2.5`,`+95 CI` = `up2.5`) %>% 
+  mutate(Outcome = case_when(
+    str_detect(Outcome, "JUD") ~ str_replace(Outcome, 'Y(.)_R_JUD', 'Maternal Judgement Year \\1'),
+    str_detect(Outcome, "INT") ~ str_replace(Outcome, 'Y(.)_R_INT', 'Interest Year \\1'),
+    str_detect(Outcome, "READ") ~ str_replace(Outcome, 'Y(.)_READ', 'Achievement Year \\1')
+  ),
+  Predictor = case_when(
+    str_detect(Predictor, "JUD") ~ str_replace(Predictor, 'Y(.)_R_JUDGE', 'Maternal Judgement Year \\1'),
+    str_detect(Predictor, "INT") ~ str_replace(Predictor, 'Y(.)_R_INT', 'Interest Year \\1'),
+    str_detect(Predictor, "READ") ~ str_replace(Predictor, 'Y(.)_READ', 'Achievement Year \\1'),
+    Predictor == 'GENDER' ~ 'Girls',
+    Predictor == 'SES' ~ 'z-Socioeconomic Status',
+    Predictor == 'GEO' ~ 'Urban',
+    Predictor == 'INDIG' ~ 'non-Indigenous',
+    Predictor == 'LANG' ~ 'LOTE',
+  )
+  ) %>%
+  datatable(filter= 'top')
+```
+
+# Full Results for Between Person Model: Math
+```{r, message=FALSE, warning=FALSE, cache=FALSE, echo=FALSE}
+
+mplus_out$mediation_math.out$parameters$ci.stdyx.standardized %>%
+  as_tibble() %>%
+  filter(str_detect(paramHeader,"ON")) %>%
+  mutate(Outcome = str_remove(paramHeader,"\\..+")) %>%
+  dplyr::select(Outcome, Predictor = param, 
+         Est = est, `-95 CI` = `low2.5`,`+95 CI` = `up2.5`) %>% 
+  mutate(Outcome = case_when(
+    str_detect(Outcome, "JUD") ~ str_replace(Outcome, 'Y(.)_M_JUD', 'Maternal Judgement Year \\1'),
+    str_detect(Outcome, "INT") ~ str_replace(Outcome, 'Y(.)_M_INT', 'Interest Year \\1'),
+    str_detect(Outcome, "MATH") ~ str_replace(Outcome, 'Y(.)_MATH', 'Achievement Year \\1')
+  ),
+  Predictor = case_when(
+    str_detect(Predictor, "JUD") ~ str_replace(Predictor, 'Y(.)_M_JUDGE', 'Maternal Judgement Year \\1'),
+    str_detect(Predictor, "INT") ~ str_replace(Predictor, 'Y(.)_M_INT', 'Interest Year \\1'),
+    str_detect(Predictor, "MATH") ~ str_replace(Predictor, 'Y(.)_MATH', 'Achievement Year \\1'),
+    Predictor == 'GENDER' ~ 'Girls',
+    Predictor == 'SES' ~ 'z-Socioeconomic Status',
+    Predictor == 'GEO' ~ 'Urban',
+    Predictor == 'INDIG' ~ 'non-Indigenous',
+    Predictor == 'LANG' ~ 'LOTE',
+  )
+  ) %>%
+  datatable(filter = 'top')
+```
+
+
+# Mediation Effects for Reading Achievement
+
+```{r, message=FALSE, warning=FALSE, cache=FALSE, echo=FALSE}
+datatable(reading)
+```
+
+# Mediation Effects for Math
+
+```{r, message=FALSE, warning=FALSE, cache=FALSE, echo=FALSE}
+datatable(math, filter = 'top')
+```
