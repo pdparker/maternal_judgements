@@ -53,6 +53,17 @@ descript_fun <- function(child_d_svy){
   sd_math_judgement_5 <- MIcombine(sd_math_judgement_5)$coef %>% .^.5 %>% as_tibble()
   sd_read_judgement_5 <- with(child_d_svy, svyby(~I(y5_read-y5_read.sch),~y5_read.judgement, svyvar) )
   sd_read_judgement_5 <- MIcombine(sd_read_judgement_5)$coef %>% .^.5 %>% as_tibble()
+  ## Year 7
+  ### Mean
+  mean_math_judgement_7 <- with(child_d_svy, svyby(~I(y7_math-y7_math.sch),~y7_math.judgement, svymean))
+  mean_math_judgement_7 <- summary(MIcombine(mean_math_judgement_7))
+  mean_read_judgement_7 <- with(child_d_svy, svyby(~I(y7_read-y7_read.sch),~y7_read.judgement, svymean))
+  mean_read_judgement_7 <- summary(MIcombine(mean_read_judgement_7))
+  ### SD
+  sd_math_judgement_7 <- with(child_d_svy, svyby(~I(y7_math-y7_math.sch),~y7_math.judgement, svyvar) )
+  sd_math_judgement_7 <- MIcombine(sd_math_judgement_7)$coef %>% .^.5 %>% as_tibble()
+  sd_read_judgement_7 <- with(child_d_svy, svyby(~I(y7_read-y7_read.sch),~y7_read.judgement, svyvar) )
+  sd_read_judgement_7 <- MIcombine(sd_read_judgement_7)$coef %>% .^.5 %>% as_tibble()
   
   ## Math ach y3
   bias_math_3 <- with(child_d_svy, svytable(~I(y3_math>=y3_math.sch) + y3_math.judgement)) %>%
@@ -92,12 +103,33 @@ descript_fun <- function(child_d_svy){
     select(level, sample_pro, below_avg, above_avg) %>%
     mutate(across(sample_pro:above_avg, ~`*`(.,100)))
   
+  ## Math ach y7
+  bias_math_7 <- with(child_d_svy, svytable(~I(y7_math>=y7_math.sch) + y7_math.judgement)) %>%
+    table_map(margin=1) %>%
+    bind_cols(., 
+              with(child_d_svy, svytable(~y7_math.judgement)) %>%
+                table_map(rows = 1)) %>%
+    set_names(c("level","below_avg","above_avg","throw_away","sample_pro")) %>%
+    select(level, sample_pro, below_avg, above_avg) %>%
+    mutate(across(sample_pro:above_avg, ~`*`(.,100)))
+  ## Read ach y7
+  bias_read_7 <- with(child_d_svy, svytable(~I(y7_read>=y7_read.sch) + y7_read.judgement)) %>%
+    table_map(margin=1) %>%
+    bind_cols(., 
+              with(child_d_svy, svytable(~y7_read.judgement)) %>%
+                table_map(rows = 1)) %>%
+    set_names(c("level","below_avg","above_avg","throw_away","sample_pro")) %>%
+    select(level, sample_pro, below_avg, above_avg) %>%
+    mutate(across(sample_pro:above_avg, ~`*`(.,100)))
+  
   
 
   descript <- list(math_judgement_3 = bind_cols(mean_math_judgement_3,sd_math_judgement_3,bias_math_3),
                    read_judgement_3 = bind_cols(mean_read_judgement_3,sd_read_judgement_3,bias_read_3),
                    math_judgement_5 = bind_cols(mean_math_judgement_5,sd_math_judgement_5,bias_math_5),
-                   read_judgement_5 = bind_cols(mean_read_judgement_5,sd_read_judgement_5,bias_read_5)
+                   read_judgement_5 = bind_cols(mean_read_judgement_5,sd_read_judgement_5,bias_read_5),
+                   math_judgement_7 = bind_cols(mean_math_judgement_7,sd_math_judgement_7,bias_math_7),
+                   read_judgement_7 = bind_cols(mean_read_judgement_7,sd_read_judgement_7,bias_read_7)
   )
   
   descript <- reduce(descript, bind_rows) %>%
@@ -106,7 +138,7 @@ descript_fun <- function(child_d_svy){
     tidyr::separate(var, into = c("subject", "variable", "year")) %>%
     select(subject,year, level, mean, lower = `(lower`, upper = `upper)`, sd,
            sample_pro, above_avg, below_avg) %>%
-    mutate(across(sample_pro:below_avg, ~scales::percent(.,scale = 1)) ) %>%
+    mutate(across(sample_pro:below_avg, ~scales::percent(.,scale = 1, accuracy = 0.1)) ) %>%
     as_tibble()
   
   return(descript)
@@ -142,7 +174,7 @@ quant_reg <- function(d=data_imp_mod, quants = c(.1,.5,.9), imputations = 5,
 
 
 bias_model <- function(d, domain = "read", imps = 5){
-  f2 <- glue("{domain}.judgement~I({domain}-{domain}.sch)+ scale(iq) + scale(ses)+ geo + gender +
+  f2 <- glue("{domain}.judgement~I(z({domain}-{domain}.sch))+ scale(iq) + scale(ses)+ geo + gender +
                        indig + lang + (1|cid) + (1|sid)")
   model <- brm_multiple(as.formula(f2),
                      data=as.list(d$child_data_imp_long[[1]]),
@@ -152,8 +184,16 @@ bias_model <- function(d, domain = "read", imps = 5){
 
 
 bias_svy <- function(data = data_s, year = 3, domain = "read") {
-  f1 <- glue("y{year}_{domain}.judgement~I(y{year}_{domain}-y{year}_{domain}.sch)+ scale(iq) + scale(ses)+ geo + gender +
+  f1 <- glue("y{year}_{domain}.judgement~I(z(y{year}_{domain}-y{year}_{domain}.sch)) + scale(iq) + scale(ses)+ geo + gender +
                        indig + lang")
+  model <- with(data, svyolr(f1) )
+  capture.output(out <- summary(MIcombine(model)),file = 'NULL')
+  return(as_tibble(out,rownames = "variable"))
+}
+
+bias_svy_int <- function(data = data_s, year = 3, domain = "read") {
+  f1 <- glue("y{year}_{domain}.judgement~I(z(y{year}_{domain}-y{year}_{domain}.sch)) + scale(iq) + scale(ses)*gender + 
+              geo*gender + indig*gender + lang*gender")
   model <- with(data, svyolr(f1) )
   capture.output(out <- summary(MIcombine(model)),file = 'NULL')
   return(as_tibble(out,rownames = "variable"))

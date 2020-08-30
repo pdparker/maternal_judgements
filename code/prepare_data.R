@@ -186,12 +186,12 @@ school_admin <- function(data_age_4){
 return(school_admin)
 } 
 
-child_data <- function(data = list(data_age_4,data_age_8,data_age_10,
+child_data <- function(d = list(data_age_4,data_age_8,data_age_10,
                                    data_age_12,child_admin,school_admin)){
-  child_data = reduce(data,left_join, by = "cid") %>%
+  child_data = reduce(d,left_join, by = "cid") %>%
   #focus on children with known qualities at age 8 (i.e., remove home schooled children) and drop fathers
-  filter(y3_grade == 19 & !is.na(y3_stratum) & !is.na(y3_sid) & y3_status != 4 & parent_gender == 'mother') 
-  
+  filter(y3_grade == 19 & !is.na(y3_stratum) & !is.na(y3_sid) & y3_status != 4 & parent_gender == 'mother')
+    
   return(child_data)
 }
 

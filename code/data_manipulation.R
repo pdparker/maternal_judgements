@@ -217,12 +217,12 @@ child_data <- reduce(list(data_age_4,data_age_8,data_age_10,data_age_12,
 
 # Imputations & subsequent manipulation ####
 # as.data.frame added because Amelian does not like tidyverse
-set.seed(42)
-child_data_imp <- amelia(as.data.frame(child_data),m = 10, idvars = c('cid', 'y3_sid', 'y5_sid', 'y7_sid',
-                                                                          'y3_weight', 'parent_gender',
-                                                                          'y3_state', 'y3_stratum',
-                                                                      "y3_grade", "y5_grade",
-                                                                      "y3_status","y5_status","y7_status"),
+child_data_imp <- amelia(as.data.frame(child_data),m = 10, seed = 101,
+                         idvars = c('cid', 'y3_sid', 'y5_sid', 'y7_sid',
+                                     'y3_weight', 'parent_gender',
+                                      'y3_state', 'y3_stratum',
+                                      "y3_grade", "y5_grade",
+                                      "y3_status","y5_status","y7_status"),
                                noms = c('geo', 'indig', 'gender', 'lang'),
                                ords = c('y3_math.judgement', 'y3_math.interest', 'y5_math.judgement', 'y5_math.interest', 'y7_math.interest', 'y7_math.judgement',
                                         'y3_read.judgement', 'y3_read.interest', 'y5_read.judgement', 'y5_read.interest', 'y7_read.interest', 'y7_read.judgement')
