@@ -1,5 +1,6 @@
 TITLE: Math RI-CLPM
-DATA: FILE = "../../data/mplus_data.dat";
+DATA: FILE = "../../data/mplus_imp.txt";
+TYPE = IMPUTATION;
 VARIABLE: 
 NAMES = y3_weight y3_math_interest y3_math_judgement y5_math_interest
      y5_math_judgement y7_math_interest y7_math_judgement y3_math y5_math y7_math
@@ -12,14 +13,19 @@ MISSING=.;
 WEIGHT ARE y3_weight;
 
 USEVARIABLES ARE 
-  	y3_math y5_math y7_math 
+  y3_math y5_math y7_math 
 	y3_math_interest y5_math_interest y7_math_interest
 	y3_math_judgement y5_math_judgement y7_math_judgement;
 
 CLUSTER = y3_sid;
 
-ANALYSIS: ESTIMATOR = MLR; TYPE = complex; 
+DEFINE:
+  STANDARDIZE y3_math y5_math y7_math;
+  !y3_math = y3_math/100;
+  !y5_math = y3_math/100;
+  !y7_math = y3_math/100;
 
+ANALYSIS: ESTIMATOR = MLR; TYPE = complex;
 
 MODEL:
 !Random Intercept
@@ -52,17 +58,17 @@ ri_math_jud WITH cx7@0 cy5@0 cw7@0;
 
 
 !cross-lagged 
-  cx7 ON cx5 (P1); cx5 ON cx3 (P1);
-  cx7 ON cy5 (P2); cx5 ON cy3 (P2);
+  cx7 ON cx5 (P1); cx5 ON cx3 (P1); 
+  cx7 ON cy5 (P2); cx5 ON cy3 (P2); 
   cx7 ON cw5 (P3); cx5 ON cw3 (P3);
 
-  cy7 ON cy5 (P4); cy5 ON cy3 (P4);
+  cy7 ON cy5 (P4); cy5 ON cy3 (P4); 
   cy7 ON cx5 (P5); cy5 ON cx3 (P5);
   cy7 ON cw5 (P6); cy5 ON cw3 (P6);
 
-  cw7 ON cw5 (P7); cw5 ON cw3 (P7);
+  cw7 ON cw5 (P7); cw5 ON cw3 (P7); 
   cw7 ON cx5 (P8); cw5 ON cx3 (P8);
-  cw7 ON cy5 (P9); cw5 ON cy3 (P9);;
+  cw7 ON cy5 (P9); cw5 ON cy3 (P9);
 
 ! Residual correlations
 cx3 WITH cy3;

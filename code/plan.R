@@ -66,7 +66,6 @@ drake_ggraph(plan, label_nodes = TRUE, targets_only = TRUE)
 ggsave(here("figures","dependency.png"), dpi = 300, width = 12, height = 12)
 
 
-
 # Old Models 
 # quant = target(
 #   quant_reg(data_imp_mod, domain = dom, year = y),

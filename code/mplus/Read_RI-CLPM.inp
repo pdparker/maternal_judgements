@@ -1,5 +1,6 @@
 TITLE: Reading RI-CLPM
-DATA: FILE = "../../data/mplus_data.dat";
+DATA: FILE = "../../data/mplus_imp.txt";
+TYPE = IMPUTATION;
 VARIABLE: 
 NAMES = y3_weight y3_math_interest y3_math_judgement y5_math_interest
      y5_math_judgement y7_math_interest y7_math_judgement y3_math y5_math y7_math

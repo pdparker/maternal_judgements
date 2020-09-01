@@ -5,13 +5,32 @@ output:
     toc: true
 ---
 ```{r include=FALSE, message=FALSE,warning=FALSE, echo=FALSE}
-source(here::here("code","extract_indirect.R"))
+source(here::here("code","packages.R"))
+source(here::here("code","custom_functions.R"))
 library(DT)
 library(hrbrthemes)
-library(tidyverse)
 library(drake)
 update_geom_font_defaults(font_rc)
 ```
+
+# Model Fits
+
+```{r, message=FALSE,warning=FALSE, echo=FALSE}
+loadd(mplus_sum)
+mplus_sum %>%
+  select(Title, ChiSqM_Mean, ChiSqM_DF,
+         RMSEA_Mean,TLI_Mean, CFI_Mean) %>%
+  set_names(c('Model', 'Chi-sq', 'DF', 'RMSEA', 'TLI','CFI')) %>%
+  mutate(Model = c('Numeracy RI-CLPM', 'Numeracy CLPM',
+                   'Reading CLPM', 'Reading RI-CLPM')) %>%
+  arrange(Model) %>%
+  datatable(
+    caption = "Table S1. Model Fit Statistics for Within and Between Models."
+  )
+```
+_Notes._ RI-CLPM = Random Intercept Cross-lagged panel model (Within model). 
+    CLPM = Cross-lagged panel model (Between model)
+
 
 # Full Results for Between Person Model: Reading
 ```{r, message=FALSE, warning=FALSE, cache=FALSE, echo=FALSE}
@@ -38,7 +57,7 @@ mplus_out$mediation_read.out$parameters$ci.unstandardized %>%
     Predictor == 'LANG' ~ 'LOTE',
   )
   ) %>%
-  datatable(filter= 'top')
+  datatable(filter= 'top', caption = "Table S2. Full Reading CLPM (Between) Model Output")
 ```
 
 # Full Results for Between Person Model: Math
@@ -66,18 +85,29 @@ mplus_out$mediation_math.out$parameters$ci.stdyx.standardized %>%
     Predictor == 'LANG' ~ 'LOTE',
   )
   ) %>%
-  datatable(filter = 'top')
+  datatable(filter = 'top', caption = "Table S2. Full Numeracy CLPM (Between) Model Output")
 ```
 
 
 # Mediation Effects for Reading Achievement
 
 ```{r, message=FALSE, warning=FALSE, cache=FALSE, echo=FALSE}
-datatable(reading)
+reading <- my_extract_indirect()
+datatable(reading, caption = "Table S3. Reading Total, Direct, and Indirect Effects")
 ```
 
 # Mediation Effects for Math
 
 ```{r, message=FALSE, warning=FALSE, cache=FALSE, echo=FALSE}
-datatable(math, filter = 'top')
+math <- my_extract_indirect(file = here("code", "mplus","mediation_math.out"),
+                            type = 'Math')
+datatable(math, filter = 'top', caption = "Table S4. Reading Total, Direct, and Indirect Effects")
+```
+
+# Assumption Checks
+```{r, message=FALSE, warning=FALSE, cache=FALSE, echo=FALSE}
+library(googlesheets4)
+assump <- read_sheet("1qEJvz45Pm6HSDpRQArRQTCF6ecAGidcibhrje3M8iJI")
+
+datatable(assump, filter = 'top', caption = 'Table S5. Assumption Checks')
 ```
