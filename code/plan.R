@@ -58,11 +58,11 @@ plan <- drake_plan(
   figure2 = figure_math(plots)
 )
 
-vis_drake_graph(plan,targets_only = TRUE)
+vis_drake_graph(plan,targets_only = TRUE,file = here("figures","dependency.html"))
 make(plan)
 #clean()
 
-drake_ggraph(plan, label_nodes = TRUE, targets_only = TRUE)
+drake_ggraph(plan, label_nodes = TRUE, targets_only = TRUE,)
 ggsave(here("figures","dependency.png"), dpi = 300, width = 12, height = 12)
 
 

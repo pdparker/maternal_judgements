@@ -110,4 +110,5 @@ library(googlesheets4)
 assump <- read_sheet("1qEJvz45Pm6HSDpRQArRQTCF6ecAGidcibhrje3M8iJI")
 
 datatable(assump, filter = 'top', caption = 'Table S5. Assumption Checks')
+
 ```
