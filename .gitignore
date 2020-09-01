@@ -17,6 +17,7 @@ code/mplus/*.out
 figures/*.html
 code/*.html
 code/archive/
+figures/dependency_files/
 
 # User-specific files
 .Ruserdata
