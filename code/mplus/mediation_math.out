@@ -1,22 +1,23 @@
 Mplus VERSION 8.4 (Mac)
 MUTHEN & MUTHEN
-07/23/2020   4:14 PM
+08/28/2020   4:29 PM
 
 INPUT INSTRUCTIONS
 
   TITLE: Mediation Mod for Math: Free Cross Paths
-  DATA: FILE = "../../data/mplus_data.dat";
+  DATA: FILE = "../../data/mplus_imp.txt";
+  TYPE = IMPUTATION;
   VARIABLE:
-  NAMES = y3_weight y3_math_interest y3_math_judgement y5_math_interest
-       y5_math_judgement y7_math_interest y7_math_judgement y3_math y5_math y7_math
+  NAMES = y3_weight y3_m_int y3_m_judge y5_m_int
+       y5_m_judge y7_m_int y7_m_judge y3_math y5_math y7_math
        y3_math_sch y5_math_sch y7_math_sch y3_read_interest y3_read_judgement
        y5_read_interest y5_read_judgement y7_read_interest y7_read_judgement y3_read
        y5_read y7_read y3_read_sch y5_read_sch y7_read_sch gender ses geo indig lang
        y3_sid;
   MISSING=.;
 
-  USEVARIABLES ARE  y3_math_judgement y5_math_judgement y7_math_judgement
-  				  y3_math_interest y5_math_interest y7_math_interest
+  USEVARIABLES ARE  y3_m_judge y5_m_judge y7_m_judge
+  				  y3_m_int y5_m_int y7_m_int
   				  y3_math y5_math y7_math
   				  gender ses geo indig lang;
 
@@ -25,42 +26,42 @@ INPUT INSTRUCTIONS
   CLUSTER y3_sid;
 
   CATEGORICAL ARE
-  	y5_math_judgement y7_math_judgement
-  	y5_math_interest y7_math_interest;
+  	y5_m_judge y7_m_judge
+  	y5_m_int y7_m_int;
 
   DEFINE:
-  STANDARDIZE y3_math y5_math y7_math ses;
+  STANDARDIZE ses y3_math y5_math y7_math y3_m_judge y3_m_int;
 
 
   ANALYSIS: ESTIMATOR = WLSMV; TYPE = COMPLEX; PARAMETERIZATION = THETA;
 
   MODEL:
-  y7_math_judgement ON y5_math_judgement y5_math_interest y5_math;
-  y7_math_interest  ON y5_math_judgement y5_math_interest y5_math;
-  y7_math           ON y5_math_judgement y5_math_interest y5_math;
+  y7_m_judge ON y5_m_judge y5_m_int y5_math;
+  y7_m_int  ON y5_m_judge y5_m_int y5_math;
+  y7_math           ON y5_m_judge y5_m_int y5_math;
 
-  y5_math_judgement ON y3_math_judgement y3_math_interest y3_math;
-  y5_math_interest  ON y3_math_judgement y3_math_interest y3_math;
-  y5_math           ON y3_math_judgement y3_math_interest y3_math;
+  y5_m_judge ON y3_m_judge y3_m_int y3_math;
+  y5_m_int  ON y3_m_judge y3_m_int y3_math;
+  y5_math           ON y3_m_judge y3_m_int y3_math;
 
-  y7_math_judgement ON y3_math_judgement;
-  y7_math_interest  ON y3_math_interest;
+  y7_m_judge ON y3_m_judge;
+  y7_m_int  ON y3_m_int;
   y7_math           ON y3_math;
 
-  y7_math_judgement y7_math_interest y7_math WITH
-  	y7_math_judgement y7_math_interest y7_math;
+  y7_m_judge y7_m_int y7_math WITH
+  	y7_m_judge y7_m_int y7_math;
 
-  y5_math_judgement y5_math_interest y5_math WITH
-  	y5_math_judgement y5_math_interest y5_math;
+  y5_m_judge y5_m_int y5_math WITH
+  	y5_m_judge y5_m_int y5_math;
 
-  y3_math_judgement y3_math_interest y3_math WITH
-  	y3_math_judgement y3_math_interest y3_math;
+  y3_m_judge y3_m_int y3_math WITH
+  	y3_m_judge y3_m_int y3_math;
 
-  y3_math_judgement-y7_math ON gender ses geo indig lang;
+  y3_m_judge-y7_math ON gender ses geo indig lang;
 
   MODEL INDIRECT:
-  y5_math IND gender;
-  y7_math IND gender;
+  y5_math IND  gender;
+  y7_math IND  gender;
 
 
   OUTPUT: stdyx; CINTERVAL; MODINDICES;
@@ -70,10 +71,9 @@ INPUT INSTRUCTIONS
 *** WARNING in VARIABLE command
   Note that only the first 8 characters of variable names are used in the output.
   Shorten variable names to avoid any confusion.
-*** WARNING
-  Data set contains cases with missing on x-variables.
-  These cases were not included in the analysis.
-  Number of cases with missing on x-variables:  11
+*** WARNING in OUTPUT command
+  MODINDICES option is not available for multiple imputation.
+  Request for MODINDICES is ignored.
    2 WARNING(S) FOUND IN THE INPUT INSTRUCTIONS
 
 
@@ -83,7 +83,11 @@ Mediation Mod for Math: Free Cross Paths
 SUMMARY OF ANALYSIS
 
 Number of groups                                                 1
-Number of observations                                        2591
+Average number of observations                                2602
+
+Number of replications
+    Requested                                                    5
+    Completed                                                    5
 
 Number of dependent variables                                    9
 Number of independent variables                                  5
@@ -92,10 +96,10 @@ Number of continuous latent variables                            0
 Observed dependent variables
 
   Continuous
-   Y3_MATH_JU  Y3_MATH_IN  Y3_MATH     Y5_MATH     Y7_MATH
+   Y3_M_JUDGE  Y3_M_INT    Y3_MATH     Y5_MATH     Y7_MATH
 
   Binary and ordered categorical (ordinal)
-   Y5_MATH_    Y7_MATH_    Y5_MATH_    Y7_MATH_
+   Y5_M_JUD    Y7_M_JUD    Y5_M_INT    Y7_M_INT
 
 Observed independent variables
    GENDER      SES         GEO         INDIG       LANG
@@ -115,19 +119,43 @@ Parameterization                                             THETA
 Link                                                        PROBIT
 
 Input data file(s)
-  ../../data/mplus_data.dat
+  Multiple data files from
+    ../../data/mplus_imp.txt
 
 Input data format  FREE
 
 
-SUMMARY OF DATA
+SUMMARY OF DATA FOR THE FIRST DATA SET
 
-     Number of missing data patterns            60
-     Number of clusters                       1608
+     Number of missing data patterns             1
+     Number of clusters                       1614
 
 
 
-COVARIANCE COVERAGE OF DATA
+SUMMARY OF MISSING DATA PATTERNS FOR THE FIRST DATA SET
+
+
+     MISSING DATA PATTERNS (x = not missing)
+
+           1
+ Y3_M_JUD  x
+ Y5_M_JUD  x
+ Y7_M_JUD  x
+ Y3_M_INT  x
+ Y5_M_INT  x
+ Y7_M_INT  x
+ Y3_MATH   x
+ Y5_MATH   x
+ Y7_MATH   x
+
+
+     MISSING DATA PATTERN FREQUENCIES
+
+    Pattern   Frequency
+          1        2602
+
+
+COVARIANCE COVERAGE OF DATA FOR THE FIRST DATA SET
 
 Minimum covariance coverage value   0.100
 
@@ -136,85 +164,121 @@ Minimum covariance coverage value   0.100
 
 
            Covariance Coverage
-              Y3_MATH_      Y5_MATH_      Y7_MATH_      Y3_MATH_      Y5_MATH_
+              Y3_M_JUD      Y5_M_JUD      Y7_M_JUD      Y3_M_INT      Y5_M_INT
               ________      ________      ________      ________      ________
- Y3_MATH_       0.994
- Y5_MATH_       0.939         0.944
- Y7_MATH_       0.884         0.868         0.889
- Y3_MATH_       0.987         0.938         0.883         0.993
- Y5_MATH_       0.934         0.930         0.865         0.936         0.940
- Y7_MATH_       0.886         0.870         0.875         0.887         0.870
- Y3_MATH        0.970         0.923         0.869         0.970         0.919
- Y5_MATH        0.936         0.895         0.840         0.935         0.892
- Y7_MATH        0.877         0.848         0.820         0.876         0.844
+ Y3_M_JUD       1.000
+ Y5_M_JUD       1.000         1.000
+ Y7_M_JUD       1.000         1.000         1.000
+ Y3_M_INT       1.000         1.000         1.000         1.000
+ Y5_M_INT       1.000         1.000         1.000         1.000         1.000
+ Y7_M_INT       1.000         1.000         1.000         1.000         1.000
+ Y3_MATH        1.000         1.000         1.000         1.000         1.000
+ Y5_MATH        1.000         1.000         1.000         1.000         1.000
+ Y7_MATH        1.000         1.000         1.000         1.000         1.000
 
 
            Covariance Coverage
-              Y7_MATH_      Y3_MATH       Y5_MATH       Y7_MATH
+              Y7_M_INT      Y3_MATH       Y5_MATH       Y7_MATH
               ________      ________      ________      ________
- Y7_MATH_       0.892
- Y3_MATH        0.871         0.976
- Y5_MATH        0.843         0.920         0.941
- Y7_MATH        0.821         0.866         0.842         0.882
+ Y7_M_INT       1.000
+ Y3_MATH        1.000         1.000
+ Y5_MATH        1.000         1.000         1.000
+ Y7_MATH        1.000         1.000         1.000         1.000
 
 
-UNIVARIATE PROPORTIONS AND COUNTS FOR CATEGORICAL VARIABLES
+UNIVARIATE PROPORTIONS FOR CATEGORICAL VARIABLES
 
-    Y5_MATH_
-      Category 1    0.019           44.870
-      Category 2    0.085          205.894
-      Category 3    0.353          853.191
-      Category 4    0.262          633.854
-      Category 5    0.282          681.262
-    Y7_MATH_
-      Category 1    0.025           56.263
-      Category 2    0.104          234.853
-      Category 3    0.334          752.576
-      Category 4    0.268          604.127
-      Category 5    0.268          603.160
-    Y5_MATH_
-      Category 1    0.102          246.665
-      Category 2    0.406          978.730
-      Category 3    0.492         1186.007
-    Y7_MATH_
-      Category 1    0.158          357.677
-      Category 2    0.425          961.813
-      Category 3    0.417          943.214
+NOTE:  These are average results over 5 data sets.
 
-
-
-UNIVARIATE SAMPLE STATISTICS
+    Y5_M_JUD
+      Category 1    0.022
+      Category 2    0.089
+      Category 3    0.346
+      Category 4    0.260
+      Category 5    0.283
+    Y7_M_JUD
+      Category 1    0.034
+      Category 2    0.115
+      Category 3    0.318
+      Category 4    0.268
+      Category 5    0.265
+    Y5_M_INT
+      Category 1    0.108
+      Category 2    0.398
+      Category 3    0.494
+    Y7_M_INT
+      Category 1    0.170
+      Category 2    0.408
+      Category 3    0.423
 
 
-     UNIVARIATE HIGHER-ORDER MOMENT DESCRIPTIVE STATISTICS
+SAMPLE STATISTICS
 
-         Variable/         Mean/     Skewness/   Minimum/ % with                Percentiles
-        Sample Size      Variance    Kurtosis    Maximum  Min/Max      20%/60%    40%/80%    Median
-
-     Y3_MATH_JUDGEME       3.729      -0.240       1.000    1.32%       3.000      3.000      4.000
-            2575.000       1.017      -0.718       5.000   29.32%       4.000      5.000
-     Y3_MATH_INTERES       2.486      -1.014       1.000   12.63%       2.000      3.000      3.000
-            2574.000       0.503      -0.335       3.000   60.61%       3.000      3.000
-     Y3_MATH               0.000       0.264      -5.591    0.04%      -0.743     -0.219      0.050
-            2529.000       1.000       0.551       3.354    1.07%       0.359      0.909
-     Y5_MATH               0.000       0.098      -6.680    0.08%      -0.714     -0.210      0.045
-            2439.000       1.000       1.889       3.957    0.16%       0.310      0.890
-     Y7_MATH               0.000       0.483      -2.660    0.04%      -0.799     -0.264     -0.037
-            2286.000       1.000       0.304       4.982    0.04%       0.274      0.866
-     GENDER                0.520      -0.078       0.000   48.17%       0.000      0.000      1.000
-            2591.000       0.250      -1.994       1.000   51.83%       1.000      1.000
-     SES                   0.000       0.347      -3.721    0.04%      -0.707     -0.220      0.043
-            2591.000       1.000      -0.163       3.143    0.04%       0.323      1.104
-     GEO                   0.652      -0.637       0.000   35.55%       0.000      1.000      1.000
-            2591.000       0.227      -1.594       1.000   64.45%       1.000      1.000
-     INDIG                 0.022       6.594       0.000   98.07%       0.000      0.000      0.000
-            2591.000       0.021      41.479       1.000    1.93%       0.000      0.000
-     LANG                  0.843      -1.887       0.000   12.54%       1.000      1.000      1.000
-            2591.000       0.132       1.561       1.000   87.46%       1.000      1.000
+NOTE:  These are average results over 5 data sets.
 
 
-THE MODEL ESTIMATION TERMINATED NORMALLY
+     ESTIMATED SAMPLE STATISTICS
 
+
+           Means/Intercepts/Thresholds
+              Y3_M_JUD      Y5_M_JUD      Y5_M_JUD      Y5_M_JUD      Y5_M_JUD
+              ________      ________      ________      ________      ________
+               -0.022        -2.173        -1.371        -0.246         0.443
+
+
+           Means/Intercepts/Thresholds
+              Y7_M_JUD      Y7_M_JUD      Y7_M_JUD      Y7_M_JUD      Y3_M_INT
+              ________      ________      ________      ________      ________
+               -2.154        -1.351        -0.369         0.361         0.049
+
+
+           Means/Intercepts/Thresholds
+              Y5_M_INT      Y5_M_INT      Y7_M_INT      Y7_M_INT      Y3_MATH
+              ________      ________      ________      ________      ________
+               -1.185         0.080        -0.956         0.216         0.075
+
+
+           Means/Intercepts/Thresholds
+              Y5_MATH       Y7_MATH
+              ________      ________
+                0.117         0.184
+
+
+           Slopes
+              GENDER        SES           GEO           INDIG         LANG
+              ________      ________      ________      ________      ________
+ Y3_M_JUD       0.131         0.115        -0.029         0.014        -0.033
+ Y5_M_JUD       0.123         0.098        -0.093        -0.316        -0.158
+ Y7_M_JUD      -0.017         0.185        -0.084        -0.516        -0.247
+ Y3_M_INT       0.135        -0.025        -0.037        -0.022        -0.112
+ Y5_M_INT       0.318        -0.004         0.020        -0.051        -0.130
+ Y7_M_INT       0.304         0.081         0.001        -0.403        -0.157
+ Y3_MATH        0.005         0.314        -0.012        -0.584        -0.068
+ Y5_MATH        0.069         0.302         0.059        -0.835        -0.204
+ Y7_MATH        0.044         0.369         0.031        -0.632        -0.252
+
+
+           Covariances/Correlations/Residual Correlations
+              Y3_M_JUD      Y5_M_JUD      Y7_M_JUD      Y3_M_INT      Y5_M_INT
+              ________      ________      ________      ________      ________
+ Y3_M_JUD       0.983
+ Y5_M_JUD       0.529
+ Y7_M_JUD       0.435         0.526
+ Y3_M_INT       0.253         0.203         0.171         0.993
+ Y5_M_INT       0.240         0.350         0.311         0.331
+ Y7_M_INT       0.212         0.294         0.441         0.270         0.506
+ Y3_MATH        0.469         0.454         0.393         0.141         0.215
+ Y5_MATH        0.476         0.523         0.468         0.162         0.277
+ Y7_MATH        0.473         0.509         0.519         0.178         0.296
+
+
+           Covariances/Correlations/Residual Correlations
+              Y7_M_INT      Y3_MATH       Y5_MATH       Y7_MATH
+              ________      ________      ________      ________
+ Y7_M_INT
+ Y3_MATH        0.190         0.888
+ Y5_MATH        0.258         0.695         0.874
+ Y7_MATH        0.320         0.711         0.782         0.836
 
 
 MODEL FIT INFORMATION
@@ -223,179 +287,256 @@ Number of Free Parameters                       97
 
 Chi-Square Test of Model Fit
 
-          Value                              4.572*
-          Degrees of Freedom                     6
-          P-Value                           0.5997
+        Degrees of freedom                       6
 
-*   The chi-square value for MLM, MLMV, MLR, ULSMV, WLSM and WLSMV cannot be used
-    for chi-square difference testing in the regular way.  MLM, MLR and WLSM
-    chi-square difference testing is described on the Mplus website.  MLMV, WLSMV,
-    and ULSMV difference testing is done using the DIFFTEST option.
+        Mean                                 9.506
+        Std Dev                              1.102
+        Number of successful computations        5
+
+             Proportions                   Percentiles
+        Expected    Observed         Expected       Observed
+           0.990       1.000            0.872          7.588
+           0.980       1.000            1.134          7.588
+           0.950       1.000            1.635          7.588
+           0.900       1.000            2.204          7.588
+           0.800       1.000            3.070          7.588
+           0.700       1.000            3.828          7.588
+           0.500       1.000            5.348          9.179
+           0.300       1.000            7.231          9.798
+           0.200       0.800            8.558         10.093
+           0.100       0.200           10.645         10.093
+           0.050       0.000           12.592         10.093
+           0.020       0.000           15.033         10.093
+           0.010       0.000           16.812         10.093
 
 RMSEA (Root Mean Square Error Of Approximation)
 
-          Estimate                           0.000
-          90 Percent C.I.                    0.000  0.022
-          Probability RMSEA <= .05           1.000
+        Mean                                 0.015
+        Std Dev                              0.003
+        Number of successful computations        5
+
+        Cumulative Distribution Function
+           Value    Function Value
+           0.990       1.000
+           0.980       1.000
+           0.950       1.000
+           0.900       1.000
+           0.800       1.000
+           0.700       1.000
+           0.500       1.000
+           0.300       1.000
+           0.200       1.000
+           0.100       1.000
+           0.050       1.000
+           0.020       1.000
+           0.010       0.000
 
 CFI/TLI
 
-          CFI                                1.000
-          TLI                                1.000
+    CFI
 
-Chi-Square Test of Model Fit for the Baseline Model
+        Mean                                 1.000
+        Std Dev                              0.000
+        Number of successful computations        5
 
-          Value                           9306.593
-          Degrees of Freedom                    81
-          P-Value                           0.0000
+        Cumulative Distribution Function
+           Value    Function Value
+           0.990       0.000
+           0.980       0.000
+           0.950       0.000
+           0.900       0.000
+           0.800       0.000
+           0.700       0.000
+           0.500       0.000
+           0.300       0.000
+           0.200       0.000
+           0.100       0.000
+           0.050       0.000
+           0.020       0.000
+           0.010       0.000
+
+    TLI
+
+        Mean                                 0.995
+        Std Dev                              0.002
+        Number of successful computations        5
+
+        Cumulative Distribution Function
+           Value    Function Value
+           0.990       0.000
+           0.980       0.000
+           0.950       0.000
+           0.900       0.000
+           0.800       0.000
+           0.700       0.000
+           0.500       0.000
+           0.300       0.000
+           0.200       0.000
+           0.100       0.000
+           0.050       0.000
+           0.020       0.000
+           0.010       0.000
 
 SRMR (Standardized Root Mean Square Residual)
 
-          Value                              0.002
+        Mean                                 0.003
+        Std Dev                              0.000
+        Number of successful computations        5
 
-Optimum Function Value for Weighted Least-Squares Estimator
-
-          Value                     0.24330082D-03
-
+        Cumulative Distribution Function
+           Value    Function Value
+           0.990       1.000
+           0.980       1.000
+           0.950       1.000
+           0.900       1.000
+           0.800       1.000
+           0.700       1.000
+           0.500       1.000
+           0.300       1.000
+           0.200       1.000
+           0.100       1.000
+           0.050       1.000
+           0.020       1.000
+           0.010       1.000
 
 
 MODEL RESULTS
 
-                                                    Two-Tailed
-                    Estimate       S.E.  Est./S.E.    P-Value
+                                                    Two-Tailed   Rate of
+                    Estimate       S.E.  Est./S.E.    P-Value    Missing
 
- Y7_MATH_ ON
-    Y5_MATH_JU         0.353      0.031     11.565      0.000
-    Y5_MATH_IN         0.152      0.029      5.261      0.000
-    Y5_MATH            0.291      0.030      9.789      0.000
-    Y3_MATH_JU         0.192      0.030      6.454      0.000
-    GENDER            -0.186      0.055     -3.413      0.001
-    SES                0.077      0.031      2.454      0.014
-    GEO               -0.050      0.061     -0.831      0.406
-    INDIG             -0.308      0.294     -1.048      0.295
-    LANG              -0.199      0.089     -2.242      0.025
+ Y7_M_JUD ON
+    Y5_M_JUDGE         0.301      0.030     10.049      0.000      0.188
+    Y5_M_INT           0.128      0.028      4.533      0.000      0.156
+    Y5_MATH            0.292      0.032      9.019      0.000      0.276
+    Y3_M_JUDGE         0.187      0.033      5.693      0.000      0.308
+    GENDER            -0.156      0.055     -2.844      0.004      0.212
+    SES                0.086      0.037      2.318      0.020      0.479
+    GEO               -0.085      0.068     -1.259      0.208      0.391
+    INDIG             -0.277      0.240     -1.156      0.248      0.048
+    LANG              -0.166      0.082     -2.030      0.042      0.109
 
- Y7_MATH_ ON
-    Y5_MATH_JU         0.103      0.030      3.424      0.001
-    Y5_MATH_IN         0.502      0.035     14.183      0.000
-    Y5_MATH            0.076      0.036      2.101      0.036
-    Y3_MATH_IN         0.161      0.039      4.093      0.000
-    GENDER             0.165      0.058      2.831      0.005
-    SES                0.067      0.030      2.193      0.028
-    GEO                0.018      0.064      0.286      0.775
-    INDIG             -0.297      0.282     -1.052      0.293
-    LANG              -0.076      0.086     -0.893      0.372
+ Y7_M_INT ON
+    Y5_M_JUDGE         0.082      0.031      2.607      0.009      0.269
+    Y5_M_INT           0.461      0.045     10.290      0.000      0.508
+    Y5_MATH            0.098      0.037      2.630      0.009      0.244
+    Y3_M_INT           0.119      0.027      4.378      0.000      0.053
+    GENDER             0.166      0.055      3.035      0.002      0.040
+    SES                0.061      0.032      1.919      0.055      0.255
+    GEO               -0.002      0.069     -0.026      0.979      0.272
+    INDIG             -0.336      0.257     -1.307      0.191      0.250
+    LANG              -0.071      0.115     -0.619      0.536      0.617
 
  Y7_MATH  ON
-    Y5_MATH_JU         0.067      0.015      4.535      0.000
-    Y5_MATH_IN         0.047      0.016      2.880      0.004
-    Y5_MATH            0.489      0.016     30.817      0.000
-    Y3_MATH            0.304      0.015     20.034      0.000
-    GENDER             0.014      0.029      0.484      0.628
-    SES                0.113      0.015      7.737      0.000
-    GEO                0.015      0.032      0.468      0.639
-    INDIG             -0.002      0.146     -0.013      0.990
-    LANG              -0.086      0.039     -2.190      0.029
+    Y5_M_JUDGE         0.066      0.013      5.155      0.000      0.142
+    Y5_M_INT           0.053      0.014      3.731      0.000      0.210
+    Y5_MATH            0.497      0.015     33.123      0.000      0.195
+    Y3_MATH            0.299      0.016     18.928      0.000      0.324
+    GENDER            -0.020      0.024     -0.815      0.415      0.093
+    SES                0.117      0.012      9.440      0.000      0.057
+    GEO                0.012      0.027      0.442      0.658      0.051
+    INDIG             -0.014      0.107     -0.132      0.895      0.422
+    LANG              -0.110      0.034     -3.230      0.001      0.092
 
- Y5_MATH_ ON
-    Y3_MATH_JU         0.497      0.027     18.091      0.000
-    Y3_MATH_IN         0.108      0.036      3.006      0.003
-    Y3_MATH            0.335      0.029     11.592      0.000
-    GENDER             0.052      0.052      0.997      0.319
-    SES               -0.022      0.029     -0.779      0.436
-    GEO               -0.090      0.055     -1.633      0.102
-    INDIG             -0.308      0.214     -1.439      0.150
-    LANG              -0.142      0.081     -1.755      0.079
+ Y5_M_JUD ON
+    Y3_M_JUDGE         0.483      0.028     17.538      0.000      0.076
+    Y3_M_INT           0.084      0.026      3.245      0.001      0.123
+    Y3_MATH            0.340      0.030     11.328      0.000      0.152
+    GENDER             0.075      0.051      1.467      0.142      0.060
+    SES               -0.039      0.029     -1.322      0.186      0.160
+    GEO               -0.094      0.055     -1.698      0.089      0.106
+    INDIG             -0.196      0.195     -1.006      0.315      0.080
+    LANG              -0.146      0.089     -1.642      0.101      0.286
 
- Y5_MATH_ ON
-    Y3_MATH_JU         0.125      0.030      4.241      0.000
-    Y3_MATH_IN         0.453      0.038     12.080      0.000
-    Y3_MATH            0.138      0.030      4.583      0.000
-    GENDER             0.285      0.054      5.282      0.000
-    SES               -0.055      0.028     -1.944      0.052
-    GEO                0.047      0.054      0.859      0.391
-    INDIG              0.098      0.244      0.403      0.687
-    LANG              -0.099      0.083     -1.188      0.235
+ Y5_M_INT ON
+    Y3_M_JUDGE         0.124      0.030      4.173      0.000      0.073
+    Y3_M_INT           0.310      0.029     10.850      0.000      0.209
+    Y3_MATH            0.136      0.031      4.384      0.000      0.130
+    GENDER             0.286      0.054      5.293      0.000      0.074
+    SES               -0.053      0.029     -1.809      0.070      0.164
+    GEO                0.038      0.057      0.668      0.504      0.187
+    INDIG              0.028      0.250      0.113      0.910      0.346
+    LANG              -0.093      0.083     -1.120      0.263      0.087
 
  Y5_MATH  ON
-    Y3_MATH_JU         0.174      0.013     12.969      0.000
-    Y3_MATH_IN         0.029      0.022      1.284      0.199
-    Y3_MATH            0.602      0.013     47.455      0.000
-    GENDER             0.039      0.030      1.302      0.193
-    SES                0.094      0.017      5.589      0.000
-    GEO                0.061      0.037      1.656      0.098
-    INDIG             -0.525      0.137     -3.833      0.000
-    LANG              -0.196      0.044     -4.444      0.000
+    Y3_M_JUDGE         0.175      0.015     11.764      0.000      0.250
+    Y3_M_INT           0.032      0.016      2.025      0.043      0.128
+    Y3_MATH            0.598      0.014     42.003      0.000      0.252
+    GENDER             0.039      0.030      1.317      0.188      0.124
+    SES                0.095      0.016      5.883      0.000      0.103
+    GEO                0.072      0.035      2.068      0.039      0.081
+    INDIG             -0.487      0.123     -3.946      0.000      0.358
+    LANG              -0.154      0.046     -3.392      0.001      0.221
 
- Y3_MATH_ ON
-    GENDER             0.137      0.043      3.161      0.002
-    SES                0.116      0.021      5.547      0.000
-    GEO               -0.034      0.046     -0.736      0.462
-    INDIG              0.040      0.152      0.267      0.790
-    LANG              -0.041      0.067     -0.605      0.545
+ Y3_M_JUD ON
+    GENDER             0.131      0.043      3.038      0.002      0.009
+    SES                0.114      0.021      5.500      0.000      0.011
+    GEO               -0.029      0.046     -0.633      0.527      0.015
+    INDIG              0.014      0.151      0.093      0.926      0.003
+    LANG              -0.033      0.067     -0.488      0.626      0.011
 
- Y3_MATH_ ON
-    GENDER             0.094      0.031      3.072      0.002
-    SES               -0.017      0.016     -1.046      0.296
-    GEO               -0.028      0.033     -0.837      0.402
-    INDIG              0.016      0.119      0.133      0.894
-    LANG              -0.082      0.053     -1.546      0.122
+ Y3_M_INT ON
+    GENDER             0.135      0.043      3.122      0.002      0.009
+    SES               -0.025      0.023     -1.083      0.279      0.024
+    GEO               -0.037      0.047     -0.791      0.429      0.013
+    INDIG             -0.022      0.180     -0.120      0.905      0.180
+    LANG              -0.112      0.075     -1.491      0.136      0.019
 
  Y3_MATH  ON
-    GENDER             0.014      0.042      0.346      0.729
-    SES                0.312      0.021     14.664      0.000
-    GEO               -0.013      0.046     -0.285      0.776
-    INDIG             -0.614      0.166     -3.709      0.000
-    LANG              -0.067      0.063     -1.060      0.289
+    GENDER             0.005      0.043      0.110      0.912      0.047
+    SES                0.314      0.021     14.886      0.000      0.016
+    GEO               -0.012      0.045     -0.261      0.794      0.002
+    INDIG             -0.584      0.167     -3.498      0.000      0.026
+    LANG              -0.068      0.063     -1.074      0.283      0.015
 
- Y7_MATH_ WITH
-    Y7_MATH_IN         0.348      0.027     13.108      0.000
-    Y7_MATH            0.112      0.014      8.287      0.000
+ Y7_M_JUD WITH
+    Y7_M_INT           0.312      0.031     10.128      0.000      0.399
+    Y7_MATH            0.108      0.012      8.718      0.000      0.249
 
- Y7_MATH_ WITH
-    Y7_MATH            0.103      0.016      6.569      0.000
+ Y7_M_INT WITH
+    Y7_MATH            0.079      0.015      5.393      0.000      0.320
 
- Y5_MATH_ WITH
-    Y5_MATH_IN         0.255      0.027      9.513      0.000
-    Y5_MATH            0.175      0.013     13.889      0.000
+ Y5_M_JUD WITH
+    Y5_M_INT           0.236      0.028      8.471      0.000      0.162
+    Y5_MATH            0.160      0.014     11.628      0.000      0.258
 
- Y5_MATH_ WITH
-    Y5_MATH            0.081      0.017      4.649      0.000
+ Y5_M_INT WITH
+    Y5_MATH            0.092      0.017      5.349      0.000      0.159
 
- Y3_MATH_ WITH
-    Y3_MATH_IN         0.182      0.017     10.867      0.000
-    Y3_MATH            0.449      0.023     19.827      0.000
+ Y3_M_JUD WITH
+    Y3_M_INT           0.250      0.023     10.666      0.000      0.023
+    Y3_MATH            0.446      0.022     20.001      0.000      0.004
 
- Y3_MATH_ WITH
-    Y3_MATH            0.098      0.015      6.570      0.000
+ Y3_M_INT WITH
+    Y3_MATH            0.134      0.021      6.511      0.000      0.024
 
  Intercepts
-    Y3_MATH_JU         3.714      0.078     47.680      0.000
-    Y3_MATH_IN         2.524      0.061     41.379      0.000
-    Y3_MATH            0.068      0.076      0.894      0.371
-    Y5_MATH           -0.606      0.086     -7.087      0.000
-    Y7_MATH           -0.162      0.061     -2.675      0.007
+    Y3_M_JUDGE        -0.022      0.077     -0.284      0.776      0.013
+    Y3_M_INT           0.049      0.086      0.567      0.571      0.015
+    Y3_MATH            0.075      0.076      0.994      0.320      0.009
+    Y5_MATH            0.074      0.057      1.308      0.191      0.231
+    Y7_MATH            0.101      0.040      2.527      0.012      0.037
 
  Thresholds
-    Y5_MATH_$1        -0.636      0.171     -3.723      0.000
-    Y5_MATH_$2         0.386      0.156      2.467      0.014
-    Y5_MATH_$3         1.829      0.156     11.693      0.000
-    Y5_MATH_$4         2.688      0.161     16.659      0.000
-    Y7_MATH_$1        -1.236      0.177     -6.985      0.000
-    Y7_MATH_$2        -0.135      0.165     -0.818      0.413
-    Y7_MATH_$3         1.247      0.167      7.450      0.000
-    Y7_MATH_$4         2.195      0.171     12.864      0.000
-    Y5_MATH_$1         0.293      0.157      1.873      0.061
-    Y5_MATH_$2         1.710      0.158     10.824      0.000
-    Y7_MATH_$1         0.245      0.162      1.510      0.131
-    Y7_MATH_$2         1.740      0.167     10.397      0.000
+    Y5_M_JUD$1        -2.653      0.132    -20.054      0.000      0.214
+    Y5_M_JUD$2        -1.667      0.106    -15.762      0.000      0.174
+    Y5_M_JUD$3        -0.283      0.102     -2.776      0.005      0.229
+    Y5_M_JUD$4         0.564      0.106      5.316      0.000      0.252
+    Y7_M_JUD$1        -2.653      0.148    -17.957      0.000      0.443
+    Y7_M_JUD$2        -1.649      0.115    -14.379      0.000      0.238
+    Y7_M_JUD$3        -0.423      0.109     -3.891      0.000      0.207
+    Y7_M_JUD$4         0.490      0.113      4.322      0.000      0.261
+    Y5_M_INT$1        -1.260      0.104    -12.122      0.000      0.135
+    Y5_M_INT$2         0.109      0.095      1.149      0.251      0.089
+    Y7_M_INT$1        -1.102      0.120     -9.183      0.000      0.258
+    Y7_M_INT$2         0.285      0.122      2.333      0.020      0.329
 
  Residual Variances
-    Y3_MATH_JU         0.999      0.038     26.199      0.000
-    Y3_MATH_IN         0.499      0.025     19.855      0.000
-    Y3_MATH            0.889      0.023     37.921      0.000
-    Y5_MATH            0.421      0.009     45.215      0.000
-    Y7_MATH            0.277      0.008     34.034      0.000
+    Y3_M_JUDGE         0.982      0.037     26.375      0.000      0.001
+    Y3_M_INT           0.993      0.050     19.894      0.000      0.000
+    Y3_MATH            0.887      0.023     38.125      0.000      0.005
+    Y5_MATH            0.421      0.010     42.739      0.000      0.099
+    Y7_MATH            0.265      0.008     32.412      0.000      0.287
 
 
 STANDARDIZED MODEL RESULTS
@@ -403,278 +544,278 @@ STANDARDIZED MODEL RESULTS
 
 STDYX Standardization
 
-                                                    Two-Tailed
-                    Estimate       S.E.  Est./S.E.    P-Value
+                                                    Two-Tailed   Rate of
+                    Estimate       S.E.  Est./S.E.    P-Value    Missing
 
- Y7_MATH_ ON
-    Y5_MATH_JU         0.332      0.026     12.766      0.000
-    Y5_MATH_IN         0.126      0.024      5.340      0.000
-    Y5_MATH            0.219      0.022      9.933      0.000
-    Y3_MATH_JU         0.145      0.022      6.501      0.000
-    GENDER            -0.070      0.020     -3.433      0.001
-    SES                0.058      0.023      2.466      0.014
-    GEO               -0.018      0.022     -0.831      0.406
-    INDIG             -0.034      0.032     -1.051      0.293
-    LANG              -0.054      0.024     -2.249      0.024
+ Y7_M_JUD ON
+    Y5_M_JUDGE         0.292      0.028     10.378      0.000      0.256
+    Y5_M_INT           0.110      0.024      4.612      0.000      0.144
+    Y5_MATH            0.228      0.025      9.257      0.000      0.267
+    Y3_M_JUDGE         0.146      0.025      5.866      0.000      0.266
+    GENDER            -0.061      0.021     -2.850      0.004      0.215
+    SES                0.067      0.029      2.346      0.019      0.468
+    GEO               -0.032      0.025     -1.265      0.206      0.380
+    INDIG             -0.032      0.028     -1.156      0.247      0.050
+    LANG              -0.047      0.023     -2.036      0.042      0.107
 
- Y7_MATH_ ON
-    Y5_MATH_JU         0.105      0.030      3.457      0.001
-    Y5_MATH_IN         0.449      0.026     17.240      0.000
-    Y5_MATH            0.062      0.029      2.102      0.036
-    Y3_MATH_IN         0.093      0.022      4.121      0.000
-    GENDER             0.067      0.024      2.833      0.005
-    SES                0.054      0.025      2.199      0.028
-    GEO                0.007      0.025      0.285      0.775
-    INDIG             -0.035      0.033     -1.054      0.292
-    LANG              -0.023      0.025     -0.894      0.371
+ Y7_M_INT ON
+    Y5_M_JUDGE         0.085      0.033      2.592      0.010      0.291
+    Y5_M_INT           0.420      0.034     12.183      0.000      0.503
+    Y5_MATH            0.081      0.030      2.664      0.008      0.223
+    Y3_M_INT           0.098      0.022      4.370      0.000      0.064
+    GENDER             0.069      0.023      3.019      0.003      0.052
+    SES                0.050      0.026      1.922      0.055      0.257
+    GEO               -0.001      0.027     -0.023      0.982      0.274
+    INDIG             -0.041      0.031     -1.310      0.190      0.250
+    LANG              -0.022      0.035     -0.616      0.538      0.621
 
  Y7_MATH  ON
-    Y5_MATH_JU         0.084      0.018      4.572      0.000
-    Y5_MATH_IN         0.051      0.018      2.881      0.004
-    Y5_MATH            0.488      0.015     31.499      0.000
-    Y3_MATH            0.303      0.014     21.099      0.000
-    GENDER             0.007      0.015      0.484      0.628
-    SES                0.113      0.015      7.691      0.000
-    GEO                0.007      0.015      0.468      0.639
-    INDIG              0.000      0.021     -0.013      0.990
-    LANG              -0.031      0.014     -2.181      0.029
+    Y5_M_JUDGE         0.081      0.016      5.175      0.000      0.141
+    Y5_M_INT           0.058      0.016      3.723      0.000      0.213
+    Y5_MATH            0.497      0.015     33.938      0.000      0.203
+    Y3_MATH            0.299      0.016     19.241      0.000      0.333
+    GENDER            -0.010      0.012     -0.815      0.415      0.093
+    SES                0.118      0.013      9.340      0.000      0.056
+    GEO                0.006      0.013      0.442      0.659      0.051
+    INDIG             -0.002      0.016     -0.132      0.895      0.422
+    LANG              -0.040      0.013     -3.215      0.001      0.091
 
- Y5_MATH_ ON
-    Y3_MATH_JU         0.401      0.021     19.062      0.000
-    Y3_MATH_IN         0.061      0.020      3.013      0.003
-    Y3_MATH            0.268      0.022     12.001      0.000
-    GENDER             0.021      0.021      0.998      0.318
-    SES               -0.018      0.023     -0.779      0.436
-    GEO               -0.034      0.021     -1.636      0.102
-    INDIG             -0.036      0.025     -1.442      0.149
-    LANG              -0.041      0.024     -1.756      0.079
+ Y5_M_JUD ON
+    Y3_M_JUDGE         0.388      0.021     18.598      0.000      0.066
+    Y3_M_INT           0.068      0.021      3.246      0.001      0.127
+    Y3_MATH            0.274      0.023     11.817      0.000      0.144
+    GENDER             0.030      0.021      1.470      0.142      0.058
+    SES               -0.031      0.024     -1.325      0.185      0.159
+    GEO               -0.036      0.021     -1.701      0.089      0.106
+    INDIG             -0.023      0.023     -1.007      0.314      0.079
+    LANG              -0.043      0.026     -1.639      0.101      0.291
 
- Y5_MATH_ ON
-    Y3_MATH_JU         0.114      0.027      4.248      0.000
-    Y3_MATH_IN         0.291      0.024     12.378      0.000
-    Y3_MATH            0.125      0.027      4.621      0.000
-    GENDER             0.129      0.024      5.363      0.000
-    SES               -0.050      0.025     -1.946      0.052
-    GEO                0.020      0.023      0.859      0.390
-    INDIG              0.013      0.032      0.403      0.687
-    LANG              -0.033      0.027     -1.190      0.234
+ Y5_M_INT ON
+    Y3_M_JUDGE         0.113      0.027      4.190      0.000      0.069
+    Y3_M_INT           0.283      0.025     11.133      0.000      0.191
+    Y3_MATH            0.123      0.028      4.404      0.000      0.134
+    GENDER             0.130      0.024      5.348      0.000      0.082
+    SES               -0.048      0.027     -1.810      0.070      0.165
+    GEO                0.017      0.025      0.669      0.504      0.186
+    INDIG              0.004      0.034      0.114      0.909      0.346
+    LANG              -0.031      0.027     -1.121      0.262      0.088
 
  Y5_MATH  ON
-    Y3_MATH_JU         0.175      0.013     13.055      0.000
-    Y3_MATH_IN         0.020      0.016      1.285      0.199
-    Y3_MATH            0.601      0.011     55.770      0.000
-    GENDER             0.020      0.015      1.303      0.192
-    SES                0.093      0.017      5.658      0.000
-    GEO                0.029      0.018      1.651      0.099
-    INDIG             -0.076      0.020     -3.872      0.000
-    LANG              -0.071      0.016     -4.443      0.000
+    Y3_M_JUDGE         0.175      0.015     11.776      0.000      0.256
+    Y3_M_INT           0.032      0.016      2.024      0.043      0.128
+    Y3_MATH            0.599      0.013     46.861      0.000      0.307
+    GENDER             0.020      0.015      1.319      0.187      0.124
+    SES                0.095      0.016      5.937      0.000      0.105
+    GEO                0.034      0.017      2.062      0.039      0.081
+    INDIG             -0.072      0.018     -3.969      0.000      0.362
+    LANG              -0.056      0.017     -3.391      0.001      0.221
 
- Y3_MATH_ ON
-    GENDER             0.068      0.021      3.198      0.001
-    SES                0.115      0.021      5.610      0.000
-    GEO               -0.016      0.022     -0.736      0.462
-    INDIG              0.006      0.022      0.267      0.790
-    LANG              -0.015      0.024     -0.605      0.545
+ Y3_M_JUD ON
+    GENDER             0.065      0.021      3.072      0.002      0.010
+    SES                0.115      0.021      5.559      0.000      0.011
+    GEO               -0.014      0.022     -0.633      0.527      0.015
+    INDIG              0.002      0.022      0.093      0.926      0.003
+    LANG              -0.012      0.024     -0.488      0.626      0.011
 
- Y3_MATH_ ON
-    GENDER             0.066      0.021      3.121      0.002
-    SES               -0.024      0.023     -1.048      0.295
-    GEO               -0.019      0.022     -0.838      0.402
-    INDIG              0.003      0.024      0.133      0.894
-    LANG              -0.042      0.027     -1.546      0.122
+ Y3_M_INT ON
+    GENDER             0.067      0.021      3.173      0.002      0.009
+    SES               -0.025      0.023     -1.085      0.278      0.024
+    GEO               -0.018      0.022     -0.791      0.429      0.013
+    INDIG             -0.003      0.027     -0.120      0.904      0.180
+    LANG              -0.041      0.027     -1.491      0.136      0.019
 
  Y3_MATH  ON
-    GENDER             0.007      0.021      0.346      0.729
-    SES                0.312      0.020     15.387      0.000
-    GEO               -0.006      0.022     -0.285      0.776
-    INDIG             -0.089      0.024     -3.738      0.000
-    LANG              -0.024      0.023     -1.060      0.289
+    GENDER             0.002      0.021      0.110      0.912      0.047
+    SES                0.315      0.020     15.618      0.000      0.017
+    GEO               -0.006      0.022     -0.261      0.794      0.002
+    INDIG             -0.087      0.025     -3.524      0.000      0.027
+    LANG              -0.025      0.023     -1.073      0.283      0.015
 
- Y7_MATH_ WITH
-    Y7_MATH_IN         0.348      0.027     13.108      0.000
-    Y7_MATH            0.213      0.025      8.566      0.000
+ Y7_M_JUD WITH
+    Y7_M_INT           0.312      0.031     10.128      0.000      0.399
+    Y7_MATH            0.210      0.023      9.103      0.000      0.232
 
- Y7_MATH_ WITH
-    Y7_MATH            0.196      0.029      6.685      0.000
+ Y7_M_INT WITH
+    Y7_MATH            0.153      0.028      5.543      0.000      0.302
 
- Y5_MATH_ WITH
-    Y5_MATH_IN         0.255      0.027      9.513      0.000
-    Y5_MATH            0.269      0.019     14.511      0.000
+ Y5_M_JUD WITH
+    Y5_M_INT           0.236      0.028      8.471      0.000      0.162
+    Y5_MATH            0.247      0.021     12.042      0.000      0.271
 
- Y5_MATH_ WITH
-    Y5_MATH            0.125      0.027      4.674      0.000
+ Y5_M_INT WITH
+    Y5_MATH            0.142      0.026      5.375      0.000      0.166
 
- Y3_MATH_ WITH
-    Y3_MATH_IN         0.258      0.020     12.996      0.000
-    Y3_MATH            0.477      0.017     28.181      0.000
+ Y3_M_JUD WITH
+    Y3_M_INT           0.254      0.020     12.611      0.000      0.034
+    Y3_MATH            0.477      0.017     28.658      0.000      0.006
 
- Y3_MATH_ WITH
-    Y3_MATH            0.147      0.021      6.894      0.000
+ Y3_M_INT WITH
+    Y3_MATH            0.143      0.021      6.803      0.000      0.027
 
  Intercepts
-    Y3_MATH_JU         3.684      0.105     35.117      0.000
-    Y3_MATH_IN         3.561      0.107     33.426      0.000
-    Y3_MATH            0.068      0.076      0.894      0.371
-    Y5_MATH           -0.606      0.085     -7.085      0.000
-    Y7_MATH           -0.162      0.060     -2.703      0.007
+    Y3_M_JUDGE        -0.022      0.078     -0.284      0.776      0.013
+    Y3_M_INT           0.049      0.086      0.569      0.570      0.015
+    Y3_MATH            0.075      0.076      0.994      0.320      0.009
+    Y5_MATH            0.074      0.057      1.308      0.191      0.231
+    Y7_MATH            0.101      0.040      2.518      0.012      0.037
 
  Thresholds
-    Y5_MATH_$1        -0.509      0.139     -3.653      0.000
-    Y5_MATH_$2         0.309      0.123      2.499      0.012
-    Y5_MATH_$3         1.463      0.118     12.450      0.000
-    Y5_MATH_$4         2.151      0.118     18.205      0.000
-    Y7_MATH_$1        -0.928      0.137     -6.790      0.000
-    Y7_MATH_$2        -0.102      0.125     -0.816      0.415
-    Y7_MATH_$3         0.936      0.122      7.682      0.000
-    Y7_MATH_$4         1.648      0.122     13.543      0.000
-    Y5_MATH_$1         0.266      0.141      1.891      0.059
-    Y5_MATH_$2         1.550      0.135     11.475      0.000
-    Y7_MATH_$1         0.199      0.131      1.522      0.128
-    Y7_MATH_$2         1.411      0.128     11.022      0.000
+    Y5_M_JUD$1        -2.136      0.108    -19.803      0.000      0.225
+    Y5_M_JUD$2        -1.342      0.086    -15.625      0.000      0.198
+    Y5_M_JUD$3        -0.228      0.082     -2.771      0.006      0.235
+    Y5_M_JUD$4         0.454      0.085      5.340      0.000      0.240
+    Y7_M_JUD$1        -2.074      0.113    -18.418      0.000      0.433
+    Y7_M_JUD$2        -1.289      0.086    -14.924      0.000      0.217
+    Y7_M_JUD$3        -0.330      0.084     -3.919      0.000      0.206
+    Y7_M_JUD$4         0.383      0.090      4.272      0.000      0.268
+    Y5_M_INT$1        -1.148      0.095    -12.059      0.000      0.127
+    Y5_M_INT$2         0.099      0.086      1.150      0.250      0.089
+    Y7_M_INT$1        -0.914      0.097     -9.387      0.000      0.240
+    Y7_M_INT$2         0.236      0.102      2.313      0.021      0.341
 
  Residual Variances
-    Y3_MATH_JU         0.983      0.005    183.595      0.000
-    Y3_MATH_IN         0.993      0.004    260.046      0.000
-    Y3_MATH            0.889      0.013     66.033      0.000
-    Y5_MATH            0.420      0.011     39.545      0.000
-    Y7_MATH            0.275      0.010     27.709      0.000
+    Y3_M_JUDGE         0.983      0.005    185.627      0.000      0.006
+    Y3_M_INT           0.993      0.004    255.404      0.000      0.010
+    Y3_MATH            0.888      0.013     65.973      0.000      0.014
+    Y5_MATH            0.423      0.011     38.375      0.000      0.085
+    Y7_MATH            0.265      0.010     27.259      0.000      0.200
 
 
 R-SQUARE
 
-    Observed                                        Two-Tailed     Scale
-    Variable        Estimate       S.E.  Est./S.E.    P-Value     Factors
+    Observed                                        Two-Tailed   Rate of
+    Variable        Estimate       S.E.  Est./S.E.    P-Value    Missing
 
-    Y3_MATH_           0.017      0.005      3.253      0.001
-    Y5_MATH_           0.360      0.018     19.892      0.000      0.809
-    Y7_MATH_           0.436      0.019     22.464      0.000      0.770
-    Y3_MATH_           0.007      0.004      1.799      0.072
-    Y5_MATH_           0.178      0.017     10.262      0.000      0.919
-    Y7_MATH_           0.343      0.023     15.088      0.000      0.826
-    Y3_MATH            0.111      0.013      8.227      0.000
-    Y5_MATH            0.580      0.011     54.575      0.000
-    Y7_MATH            0.725      0.010     72.967      0.000
+    Y3_M_JUD           0.017      0.005      3.212      0.001      0.006
+    Y5_M_JUD           0.352      0.018     19.328      0.000      0.071
+    Y7_M_JUD           0.389      0.021     18.161      0.000      0.319
+    Y3_M_INT           0.007      0.004      1.824      0.068      0.009
+    Y5_M_INT           0.171      0.018      9.737      0.000      0.099
+    Y7_M_INT           0.312      0.027     11.684      0.000      0.410
+    Y3_MATH            0.112      0.013      8.317      0.000      0.014
+    Y5_MATH            0.577      0.011     52.445      0.000      0.085
+    Y7_MATH            0.735      0.010     75.787      0.000      0.200
 
 
 QUALITY OF NUMERICAL RESULTS
 
-     Condition Number for the Information Matrix              0.115E-03
+     Average Condition Number for the Information Matrix      0.214E-03
        (ratio of smallest to largest eigenvalue)
 
 
 TOTAL, TOTAL INDIRECT, SPECIFIC INDIRECT, AND DIRECT EFFECTS
 
 
-                                                    Two-Tailed
-                    Estimate       S.E.  Est./S.E.    P-Value
+                                                    Two-Tailed   Rate of
+                    Estimate       S.E.  Est./S.E.    P-Value    Missing
 
 Effects from GENDER to Y5_MATH
 
-  Total                0.074      0.043      1.731      0.083
-  Total indirect       0.035      0.030      1.181      0.237
+  Total                0.069      0.042      1.627      0.104      0.040
+  Total indirect       0.030      0.030      0.995      0.320      0.038
 
   Specific indirect 1
     Y5_MATH
-    Y3_MATH_
-    GENDER             0.024      0.008      3.065      0.002
+    Y3_M_JUD
+    GENDER             0.023      0.008      2.910      0.004      0.041
 
   Specific indirect 2
     Y5_MATH
-    Y3_MATH_
-    GENDER             0.003      0.002      1.203      0.229
+    Y3_M_INT
+    GENDER             0.004      0.003      1.708      0.088      0.112
 
   Specific indirect 3
     Y5_MATH
     Y3_MATH
-    GENDER             0.009      0.025      0.346      0.729
+    GENDER             0.003      0.025      0.109      0.913      0.046
 
   Direct
     Y5_MATH
-    GENDER             0.039      0.030      1.302      0.193
+    GENDER             0.039      0.030      1.317      0.188      0.124
 
 
 Effects from GENDER to Y7_MATH
 
-  Total                0.080      0.043      1.860      0.063
-  Total indirect       0.066      0.034      1.928      0.054
+  Total                0.044      0.041      1.076      0.282      0.031
+  Total indirect       0.064      0.034      1.873      0.061      0.023
 
   Specific indirect 1
     Y7_MATH
-    Y5_MATH_
-    GENDER             0.003      0.004      0.978      0.328
+    Y5_M_JUD
+    GENDER             0.005      0.003      1.410      0.159      0.081
 
   Specific indirect 2
     Y7_MATH
-    Y5_MATH_
-    GENDER             0.013      0.005      2.525      0.012
+    Y5_M_INT
+    GENDER             0.015      0.005      3.098      0.002      0.138
 
   Specific indirect 3
     Y7_MATH
     Y3_MATH
-    GENDER             0.004      0.013      0.346      0.729
+    GENDER             0.001      0.013      0.109      0.913      0.046
 
   Specific indirect 4
     Y7_MATH
     Y5_MATH
-    GENDER             0.019      0.015      1.302      0.193
+    GENDER             0.019      0.015      1.319      0.187      0.121
 
   Specific indirect 5
     Y7_MATH
-    Y5_MATH_
-    Y3_MATH_
-    GENDER             0.005      0.002      2.508      0.012
+    Y5_M_JUD
+    Y3_M_JUD
+    GENDER             0.004      0.002      2.581      0.010      0.026
 
   Specific indirect 6
     Y7_MATH
-    Y5_MATH_
-    Y3_MATH_
-    GENDER             0.001      0.000      1.912      0.056
+    Y5_M_JUD
+    Y3_M_INT
+    GENDER             0.001      0.000      2.032      0.042      0.070
 
   Specific indirect 7
     Y7_MATH
-    Y5_MATH_
+    Y5_M_JUD
     Y3_MATH
-    GENDER             0.000      0.001      0.343      0.731
+    GENDER             0.000      0.001      0.117      0.907      0.055
 
   Specific indirect 8
     Y7_MATH
-    Y5_MATH_
-    Y3_MATH_
-    GENDER             0.001      0.000      1.854      0.064
+    Y5_M_INT
+    Y3_M_JUD
+    GENDER             0.001      0.000      1.976      0.048      0.114
 
   Specific indirect 9
     Y7_MATH
-    Y5_MATH_
-    Y3_MATH_
-    GENDER             0.002      0.001      2.059      0.040
+    Y5_M_INT
+    Y3_M_INT
+    GENDER             0.002      0.001      2.263      0.024      0.133
 
   Specific indirect 10
     Y7_MATH
-    Y5_MATH_
+    Y5_M_INT
     Y3_MATH
-    GENDER             0.000      0.000      0.343      0.731
+    GENDER             0.000      0.000      0.114      0.909      0.055
 
   Specific indirect 11
     Y7_MATH
     Y5_MATH
-    Y3_MATH_
-    GENDER             0.012      0.004      3.063      0.002
+    Y3_M_JUD
+    GENDER             0.011      0.004      2.900      0.004      0.043
 
   Specific indirect 12
     Y7_MATH
     Y5_MATH
-    Y3_MATH_
-    GENDER             0.001      0.001      1.200      0.230
+    Y3_M_INT
+    GENDER             0.002      0.001      1.709      0.088      0.107
 
   Specific indirect 13
     Y7_MATH
     Y5_MATH
     Y3_MATH
-    GENDER             0.004      0.012      0.346      0.729
+    GENDER             0.001      0.013      0.110      0.913      0.047
 
   Direct
     Y7_MATH
-    GENDER             0.014      0.029      0.484      0.628
+    GENDER            -0.020      0.024     -0.815      0.415      0.093
 
 
 
@@ -683,116 +824,116 @@ STANDARDIZED TOTAL, TOTAL INDIRECT, SPECIFIC INDIRECT, AND DIRECT EFFECTS
 
 STDYX Standardization
 
-                                                    Two-Tailed
-                    Estimate       S.E.  Est./S.E.    P-Value
+                                                    Two-Tailed   Rate of
+                    Estimate       S.E.  Est./S.E.    P-Value    Missing
 
 Effects from GENDER to Y5_MATH
 
-  Total                0.037      0.021      1.735      0.083
-  Total indirect       0.018      0.015      1.183      0.237
+  Total                0.035      0.021      1.631      0.103      0.041
+  Total indirect       0.015      0.015      0.995      0.320      0.038
 
   Specific indirect 1
     Y5_MATH
-    Y3_MATH_
-    GENDER             0.012      0.004      3.074      0.002
+    Y3_M_JUD
+    GENDER             0.011      0.004      2.917      0.004      0.042
 
   Specific indirect 2
     Y5_MATH
-    Y3_MATH_
-    GENDER             0.001      0.001      1.203      0.229
+    Y3_M_INT
+    GENDER             0.002      0.001      1.707      0.088      0.112
 
   Specific indirect 3
     Y5_MATH
     Y3_MATH
-    GENDER             0.004      0.013      0.346      0.729
+    GENDER             0.001      0.013      0.109      0.913      0.046
 
   Direct
     Y5_MATH
-    GENDER             0.020      0.015      1.303      0.192
+    GENDER             0.020      0.015      1.319      0.187      0.124
 
 
 Effects from GENDER to Y7_MATH
 
-  Total                0.040      0.021      1.859      0.063
-  Total indirect       0.033      0.017      1.933      0.053
+  Total                0.022      0.020      1.076      0.282      0.031
+  Total indirect       0.032      0.017      1.875      0.061      0.023
 
   Specific indirect 1
     Y7_MATH
-    Y5_MATH_
-    GENDER             0.002      0.002      0.978      0.328
+    Y5_M_JUD
+    GENDER             0.002      0.002      1.410      0.158      0.081
 
   Specific indirect 2
     Y7_MATH
-    Y5_MATH_
-    GENDER             0.007      0.003      2.527      0.011
+    Y5_M_INT
+    GENDER             0.008      0.002      3.095      0.002      0.137
 
   Specific indirect 3
     Y7_MATH
     Y3_MATH
-    GENDER             0.002      0.006      0.346      0.729
+    GENDER             0.001      0.006      0.109      0.913      0.046
 
   Specific indirect 4
     Y7_MATH
     Y5_MATH
-    GENDER             0.010      0.007      1.303      0.193
+    GENDER             0.010      0.007      1.319      0.187      0.121
 
   Specific indirect 5
     Y7_MATH
-    Y5_MATH_
-    Y3_MATH_
-    GENDER             0.002      0.001      2.522      0.012
+    Y5_M_JUD
+    Y3_M_JUD
+    GENDER             0.002      0.001      2.590      0.010      0.027
 
   Specific indirect 6
     Y7_MATH
-    Y5_MATH_
-    Y3_MATH_
-    GENDER             0.000      0.000      1.916      0.055
+    Y5_M_JUD
+    Y3_M_INT
+    GENDER             0.000      0.000      2.034      0.042      0.070
 
   Specific indirect 7
     Y7_MATH
-    Y5_MATH_
+    Y5_M_JUD
     Y3_MATH
-    GENDER             0.000      0.000      0.344      0.731
+    GENDER             0.000      0.000      0.117      0.907      0.055
 
   Specific indirect 8
     Y7_MATH
-    Y5_MATH_
-    Y3_MATH_
-    GENDER             0.000      0.000      1.858      0.063
+    Y5_M_INT
+    Y3_M_JUD
+    GENDER             0.000      0.000      1.978      0.048      0.115
 
   Specific indirect 9
     Y7_MATH
-    Y5_MATH_
-    Y3_MATH_
-    GENDER             0.001      0.000      2.060      0.039
+    Y5_M_INT
+    Y3_M_INT
+    GENDER             0.001      0.000      2.263      0.024      0.133
 
   Specific indirect 10
     Y7_MATH
-    Y5_MATH_
+    Y5_M_INT
     Y3_MATH
-    GENDER             0.000      0.000      0.343      0.731
+    GENDER             0.000      0.000      0.114      0.909      0.055
 
   Specific indirect 11
     Y7_MATH
     Y5_MATH
-    Y3_MATH_
-    GENDER             0.006      0.002      3.070      0.002
+    Y3_M_JUD
+    GENDER             0.006      0.002      2.906      0.004      0.043
 
   Specific indirect 12
     Y7_MATH
     Y5_MATH
-    Y3_MATH_
-    GENDER             0.001      0.001      1.200      0.230
+    Y3_M_INT
+    GENDER             0.001      0.001      1.710      0.087      0.107
 
   Specific indirect 13
     Y7_MATH
     Y5_MATH
     Y3_MATH
-    GENDER             0.002      0.006      0.346      0.729
+    GENDER             0.001      0.006      0.110      0.913      0.047
 
   Direct
     Y7_MATH
-    GENDER             0.007      0.015      0.484      0.628
+    GENDER            -0.010      0.012     -0.815      0.415      0.093
 
 
 
@@ -801,138 +942,138 @@ CONFIDENCE INTERVALS OF MODEL RESULTS
 
                   Lower .5%  Lower 2.5%    Lower 5%    Estimate    Upper 5%  Upper 2.5%   Upper .5%
 
- Y7_MATH_ ON
-    Y5_MATH_JU       0.275       0.294       0.303       0.353       0.404       0.413       0.432
-    Y5_MATH_IN       0.078       0.095       0.105       0.152       0.200       0.209       0.227
-    Y5_MATH          0.214       0.233       0.242       0.291       0.340       0.349       0.367
-    Y3_MATH_JU       0.115       0.133       0.143       0.192       0.241       0.250       0.268
-    GENDER          -0.327      -0.293      -0.276      -0.186      -0.097      -0.079      -0.046
-    SES             -0.004       0.015       0.025       0.077       0.128       0.138       0.157
-    GEO             -0.207      -0.169      -0.150      -0.050       0.049       0.069       0.106
-    INDIG           -1.065      -0.884      -0.792      -0.308       0.175       0.268       0.449
-    LANG            -0.428      -0.374      -0.346      -0.199      -0.053      -0.025       0.030
+ Y7_M_JUD ON
+    Y5_M_JUDGE       0.224       0.242       0.252       0.301       0.350       0.359       0.378
+    Y5_M_INT         0.055       0.073       0.082       0.128       0.175       0.184       0.201
+    Y5_MATH          0.208       0.228       0.239       0.292       0.345       0.355       0.375
+    Y3_M_JUDGE       0.102       0.122       0.133       0.187       0.241       0.251       0.271
+    GENDER          -0.297      -0.263      -0.246      -0.156      -0.066      -0.048      -0.015
+    SES             -0.010       0.013       0.025       0.086       0.146       0.158       0.181
+    GEO             -0.259      -0.217      -0.196      -0.085       0.026       0.047       0.089
+    INDIG           -0.894      -0.746      -0.671      -0.277       0.117       0.193       0.340
+    LANG            -0.377      -0.326      -0.301      -0.166      -0.031      -0.006       0.045
 
- Y7_MATH_ ON
-    Y5_MATH_JU       0.026       0.044       0.054       0.103       0.153       0.163       0.181
-    Y5_MATH_IN       0.411       0.433       0.444       0.502       0.561       0.572       0.594
-    Y5_MATH         -0.017       0.005       0.017       0.076       0.136       0.147       0.169
-    Y3_MATH_IN       0.060       0.084       0.096       0.161       0.226       0.238       0.262
-    GENDER           0.015       0.051       0.069       0.165       0.260       0.278       0.314
-    SES             -0.012       0.007       0.017       0.067       0.117       0.126       0.145
-    GEO             -0.147      -0.107      -0.087       0.018       0.124       0.144       0.184
-    INDIG           -1.023      -0.849      -0.760      -0.297       0.167       0.256       0.430
-    LANG            -0.297      -0.244      -0.217      -0.076       0.064       0.091       0.144
+ Y7_M_INT ON
+    Y5_M_JUDGE       0.001       0.020       0.030       0.082       0.134       0.144       0.163
+    Y5_M_INT         0.346       0.373       0.387       0.461       0.535       0.549       0.576
+    Y5_MATH          0.002       0.025       0.037       0.098       0.160       0.171       0.194
+    Y3_M_INT         0.049       0.065       0.074       0.119       0.163       0.172       0.188
+    GENDER           0.025       0.059       0.076       0.166       0.256       0.273       0.307
+    SES             -0.021      -0.001       0.009       0.061       0.113       0.123       0.143
+    GEO             -0.179      -0.137      -0.115      -0.002       0.111       0.133       0.175
+    INDIG           -0.997      -0.839      -0.758      -0.336       0.087       0.168       0.326
+    LANG            -0.368      -0.297      -0.261      -0.071       0.118       0.155       0.226
 
  Y7_MATH  ON
-    Y5_MATH_JU       0.029       0.038       0.043       0.067       0.092       0.096       0.106
-    Y5_MATH_IN       0.005       0.015       0.020       0.047       0.073       0.078       0.088
-    Y5_MATH          0.448       0.458       0.463       0.489       0.515       0.520       0.530
-    Y3_MATH          0.265       0.274       0.279       0.304       0.329       0.334       0.343
-    GENDER          -0.061      -0.043      -0.034       0.014       0.062       0.071       0.089
-    SES              0.075       0.084       0.089       0.113       0.137       0.142       0.151
-    GEO             -0.068      -0.048      -0.038       0.015       0.069       0.079       0.099
-    INDIG           -0.379      -0.289      -0.242      -0.002       0.239       0.285       0.375
-    LANG            -0.186      -0.162      -0.150      -0.086      -0.021      -0.009       0.015
+    Y5_M_JUDGE       0.033       0.041       0.045       0.066       0.086       0.091       0.098
+    Y5_M_INT         0.016       0.025       0.030       0.053       0.076       0.081       0.090
+    Y5_MATH          0.459       0.468       0.473       0.497       0.522       0.527       0.536
+    Y3_MATH          0.258       0.268       0.273       0.299       0.325       0.330       0.340
+    GENDER          -0.083      -0.068      -0.060      -0.020       0.020       0.028       0.043
+    SES              0.085       0.093       0.097       0.117       0.138       0.142       0.150
+    GEO             -0.057      -0.040      -0.032       0.012       0.055       0.064       0.080
+    INDIG           -0.291      -0.224      -0.191      -0.014       0.162       0.196       0.262
+    LANG            -0.198      -0.177      -0.166      -0.110      -0.054      -0.043      -0.022
 
- Y5_MATH_ ON
-    Y3_MATH_JU       0.426       0.443       0.451       0.497       0.542       0.550       0.567
-    Y3_MATH_IN       0.015       0.037       0.049       0.108       0.166       0.178       0.200
-    Y3_MATH          0.261       0.278       0.288       0.335       0.383       0.392       0.410
-    GENDER          -0.082      -0.050      -0.034       0.052       0.137       0.154       0.186
-    SES             -0.096      -0.078      -0.069      -0.022       0.025       0.034       0.051
-    GEO             -0.233      -0.199      -0.181      -0.090       0.001       0.018       0.052
-    INDIG           -0.860      -0.728      -0.660      -0.308       0.044       0.112       0.243
-    LANG            -0.351      -0.301      -0.276      -0.142      -0.009       0.017       0.067
+ Y5_M_JUD ON
+    Y3_M_JUDGE       0.412       0.429       0.437       0.483       0.528       0.536       0.553
+    Y3_M_INT         0.017       0.033       0.041       0.084       0.127       0.135       0.151
+    Y3_MATH          0.263       0.281       0.291       0.340       0.389       0.399       0.417
+    GENDER          -0.057      -0.025      -0.009       0.075       0.159       0.175       0.207
+    SES             -0.115      -0.097      -0.087      -0.039       0.010       0.019       0.037
+    GEO             -0.236      -0.202      -0.185      -0.094      -0.003       0.014       0.048
+    INDIG           -0.699      -0.579      -0.517      -0.196       0.125       0.186       0.306
+    LANG            -0.376      -0.321      -0.293      -0.146       0.000       0.028       0.083
 
- Y5_MATH_ ON
-    Y3_MATH_JU       0.049       0.067       0.077       0.125       0.174       0.183       0.201
-    Y3_MATH_IN       0.357       0.380       0.392       0.453       0.515       0.527       0.550
-    Y3_MATH          0.060       0.079       0.088       0.138       0.187       0.197       0.215
-    GENDER           0.146       0.179       0.196       0.285       0.373       0.390       0.424
-    SES             -0.127      -0.110      -0.101      -0.055      -0.008       0.000       0.018
-    GEO             -0.093      -0.060      -0.043       0.047       0.136       0.153       0.186
-    INDIG           -0.531      -0.381      -0.304       0.098       0.501       0.578       0.728
-    LANG            -0.313      -0.262      -0.235      -0.099       0.038       0.064       0.115
+ Y5_M_INT ON
+    Y3_M_JUDGE       0.048       0.066       0.075       0.124       0.173       0.183       0.201
+    Y3_M_INT         0.237       0.254       0.263       0.310       0.357       0.366       0.384
+    Y3_MATH          0.056       0.075       0.085       0.136       0.186       0.196       0.215
+    GENDER           0.147       0.180       0.197       0.286       0.374       0.391       0.424
+    SES             -0.129      -0.111      -0.101      -0.053      -0.005       0.004       0.023
+    GEO             -0.109      -0.074      -0.056       0.038       0.133       0.151       0.186
+    INDIG           -0.615      -0.461      -0.383       0.028       0.439       0.518       0.672
+    LANG            -0.306      -0.255      -0.229      -0.093       0.043       0.069       0.120
 
  Y5_MATH  ON
-    Y3_MATH_JU       0.139       0.147       0.152       0.174       0.196       0.200       0.208
-    Y3_MATH_IN      -0.029      -0.015      -0.008       0.029       0.065       0.072       0.086
-    Y3_MATH          0.570       0.577       0.581       0.602       0.623       0.627       0.635
-    GENDER          -0.038      -0.020      -0.010       0.039       0.089       0.098       0.117
-    SES              0.050       0.061       0.066       0.094       0.121       0.126       0.137
-    GEO             -0.034      -0.011       0.000       0.061       0.122       0.134       0.157
-    INDIG           -0.877      -0.793      -0.750      -0.525      -0.300      -0.256      -0.172
-    LANG            -0.310      -0.283      -0.269      -0.196      -0.124      -0.110      -0.082
+    Y3_M_JUDGE       0.137       0.146       0.151       0.175       0.200       0.204       0.213
+    Y3_M_INT        -0.009       0.001       0.006       0.032       0.058       0.063       0.072
+    Y3_MATH          0.562       0.570       0.575       0.598       0.622       0.626       0.635
+    GENDER          -0.037      -0.019      -0.010       0.039       0.088       0.097       0.115
+    SES              0.053       0.063       0.068       0.095       0.121       0.126       0.136
+    GEO             -0.018       0.004       0.015       0.072       0.129       0.140       0.161
+    INDIG           -0.805      -0.729      -0.690      -0.487      -0.284      -0.245      -0.169
+    LANG            -0.272      -0.244      -0.229      -0.154      -0.080      -0.065      -0.037
 
- Y3_MATH_ ON
-    GENDER           0.025       0.052       0.066       0.137       0.208       0.222       0.248
-    SES              0.062       0.075       0.082       0.116       0.151       0.157       0.170
-    GEO             -0.153      -0.125      -0.110      -0.034       0.042       0.057       0.085
-    INDIG           -0.350      -0.257      -0.209       0.040       0.290       0.338       0.431
-    LANG            -0.214      -0.172      -0.151      -0.041       0.070       0.091       0.133
+ Y3_M_JUD ON
+    GENDER           0.020       0.046       0.060       0.131       0.201       0.215       0.241
+    SES              0.061       0.074       0.080       0.114       0.149       0.155       0.168
+    GEO             -0.148      -0.119      -0.105      -0.029       0.047       0.061       0.089
+    INDIG           -0.375      -0.282      -0.235       0.014       0.263       0.310       0.403
+    LANG            -0.205      -0.164      -0.143      -0.033       0.077       0.098       0.140
 
- Y3_MATH_ ON
-    GENDER           0.015       0.034       0.044       0.094       0.144       0.154       0.172
-    SES             -0.058      -0.048      -0.043      -0.017       0.010       0.015       0.025
-    GEO             -0.113      -0.092      -0.082      -0.028       0.027       0.037       0.057
-    INDIG           -0.290      -0.217      -0.180       0.016       0.211       0.249       0.322
-    LANG            -0.219      -0.186      -0.169      -0.082       0.005       0.022       0.055
+ Y3_M_INT ON
+    GENDER           0.024       0.050       0.064       0.135       0.206       0.219       0.246
+    SES             -0.084      -0.070      -0.062      -0.025       0.013       0.020       0.034
+    GEO             -0.157      -0.129      -0.114      -0.037       0.040       0.055       0.083
+    INDIG           -0.485      -0.374      -0.317      -0.022       0.274       0.331       0.442
+    LANG            -0.306      -0.260      -0.236      -0.112       0.012       0.035       0.082
 
  Y3_MATH  ON
-    GENDER          -0.093      -0.068      -0.054       0.014       0.083       0.097       0.122
-    SES              0.257       0.270       0.277       0.312       0.347       0.353       0.367
-    GEO             -0.131      -0.103      -0.088      -0.013       0.062       0.077       0.105
-    INDIG           -1.041      -0.939      -0.886      -0.614      -0.342      -0.290      -0.188
-    LANG            -0.230      -0.191      -0.171      -0.067       0.037       0.057       0.096
+    GENDER          -0.105      -0.079      -0.065       0.005       0.075       0.088       0.114
+    SES              0.260       0.273       0.280       0.314       0.349       0.356       0.369
+    GEO             -0.129      -0.101      -0.086      -0.012       0.063       0.077       0.105
+    INDIG           -1.014      -0.912      -0.859      -0.584      -0.310      -0.257      -0.154
+    LANG            -0.230      -0.191      -0.171      -0.068       0.036       0.056       0.094
 
- Y7_MATH_ WITH
-    Y7_MATH_IN       0.280       0.296       0.305       0.348       0.392       0.400       0.417
-    Y7_MATH          0.077       0.086       0.090       0.112       0.134       0.139       0.147
+ Y7_M_JUD WITH
+    Y7_M_INT         0.233       0.252       0.262       0.312       0.363       0.373       0.392
+    Y7_MATH          0.076       0.084       0.088       0.108       0.129       0.132       0.140
 
- Y7_MATH_ WITH
-    Y7_MATH          0.063       0.072       0.077       0.103       0.129       0.134       0.143
+ Y7_M_INT WITH
+    Y7_MATH          0.041       0.050       0.055       0.079       0.103       0.107       0.116
 
- Y5_MATH_ WITH
-    Y5_MATH_IN       0.186       0.203       0.211       0.255       0.300       0.308       0.325
-    Y5_MATH          0.142       0.150       0.154       0.175       0.195       0.199       0.207
+ Y5_M_JUD WITH
+    Y5_M_INT         0.164       0.182       0.190       0.236       0.282       0.291       0.308
+    Y5_MATH          0.125       0.133       0.138       0.160       0.183       0.187       0.196
 
- Y5_MATH_ WITH
-    Y5_MATH          0.036       0.047       0.052       0.081       0.110       0.115       0.126
+ Y5_M_INT WITH
+    Y5_MATH          0.048       0.058       0.064       0.092       0.120       0.126       0.137
 
- Y3_MATH_ WITH
-    Y3_MATH_IN       0.139       0.149       0.154       0.182       0.209       0.215       0.225
-    Y3_MATH          0.391       0.405       0.412       0.449       0.487       0.494       0.508
+ Y3_M_JUD WITH
+    Y3_M_INT         0.190       0.204       0.212       0.250       0.289       0.296       0.311
+    Y3_MATH          0.388       0.402       0.409       0.446       0.482       0.489       0.503
 
- Y3_MATH_ WITH
-    Y3_MATH          0.059       0.069       0.073       0.098       0.122       0.127       0.136
+ Y3_M_INT WITH
+    Y3_MATH          0.081       0.094       0.100       0.134       0.168       0.175       0.187
 
  Intercepts
-    Y3_MATH_         3.513       3.561       3.586       3.714       3.842       3.867       3.915
-    Y3_MATH_         2.367       2.405       2.424       2.524       2.625       2.644       2.681
-    Y3_MATH         -0.128      -0.081      -0.057       0.068       0.193       0.216       0.263
-    Y5_MATH         -0.827      -0.774      -0.747      -0.606      -0.466      -0.439      -0.386
-    Y7_MATH         -0.318      -0.281      -0.262      -0.162      -0.062      -0.043      -0.006
+    Y3_M_JUD        -0.222      -0.174      -0.149      -0.022       0.105       0.130       0.178
+    Y3_M_INT        -0.174      -0.121      -0.093       0.049       0.191       0.219       0.272
+    Y3_MATH         -0.119      -0.073      -0.049       0.075       0.199       0.223       0.270
+    Y5_MATH         -0.072      -0.037      -0.019       0.074       0.167       0.185       0.220
+    Y7_MATH         -0.002       0.023       0.035       0.101       0.166       0.179       0.203
 
  Thresholds
-    Y5_MATH_        -1.077      -0.971      -0.917      -0.636      -0.355      -0.301      -0.196
-    Y5_MATH_        -0.017       0.079       0.129       0.386       0.643       0.692       0.789
-    Y5_MATH_         1.426       1.522       1.571       1.829       2.086       2.135       2.232
-    Y5_MATH_         2.273       2.372       2.423       2.688       2.954       3.004       3.104
-    Y7_MATH_        -1.691      -1.582      -1.526      -1.236      -0.945      -0.889      -0.780
-    Y7_MATH_        -0.561      -0.459      -0.407      -0.135       0.137       0.189       0.291
-    Y7_MATH_         0.816       0.919       0.972       1.247       1.523       1.575       1.678
-    Y7_MATH_         1.756       1.861       1.915       2.195       2.476       2.530       2.635
-    Y5_MATH_        -0.110      -0.014       0.036       0.293       0.551       0.600       0.697
-    Y5_MATH_         1.303       1.400       1.450       1.710       1.969       2.019       2.116
-    Y7_MATH_        -0.173      -0.073      -0.022       0.245       0.512       0.563       0.663
-    Y7_MATH_         1.309       1.412       1.465       1.740       2.016       2.068       2.171
+    Y5_M_JUD        -2.993      -2.912      -2.870      -2.653      -2.435      -2.393      -2.312
+    Y5_M_JUD        -1.939      -1.874      -1.841      -1.667      -1.493      -1.460      -1.394
+    Y5_M_JUD        -0.546      -0.484      -0.451      -0.283      -0.115      -0.083      -0.020
+    Y5_M_JUD         0.291       0.356       0.389       0.564       0.738       0.772       0.837
+    Y7_M_JUD        -3.033      -2.942      -2.896      -2.653      -2.410      -2.363      -2.272
+    Y7_M_JUD        -1.945      -1.874      -1.838      -1.649      -1.461      -1.425      -1.354
+    Y7_M_JUD        -0.702      -0.636      -0.601      -0.423      -0.244      -0.210      -0.143
+    Y7_M_JUD         0.198       0.268       0.303       0.490       0.676       0.712       0.781
+    Y5_M_INT        -1.528      -1.464      -1.432      -1.260      -1.089      -1.057      -0.993
+    Y5_M_INT        -0.135      -0.077      -0.047       0.109       0.265       0.295       0.353
+    Y7_M_INT        -1.411      -1.337      -1.300      -1.102      -0.905      -0.867      -0.793
+    Y7_M_INT        -0.030       0.046       0.084       0.285       0.485       0.524       0.599
 
  Residual Variances
-    Y3_MATH_         0.900       0.924       0.936       0.999       1.061       1.073       1.097
-    Y3_MATH_         0.434       0.450       0.458       0.499       0.540       0.548       0.564
-    Y3_MATH          0.828       0.843       0.850       0.889       0.927       0.934       0.949
-    Y5_MATH          0.397       0.403       0.406       0.421       0.436       0.439       0.445
-    Y7_MATH          0.256       0.261       0.263       0.277       0.290       0.293       0.298
+    Y3_M_JUD         0.886       0.909       0.921       0.982       1.043       1.055       1.078
+    Y3_M_INT         0.864       0.895       0.911       0.993       1.075       1.091       1.121
+    Y3_MATH          0.827       0.841       0.849       0.887       0.925       0.932       0.947
+    Y5_MATH          0.396       0.402       0.405       0.421       0.438       0.441       0.447
+    Y7_MATH          0.244       0.249       0.251       0.265       0.278       0.281       0.286
 
 
 CONFIDENCE INTERVALS OF STANDARDIZED MODEL RESULTS
@@ -942,138 +1083,138 @@ STDYX Standardization
 
                   Lower .5%  Lower 2.5%    Lower 5%    Estimate    Upper 5%  Upper 2.5%   Upper .5%
 
- Y7_MATH_ ON
-    Y5_MATH_JU       0.265       0.281       0.289       0.332       0.374       0.383       0.399
-    Y5_MATH_IN       0.065       0.080       0.087       0.126       0.165       0.172       0.187
-    Y5_MATH          0.162       0.175       0.182       0.219       0.255       0.262       0.275
-    Y3_MATH_JU       0.088       0.101       0.108       0.145       0.182       0.189       0.203
-    GENDER          -0.122      -0.110      -0.103      -0.070      -0.036      -0.030      -0.017
-    SES             -0.003       0.012       0.019       0.058       0.096       0.103       0.118
-    GEO             -0.074      -0.061      -0.054      -0.018       0.018       0.024       0.038
-    INDIG           -0.116      -0.096      -0.086      -0.034       0.019       0.029       0.049
-    LANG            -0.117      -0.102      -0.094      -0.054      -0.015      -0.007       0.008
+ Y7_M_JUD ON
+    Y5_M_JUDGE       0.220       0.237       0.246       0.292       0.338       0.347       0.365
+    Y5_M_INT         0.049       0.063       0.071       0.110       0.149       0.157       0.171
+    Y5_MATH          0.164       0.180       0.187       0.228       0.268       0.276       0.291
+    Y3_M_JUDGE       0.082       0.097       0.105       0.146       0.187       0.195       0.210
+    GENDER          -0.116      -0.103      -0.096      -0.061      -0.026      -0.019      -0.006
+    SES             -0.007       0.011       0.020       0.067       0.114       0.123       0.140
+    GEO             -0.096      -0.080      -0.073      -0.032       0.009       0.017       0.033
+    INDIG           -0.103      -0.086      -0.078      -0.032       0.014       0.022       0.039
+    LANG            -0.107      -0.093      -0.086      -0.047      -0.009      -0.002       0.013
 
- Y7_MATH_ ON
-    Y5_MATH_JU       0.027       0.045       0.055       0.105       0.155       0.164       0.183
-    Y5_MATH_IN       0.382       0.398       0.406       0.449       0.492       0.500       0.516
-    Y5_MATH         -0.014       0.004       0.013       0.062       0.110       0.119       0.137
-    Y3_MATH_IN       0.035       0.049       0.056       0.093       0.129       0.137       0.150
-    GENDER           0.006       0.021       0.028       0.067       0.105       0.113       0.127
-    SES             -0.009       0.006       0.014       0.054       0.094       0.102       0.117
-    GEO             -0.057      -0.042      -0.034       0.007       0.048       0.056       0.071
-    INDIG           -0.120      -0.100      -0.089      -0.035       0.020       0.030       0.050
-    LANG            -0.088      -0.072      -0.064      -0.023       0.019       0.027       0.042
+ Y7_M_INT ON
+    Y5_M_JUDGE       0.001       0.021       0.031       0.085       0.138       0.148       0.169
+    Y5_M_INT         0.331       0.352       0.363       0.420       0.476       0.487       0.508
+    Y5_MATH          0.003       0.021       0.031       0.081       0.131       0.141       0.160
+    Y3_M_INT         0.040       0.054       0.061       0.098       0.135       0.142       0.156
+    GENDER           0.010       0.024       0.031       0.069       0.106       0.113       0.127
+    SES             -0.017      -0.001       0.007       0.050       0.094       0.102       0.118
+    GEO             -0.071      -0.054      -0.045      -0.001       0.044       0.053       0.069
+    INDIG           -0.122      -0.103      -0.093      -0.041       0.011       0.020       0.040
+    LANG            -0.112      -0.090      -0.079      -0.022       0.036       0.047       0.069
 
  Y7_MATH  ON
-    Y5_MATH_JU       0.037       0.048       0.054       0.084       0.114       0.120       0.131
-    Y5_MATH_IN       0.005       0.016       0.022       0.051       0.081       0.086       0.097
-    Y5_MATH          0.448       0.458       0.463       0.488       0.514       0.519       0.528
-    Y3_MATH          0.266       0.275       0.280       0.303       0.327       0.331       0.340
-    GENDER          -0.030      -0.021      -0.017       0.007       0.031       0.036       0.044
-    SES              0.075       0.084       0.089       0.113       0.137       0.141       0.150
-    GEO             -0.032      -0.023      -0.018       0.007       0.033       0.037       0.047
-    INDIG           -0.055      -0.042      -0.035       0.000       0.035       0.041       0.054
-    LANG            -0.068      -0.059      -0.055      -0.031      -0.008      -0.003       0.006
+    Y5_M_JUDGE       0.041       0.051       0.056       0.081       0.107       0.112       0.122
+    Y5_M_INT         0.018       0.028       0.033       0.058       0.084       0.089       0.099
+    Y5_MATH          0.459       0.468       0.473       0.497       0.521       0.525       0.534
+    Y3_MATH          0.259       0.268       0.273       0.299       0.324       0.329       0.339
+    GENDER          -0.041      -0.034      -0.030      -0.010       0.010       0.014       0.021
+    SES              0.085       0.093       0.097       0.118       0.138       0.142       0.150
+    GEO             -0.027      -0.019      -0.015       0.006       0.026       0.030       0.038
+    INDIG           -0.043      -0.033      -0.028      -0.002       0.024       0.029       0.039
+    LANG            -0.072      -0.065      -0.061      -0.040      -0.020      -0.016      -0.008
 
- Y5_MATH_ ON
-    Y3_MATH_JU       0.346       0.359       0.366       0.401       0.435       0.442       0.455
-    Y3_MATH_IN       0.009       0.021       0.028       0.061       0.094       0.101       0.113
-    Y3_MATH          0.210       0.224       0.231       0.268       0.305       0.312       0.325
-    GENDER          -0.033      -0.020      -0.013       0.021       0.055       0.061       0.074
-    SES             -0.077      -0.063      -0.056      -0.018       0.020       0.027       0.041
-    GEO             -0.089      -0.076      -0.069      -0.034       0.000       0.007       0.020
-    INDIG           -0.100      -0.084      -0.077      -0.036       0.005       0.013       0.028
-    LANG            -0.102      -0.088      -0.080      -0.041      -0.003       0.005       0.019
+ Y5_M_JUD ON
+    Y3_M_JUDGE       0.335       0.347       0.354       0.388       0.423       0.429       0.442
+    Y3_M_INT         0.014       0.027       0.033       0.068       0.102       0.109       0.122
+    Y3_MATH          0.214       0.228       0.236       0.274       0.312       0.319       0.333
+    GENDER          -0.023      -0.010      -0.004       0.030       0.064       0.070       0.083
+    SES             -0.092      -0.078      -0.070      -0.031       0.008       0.015       0.030
+    GEO             -0.090      -0.077      -0.071      -0.036      -0.001       0.005       0.018
+    INDIG           -0.083      -0.069      -0.062      -0.023       0.015       0.022       0.036
+    LANG            -0.110      -0.094      -0.086      -0.043       0.000       0.008       0.025
 
- Y5_MATH_ ON
-    Y3_MATH_JU       0.045       0.062       0.070       0.114       0.159       0.167       0.184
-    Y3_MATH_IN       0.231       0.245       0.253       0.291       0.330       0.337       0.352
-    Y3_MATH          0.055       0.072       0.080       0.125       0.169       0.178       0.195
-    GENDER           0.067       0.082       0.089       0.129       0.169       0.176       0.191
-    SES             -0.115      -0.099      -0.091      -0.050      -0.008       0.000       0.016
-    GEO             -0.040      -0.026      -0.018       0.020       0.059       0.066       0.080
-    INDIG           -0.070      -0.050      -0.040       0.013       0.066       0.076       0.096
-    LANG            -0.103      -0.086      -0.078      -0.033       0.012       0.021       0.038
+ Y5_M_INT ON
+    Y3_M_JUDGE       0.044       0.060       0.069       0.113       0.157       0.166       0.183
+    Y3_M_INT         0.217       0.233       0.241       0.283       0.324       0.332       0.348
+    Y3_MATH          0.051       0.068       0.077       0.123       0.169       0.178       0.195
+    GENDER           0.067       0.082       0.090       0.130       0.170       0.178       0.192
+    SES             -0.117      -0.101      -0.092      -0.048      -0.004       0.004       0.020
+    GEO             -0.047      -0.032      -0.024       0.017       0.058       0.065       0.081
+    INDIG           -0.083      -0.062      -0.052       0.004       0.059       0.070       0.091
+    LANG            -0.101      -0.085      -0.076      -0.031       0.014       0.023       0.040
 
  Y5_MATH  ON
-    Y3_MATH_JU       0.140       0.149       0.153       0.175       0.197       0.201       0.209
-    Y3_MATH_IN      -0.020      -0.011      -0.006       0.020       0.046       0.051       0.061
-    Y3_MATH          0.574       0.580       0.584       0.601       0.619       0.622       0.629
-    GENDER          -0.019      -0.010      -0.005       0.020       0.044       0.049       0.058
-    SES              0.051       0.061       0.066       0.093       0.121       0.126       0.136
-    GEO             -0.016      -0.005       0.000       0.029       0.058       0.064       0.075
-    INDIG           -0.127      -0.115      -0.108      -0.076      -0.044      -0.038      -0.025
-    LANG            -0.113      -0.103      -0.098      -0.071      -0.045      -0.040      -0.030
+    Y3_M_JUDGE       0.137       0.146       0.151       0.175       0.200       0.204       0.214
+    Y3_M_INT        -0.009       0.001       0.006       0.032       0.058       0.063       0.072
+    Y3_MATH          0.566       0.574       0.578       0.599       0.620       0.624       0.632
+    GENDER          -0.019      -0.009      -0.005       0.020       0.044       0.049       0.058
+    SES              0.054       0.063       0.068       0.095       0.121       0.126       0.136
+    GEO             -0.009       0.002       0.007       0.034       0.062       0.067       0.077
+    INDIG           -0.119      -0.108      -0.102      -0.072      -0.042      -0.037      -0.025
+    LANG            -0.099      -0.089      -0.084      -0.056      -0.029      -0.024      -0.014
 
- Y3_MATH_ ON
-    GENDER           0.013       0.026       0.033       0.068       0.103       0.109       0.122
-    SES              0.062       0.075       0.081       0.115       0.149       0.156       0.168
-    GEO             -0.072      -0.059      -0.052      -0.016       0.020       0.027       0.040
-    INDIG           -0.050      -0.037      -0.030       0.006       0.042       0.049       0.062
-    LANG            -0.077      -0.062      -0.055      -0.015       0.025       0.033       0.048
+ Y3_M_JUD ON
+    GENDER           0.011       0.024       0.030       0.065       0.100       0.107       0.120
+    SES              0.061       0.074       0.081       0.115       0.148       0.155       0.168
+    GEO             -0.070      -0.057      -0.050      -0.014       0.022       0.029       0.043
+    INDIG           -0.056      -0.042      -0.035       0.002       0.039       0.046       0.060
+    LANG            -0.075      -0.060      -0.052      -0.012       0.028       0.036       0.051
 
- Y3_MATH_ ON
-    GENDER           0.012       0.025       0.031       0.066       0.101       0.108       0.121
-    SES             -0.082      -0.068      -0.061      -0.024       0.014       0.021       0.035
-    GEO             -0.076      -0.062      -0.055      -0.019       0.018       0.025       0.039
-    INDIG           -0.059      -0.044      -0.037       0.003       0.043       0.051       0.066
-    LANG            -0.112      -0.095      -0.087      -0.042       0.003       0.011       0.028
+ Y3_M_INT ON
+    GENDER           0.013       0.026       0.032       0.067       0.102       0.109       0.122
+    SES             -0.084      -0.070      -0.062      -0.025       0.013       0.020       0.034
+    GEO             -0.075      -0.061      -0.054      -0.018       0.019       0.026       0.040
+    INDIG           -0.072      -0.055      -0.047      -0.003       0.041       0.049       0.065
+    LANG            -0.112      -0.095      -0.086      -0.041       0.004       0.013       0.030
 
  Y3_MATH  ON
-    GENDER          -0.047      -0.034      -0.027       0.007       0.042       0.048       0.061
-    SES              0.260       0.272       0.279       0.312       0.345       0.352       0.364
-    GEO             -0.062      -0.049      -0.042      -0.006       0.030       0.037       0.050
-    INDIG           -0.151      -0.136      -0.128      -0.089      -0.050      -0.042      -0.028
-    LANG            -0.084      -0.069      -0.062      -0.024       0.013       0.021       0.035
+    GENDER          -0.052      -0.039      -0.033       0.002       0.037       0.044       0.057
+    SES              0.263       0.275       0.282       0.315       0.348       0.354       0.367
+    GEO             -0.061      -0.048      -0.041      -0.006       0.030       0.037       0.050
+    INDIG           -0.150      -0.135      -0.127      -0.087      -0.046      -0.038      -0.023
+    LANG            -0.084      -0.070      -0.062      -0.025       0.013       0.020       0.034
 
- Y7_MATH_ WITH
-    Y7_MATH_IN       0.280       0.296       0.305       0.348       0.392       0.400       0.417
-    Y7_MATH          0.149       0.164       0.172       0.213       0.254       0.262       0.277
+ Y7_M_JUD WITH
+    Y7_M_INT         0.233       0.252       0.262       0.312       0.363       0.373       0.392
+    Y7_MATH          0.151       0.165       0.172       0.210       0.248       0.256       0.270
 
- Y7_MATH_ WITH
-    Y7_MATH          0.120       0.138       0.148       0.196       0.244       0.253       0.271
+ Y7_M_INT WITH
+    Y7_MATH          0.082       0.099       0.107       0.153       0.198       0.207       0.224
 
- Y5_MATH_ WITH
-    Y5_MATH_IN       0.186       0.203       0.211       0.255       0.300       0.308       0.325
-    Y5_MATH          0.222       0.233       0.239       0.269       0.300       0.306       0.317
+ Y5_M_JUD WITH
+    Y5_M_INT         0.164       0.182       0.190       0.236       0.282       0.291       0.308
+    Y5_MATH          0.194       0.207       0.213       0.247       0.281       0.287       0.300
 
- Y5_MATH_ WITH
-    Y5_MATH          0.056       0.073       0.081       0.125       0.169       0.178       0.194
+ Y5_M_INT WITH
+    Y5_MATH          0.074       0.090       0.099       0.142       0.185       0.194       0.210
 
- Y3_MATH_ WITH
-    Y3_MATH_IN       0.207       0.219       0.225       0.258       0.290       0.296       0.309
-    Y3_MATH          0.433       0.444       0.449       0.477       0.505       0.510       0.521
+ Y3_M_JUD WITH
+    Y3_M_INT         0.202       0.214       0.221       0.254       0.287       0.293       0.305
+    Y3_MATH          0.435       0.445       0.450       0.477       0.505       0.510       0.520
 
- Y3_MATH_ WITH
-    Y3_MATH          0.092       0.105       0.112       0.147       0.182       0.189       0.202
+ Y3_M_INT WITH
+    Y3_MATH          0.089       0.102       0.108       0.143       0.178       0.184       0.197
 
  Intercepts
-    Y3_MATH_         3.414       3.479       3.512       3.684       3.857       3.890       3.954
-    Y3_MATH_         3.286       3.352       3.386       3.561       3.736       3.770       3.835
-    Y3_MATH         -0.128      -0.081      -0.057       0.068       0.193       0.217       0.263
-    Y5_MATH         -0.826      -0.773      -0.746      -0.606      -0.465      -0.438      -0.385
-    Y7_MATH         -0.316      -0.279      -0.260      -0.162      -0.063      -0.044      -0.008
+    Y3_M_JUD        -0.222      -0.174      -0.150      -0.022       0.105       0.130       0.178
+    Y3_M_INT        -0.173      -0.120      -0.093       0.049       0.191       0.218       0.271
+    Y3_MATH         -0.120      -0.073      -0.049       0.075       0.199       0.223       0.270
+    Y5_MATH         -0.072      -0.037      -0.019       0.074       0.167       0.185       0.220
+    Y7_MATH         -0.002       0.022       0.035       0.101       0.166       0.179       0.204
 
  Thresholds
-    Y5_MATH_        -0.868      -0.782      -0.738      -0.509      -0.280      -0.236      -0.150
-    Y5_MATH_        -0.009       0.067       0.105       0.309       0.512       0.551       0.627
-    Y5_MATH_         1.160       1.233       1.270       1.463       1.656       1.693       1.766
-    Y5_MATH_         1.846       1.919       1.956       2.151       2.345       2.382       2.455
-    Y7_MATH_        -1.279      -1.195      -1.152      -0.928      -0.703      -0.660      -0.576
-    Y7_MATH_        -0.422      -0.346      -0.306      -0.102       0.103       0.142       0.219
-    Y7_MATH_         0.622       0.697       0.736       0.936       1.137       1.175       1.250
-    Y7_MATH_         1.335       1.410       1.448       1.648       1.848       1.887       1.962
-    Y5_MATH_        -0.096      -0.010       0.035       0.266       0.497       0.541       0.628
-    Y5_MATH_         1.202       1.285       1.328       1.550       1.772       1.814       1.898
-    Y7_MATH_        -0.138      -0.057      -0.016       0.199       0.414       0.455       0.535
-    Y7_MATH_         1.081       1.160       1.200       1.411       1.621       1.662       1.741
+    Y5_M_JUD        -2.414      -2.348      -2.314      -2.136      -1.959      -1.925      -1.858
+    Y5_M_JUD        -1.564      -1.511      -1.484      -1.342      -1.201      -1.174      -1.121
+    Y5_M_JUD        -0.440      -0.390      -0.364      -0.228      -0.093      -0.067      -0.016
+    Y5_M_JUD         0.235       0.287       0.314       0.454       0.594       0.621       0.673
+    Y7_M_JUD        -2.364      -2.294      -2.259      -2.074      -1.889      -1.853      -1.784
+    Y7_M_JUD        -1.512      -1.459      -1.431      -1.289      -1.147      -1.120      -1.067
+    Y7_M_JUD        -0.547      -0.496      -0.469      -0.330      -0.192      -0.165      -0.113
+    Y7_M_JUD         0.152       0.207       0.235       0.383       0.530       0.558       0.614
+    Y5_M_INT        -1.393      -1.334      -1.304      -1.148      -0.991      -0.961      -0.903
+    Y5_M_INT        -0.123      -0.070      -0.043       0.099       0.241       0.268       0.321
+    Y7_M_INT        -1.165      -1.105      -1.074      -0.914      -0.754      -0.723      -0.663
+    Y7_M_INT        -0.027       0.036       0.068       0.236       0.404       0.436       0.499
 
  Residual Variances
-    Y3_MATH_         0.969       0.972       0.974       0.983       0.991       0.993       0.996
-    Y3_MATH_         0.983       0.986       0.987       0.993       0.999       1.001       1.003
-    Y3_MATH          0.855       0.863       0.867       0.889       0.911       0.916       0.924
-    Y5_MATH          0.393       0.399       0.403       0.420       0.438       0.441       0.448
-    Y7_MATH          0.250       0.256       0.259       0.275       0.292       0.295       0.301
+    Y3_M_JUD         0.969       0.973       0.974       0.983       0.992       0.993       0.997
+    Y3_M_INT         0.983       0.985       0.987       0.993       0.999       1.001       1.003
+    Y3_MATH          0.853       0.862       0.866       0.888       0.910       0.914       0.923
+    Y5_MATH          0.394       0.401       0.404       0.423       0.441       0.444       0.451
+    Y7_MATH          0.240       0.246       0.249       0.265       0.280       0.284       0.290
 
 
 CONFIDENCE INTERVALS OF TOTAL, TOTAL INDIRECT, SPECIFIC INDIRECT, AND DIRECT EFFECTS
@@ -1083,111 +1224,111 @@ CONFIDENCE INTERVALS OF TOTAL, TOTAL INDIRECT, SPECIFIC INDIRECT, AND DIRECT EFF
 
 Effects from GENDER to Y5_MATH
 
-  Total             -0.036      -0.010       0.004       0.074       0.145       0.159       0.185
-  Total indirect    -0.041      -0.023      -0.014       0.035       0.084       0.093       0.112
+  Total             -0.040      -0.014      -0.001       0.069       0.139       0.152       0.178
+  Total indirect    -0.048      -0.029      -0.020       0.030       0.080       0.089       0.108
 
   Specific indirect 1
     Y5_MATH
-    Y3_MATH_
-    GENDER           0.004       0.009       0.011       0.024       0.036       0.039       0.044
+    Y3_M_JUD
+    GENDER           0.003       0.007       0.010       0.023       0.036       0.038       0.043
 
   Specific indirect 2
     Y5_MATH
-    Y3_MATH_
-    GENDER          -0.003      -0.002      -0.001       0.003       0.006       0.007       0.008
+    Y3_M_INT
+    GENDER          -0.002      -0.001       0.000       0.004       0.008       0.009       0.011
 
   Specific indirect 3
     Y5_MATH
     Y3_MATH
-    GENDER          -0.056      -0.041      -0.033       0.009       0.050       0.058       0.074
+    GENDER          -0.063      -0.047      -0.039       0.003       0.045       0.053       0.068
 
   Direct
     Y5_MATH
-    GENDER          -0.038      -0.020      -0.010       0.039       0.089       0.098       0.117
+    GENDER          -0.037      -0.019      -0.010       0.039       0.088       0.097       0.115
 
 
 Effects from GENDER to Y7_MATH
 
-  Total             -0.031      -0.004       0.009       0.080       0.151       0.165       0.191
-  Total indirect    -0.022      -0.001       0.010       0.066       0.122       0.133       0.154
+  Total             -0.061      -0.036      -0.023       0.044       0.111       0.124       0.149
+  Total indirect    -0.024      -0.003       0.008       0.064       0.120       0.131       0.152
 
   Specific indirect 1
     Y7_MATH
-    Y5_MATH_
-    GENDER          -0.006      -0.004      -0.002       0.003       0.009       0.010       0.013
+    Y5_M_JUD
+    GENDER          -0.004      -0.002      -0.001       0.005       0.011       0.012       0.014
 
   Specific indirect 2
     Y7_MATH
-    Y5_MATH_
-    GENDER           0.000       0.003       0.005       0.013       0.022       0.024       0.027
+    Y5_M_INT
+    GENDER           0.003       0.006       0.007       0.015       0.023       0.025       0.028
 
   Specific indirect 3
     Y7_MATH
     Y3_MATH
-    GENDER          -0.028      -0.021      -0.017       0.004       0.025       0.029       0.037
+    GENDER          -0.031      -0.024      -0.020       0.001       0.022       0.026       0.034
 
   Specific indirect 4
     Y7_MATH
     Y5_MATH
-    GENDER          -0.019      -0.010      -0.005       0.019       0.043       0.048       0.057
+    GENDER          -0.018      -0.009      -0.005       0.019       0.044       0.048       0.057
 
   Specific indirect 5
     Y7_MATH
-    Y5_MATH_
-    Y3_MATH_
-    GENDER           0.000       0.001       0.002       0.005       0.008       0.008       0.009
+    Y5_M_JUD
+    Y3_M_JUD
+    GENDER           0.000       0.001       0.001       0.004       0.007       0.007       0.008
 
   Specific indirect 6
     Y7_MATH
-    Y5_MATH_
-    Y3_MATH_
+    Y5_M_JUD
+    Y3_M_INT
     GENDER           0.000       0.000       0.000       0.001       0.001       0.001       0.002
 
   Specific indirect 7
     Y7_MATH
-    Y5_MATH_
+    Y5_M_JUD
     Y3_MATH
     GENDER          -0.002      -0.002      -0.001       0.000       0.002       0.002       0.003
 
   Specific indirect 8
     Y7_MATH
-    Y5_MATH_
-    Y3_MATH_
+    Y5_M_INT
+    Y3_M_JUD
     GENDER           0.000       0.000       0.000       0.001       0.002       0.002       0.002
 
   Specific indirect 9
     Y7_MATH
-    Y5_MATH_
-    Y3_MATH_
-    GENDER           0.000       0.000       0.000       0.002       0.004       0.004       0.004
+    Y5_M_INT
+    Y3_M_INT
+    GENDER           0.000       0.000       0.001       0.002       0.004       0.004       0.005
 
   Specific indirect 10
     Y7_MATH
-    Y5_MATH_
+    Y5_M_INT
     Y3_MATH
-    GENDER          -0.001       0.000       0.000       0.000       0.001       0.001       0.001
+    GENDER          -0.001      -0.001       0.000       0.000       0.001       0.001       0.001
 
   Specific indirect 11
     Y7_MATH
     Y5_MATH
-    Y3_MATH_
-    GENDER           0.002       0.004       0.005       0.012       0.018       0.019       0.021
+    Y3_M_JUD
+    GENDER           0.001       0.004       0.005       0.011       0.018       0.019       0.021
 
   Specific indirect 12
     Y7_MATH
     Y5_MATH
-    Y3_MATH_
-    GENDER          -0.002      -0.001       0.000       0.001       0.003       0.003       0.004
+    Y3_M_INT
+    GENDER          -0.001       0.000       0.000       0.002       0.004       0.005       0.005
 
   Specific indirect 13
     Y7_MATH
     Y5_MATH
     Y3_MATH
-    GENDER          -0.028      -0.020      -0.016       0.004       0.025       0.028       0.036
+    GENDER          -0.031      -0.023      -0.019       0.001       0.022       0.026       0.034
 
   Direct
     Y7_MATH
-    GENDER          -0.061      -0.043      -0.034       0.014       0.062       0.071       0.089
+    GENDER          -0.083      -0.068      -0.060      -0.020       0.020       0.028       0.043
 
 
 
@@ -1200,132 +1341,443 @@ STDYX Standardization
 
 Effects from GENDER to Y5_MATH
 
-  Total             -0.018      -0.005       0.002       0.037       0.072       0.079       0.092
-  Total indirect    -0.021      -0.012      -0.007       0.018       0.042       0.047       0.056
+  Total             -0.020      -0.007       0.000       0.035       0.069       0.076       0.089
+  Total indirect    -0.024      -0.015      -0.010       0.015       0.040       0.045       0.054
 
   Specific indirect 1
     Y5_MATH
-    Y3_MATH_
-    GENDER           0.002       0.004       0.006       0.012       0.018       0.019       0.022
+    Y3_M_JUD
+    GENDER           0.001       0.004       0.005       0.011       0.018       0.019       0.022
 
   Specific indirect 2
     Y5_MATH
-    Y3_MATH_
-    GENDER          -0.002      -0.001       0.000       0.001       0.003       0.004       0.004
+    Y3_M_INT
+    GENDER          -0.001       0.000       0.000       0.002       0.004       0.005       0.005
 
   Specific indirect 3
     Y5_MATH
     Y3_MATH
-    GENDER          -0.028      -0.020      -0.016       0.004       0.025       0.029       0.037
+    GENDER          -0.031      -0.024      -0.020       0.001       0.022       0.026       0.034
 
   Direct
     Y5_MATH
-    GENDER          -0.019      -0.010      -0.005       0.020       0.044       0.049       0.058
+    GENDER          -0.019      -0.009      -0.005       0.020       0.044       0.049       0.058
 
 
 Effects from GENDER to Y7_MATH
 
-  Total             -0.015      -0.002       0.005       0.040       0.075       0.082       0.095
-  Total indirect    -0.011       0.000       0.005       0.033       0.061       0.066       0.077
+  Total             -0.031      -0.018      -0.012       0.022       0.056       0.062       0.075
+  Total indirect    -0.012      -0.001       0.004       0.032       0.060       0.065       0.076
 
   Specific indirect 1
     Y7_MATH
-    Y5_MATH_
-    GENDER          -0.003      -0.002      -0.001       0.002       0.005       0.005       0.006
+    Y5_M_JUD
+    GENDER          -0.002      -0.001       0.000       0.002       0.005       0.006       0.007
 
   Specific indirect 2
     Y7_MATH
-    Y5_MATH_
-    GENDER           0.000       0.001       0.002       0.007       0.011       0.012       0.013
+    Y5_M_INT
+    GENDER           0.001       0.003       0.004       0.008       0.012       0.012       0.014
 
   Specific indirect 3
     Y7_MATH
     Y3_MATH
-    GENDER          -0.014      -0.010      -0.008       0.002       0.013       0.015       0.019
+    GENDER          -0.016      -0.012      -0.010       0.001       0.011       0.013       0.017
 
   Specific indirect 4
     Y7_MATH
     Y5_MATH
-    GENDER          -0.009      -0.005      -0.003       0.010       0.022       0.024       0.029
+    GENDER          -0.009      -0.005      -0.002       0.010       0.022       0.024       0.029
 
   Specific indirect 5
     Y7_MATH
-    Y5_MATH_
-    Y3_MATH_
-    GENDER           0.000       0.001       0.001       0.002       0.004       0.004       0.005
+    Y5_M_JUD
+    Y3_M_JUD
+    GENDER           0.000       0.001       0.001       0.002       0.003       0.004       0.004
 
   Specific indirect 6
     Y7_MATH
-    Y5_MATH_
-    Y3_MATH_
+    Y5_M_JUD
+    Y3_M_INT
     GENDER           0.000       0.000       0.000       0.000       0.001       0.001       0.001
 
   Specific indirect 7
     Y7_MATH
-    Y5_MATH_
+    Y5_M_JUD
     Y3_MATH
     GENDER          -0.001      -0.001      -0.001       0.000       0.001       0.001       0.001
 
   Specific indirect 8
     Y7_MATH
-    Y5_MATH_
-    Y3_MATH_
+    Y5_M_INT
+    Y3_M_JUD
     GENDER           0.000       0.000       0.000       0.000       0.001       0.001       0.001
 
   Specific indirect 9
     Y7_MATH
-    Y5_MATH_
-    Y3_MATH_
+    Y5_M_INT
+    Y3_M_INT
     GENDER           0.000       0.000       0.000       0.001       0.002       0.002       0.002
 
   Specific indirect 10
     Y7_MATH
-    Y5_MATH_
+    Y5_M_INT
     Y3_MATH
     GENDER           0.000       0.000       0.000       0.000       0.000       0.000       0.000
 
   Specific indirect 11
     Y7_MATH
     Y5_MATH
-    Y3_MATH_
-    GENDER           0.001       0.002       0.003       0.006       0.009       0.009       0.011
+    Y3_M_JUD
+    GENDER           0.001       0.002       0.002       0.006       0.009       0.010       0.011
 
   Specific indirect 12
     Y7_MATH
     Y5_MATH
-    Y3_MATH_
-    GENDER          -0.001       0.000       0.000       0.001       0.002       0.002       0.002
+    Y3_M_INT
+    GENDER          -0.001       0.000       0.000       0.001       0.002       0.002       0.003
 
   Specific indirect 13
     Y7_MATH
     Y5_MATH
     Y3_MATH
-    GENDER          -0.014      -0.010      -0.008       0.002       0.012       0.014       0.018
+    GENDER          -0.016      -0.012      -0.010       0.001       0.011       0.013       0.017
 
   Direct
     Y7_MATH
-    GENDER          -0.030      -0.021      -0.017       0.007       0.031       0.036       0.044
+    GENDER          -0.041      -0.034      -0.030      -0.010       0.010       0.014       0.021
 
 
 
 
-MODEL MODIFICATION INDICES
-
-NOTE:  Modification indices for direct effects of observed dependent variables
-regressed on covariates and residual covariances among observed dependent
-variables may not be included.  To include these, request MODINDICES (ALL).
-
-Minimum M.I. value for printing the modification index    10.000
-
-                                   M.I.     E.P.C.  Std E.P.C.  StdYX E.P.C.
-
-No modification indices above the minimum value.
+TECHNICAL 1 OUTPUT
 
 
+     PARAMETER SPECIFICATION
 
-     Beginning Time:  16:14:13
-        Ending Time:  16:14:13
-       Elapsed Time:  00:00:00
+
+           TAU
+              Y5_M_JUD      Y5_M_JUD      Y5_M_JUD      Y5_M_JUD      Y7_M_JUD
+              ________      ________      ________      ________      ________
+                  1             2             3             4             5
+
+
+           TAU
+              Y7_M_JUD      Y7_M_JUD      Y7_M_JUD      Y5_M_INT      Y5_M_INT
+              ________      ________      ________      ________      ________
+                  6             7             8             9            10
+
+
+           TAU
+              Y7_M_INT      Y7_M_INT
+              ________      ________
+                 11            12
+
+
+           NU
+              Y3_M_JUD      Y5_M_JUD      Y7_M_JUD      Y3_M_INT      Y5_M_INT
+              ________      ________      ________      ________      ________
+                  0             0             0             0             0
+
+
+           NU
+              Y7_M_INT      Y3_MATH       Y5_MATH       Y7_MATH
+              ________      ________      ________      ________
+                  0             0             0             0
+
+
+           LAMBDA
+              Y3_M_JUD      Y5_M_JUD      Y7_M_JUD      Y3_M_INT      Y5_M_INT
+              ________      ________      ________      ________      ________
+ Y3_M_JUD           0             0             0             0             0
+ Y5_M_JUD           0             0             0             0             0
+ Y7_M_JUD           0             0             0             0             0
+ Y3_M_INT           0             0             0             0             0
+ Y5_M_INT           0             0             0             0             0
+ Y7_M_INT           0             0             0             0             0
+ Y3_MATH            0             0             0             0             0
+ Y5_MATH            0             0             0             0             0
+ Y7_MATH            0             0             0             0             0
+
+
+           LAMBDA
+              Y7_M_INT      Y3_MATH       Y5_MATH       Y7_MATH
+              ________      ________      ________      ________
+ Y3_M_JUD           0             0             0             0
+ Y5_M_JUD           0             0             0             0
+ Y7_M_JUD           0             0             0             0
+ Y3_M_INT           0             0             0             0
+ Y5_M_INT           0             0             0             0
+ Y7_M_INT           0             0             0             0
+ Y3_MATH            0             0             0             0
+ Y5_MATH            0             0             0             0
+ Y7_MATH            0             0             0             0
+
+
+           THETA
+              Y3_M_JUD      Y5_M_JUD      Y7_M_JUD      Y3_M_INT      Y5_M_INT
+              ________      ________      ________      ________      ________
+ Y3_M_JUD           0
+ Y5_M_JUD           0             0
+ Y7_M_JUD           0             0             0
+ Y3_M_INT           0             0             0             0
+ Y5_M_INT           0             0             0             0             0
+ Y7_M_INT           0             0             0             0             0
+ Y3_MATH            0             0             0             0             0
+ Y5_MATH            0             0             0             0             0
+ Y7_MATH            0             0             0             0             0
+
+
+           THETA
+              Y7_M_INT      Y3_MATH       Y5_MATH       Y7_MATH
+              ________      ________      ________      ________
+ Y7_M_INT           0
+ Y3_MATH            0             0
+ Y5_MATH            0             0             0
+ Y7_MATH            0             0             0             0
+
+
+           ALPHA
+              Y3_M_JUD      Y5_M_JUD      Y7_M_JUD      Y3_M_INT      Y5_M_INT
+              ________      ________      ________      ________      ________
+                 13             0             0            14             0
+
+
+           ALPHA
+              Y7_M_INT      Y3_MATH       Y5_MATH       Y7_MATH
+              ________      ________      ________      ________
+                  0            15            16            17
+
+
+           BETA
+              Y3_M_JUD      Y5_M_JUD      Y7_M_JUD      Y3_M_INT      Y5_M_INT
+              ________      ________      ________      ________      ________
+ Y3_M_JUD           0             0             0             0             0
+ Y5_M_JUD          18             0             0            19             0
+ Y7_M_JUD          21            22             0             0            23
+ Y3_M_INT           0             0             0             0             0
+ Y5_M_INT          25             0             0            26             0
+ Y7_M_INT           0            28             0            29            30
+ Y3_MATH            0             0             0             0             0
+ Y5_MATH           32             0             0            33             0
+ Y7_MATH            0            35             0             0            36
+
+
+           BETA
+              Y7_M_INT      Y3_MATH       Y5_MATH       Y7_MATH
+              ________      ________      ________      ________
+ Y3_M_JUD           0             0             0             0
+ Y5_M_JUD           0            20             0             0
+ Y7_M_JUD           0             0            24             0
+ Y3_M_INT           0             0             0             0
+ Y5_M_INT           0            27             0             0
+ Y7_M_INT           0             0            31             0
+ Y3_MATH            0             0             0             0
+ Y5_MATH            0            34             0             0
+ Y7_MATH            0            37            38             0
+
+
+           GAMMA
+              GENDER        SES           GEO           INDIG         LANG
+              ________      ________      ________      ________      ________
+ Y3_M_JUD          39            40            41            42            43
+ Y5_M_JUD          44            45            46            47            48
+ Y7_M_JUD          49            50            51            52            53
+ Y3_M_INT          54            55            56            57            58
+ Y5_M_INT          59            60            61            62            63
+ Y7_M_INT          64            65            66            67            68
+ Y3_MATH           69            70            71            72            73
+ Y5_MATH           74            75            76            77            78
+ Y7_MATH           79            80            81            82            83
+
+
+           PSI
+              Y3_M_JUD      Y5_M_JUD      Y7_M_JUD      Y3_M_INT      Y5_M_INT
+              ________      ________      ________      ________      ________
+ Y3_M_JUD          84
+ Y5_M_JUD           0             0
+ Y7_M_JUD           0             0             0
+ Y3_M_INT          85             0             0            86
+ Y5_M_INT           0            87             0             0             0
+ Y7_M_INT           0             0            88             0             0
+ Y3_MATH           89             0             0            90             0
+ Y5_MATH            0            92             0             0            93
+ Y7_MATH            0             0            95             0             0
+
+
+           PSI
+              Y7_M_INT      Y3_MATH       Y5_MATH       Y7_MATH
+              ________      ________      ________      ________
+ Y7_M_INT           0
+ Y3_MATH            0            91
+ Y5_MATH            0             0            94
+ Y7_MATH           96             0             0            97
+
+
+     STARTING VALUES
+
+
+           TAU
+              Y5_M_JUD      Y5_M_JUD      Y5_M_JUD      Y5_M_JUD      Y7_M_JUD
+              ________      ________      ________      ________      ________
+               -1.999        -1.216        -0.113         0.567        -1.887
+
+
+           TAU
+              Y7_M_JUD      Y7_M_JUD      Y7_M_JUD      Y5_M_INT      Y5_M_INT
+              ________      ________      ________      ________      ________
+               -1.045        -0.078         0.628        -1.258         0.007
+
+
+           TAU
+              Y7_M_INT      Y7_M_INT
+              ________      ________
+               -0.941         0.201
+
+
+           NU
+              Y3_M_JUD      Y5_M_JUD      Y7_M_JUD      Y3_M_INT      Y5_M_INT
+              ________      ________      ________      ________      ________
+                0.000         0.000         0.000         0.000         0.000
+
+
+           NU
+              Y7_M_INT      Y3_MATH       Y5_MATH       Y7_MATH
+              ________      ________      ________      ________
+                0.000         0.000         0.000         0.000
+
+
+           LAMBDA
+              Y3_M_JUD      Y5_M_JUD      Y7_M_JUD      Y3_M_INT      Y5_M_INT
+              ________      ________      ________      ________      ________
+ Y3_M_JUD       1.000         0.000         0.000         0.000         0.000
+ Y5_M_JUD       0.000         1.000         0.000         0.000         0.000
+ Y7_M_JUD       0.000         0.000         1.000         0.000         0.000
+ Y3_M_INT       0.000         0.000         0.000         1.000         0.000
+ Y5_M_INT       0.000         0.000         0.000         0.000         1.000
+ Y7_M_INT       0.000         0.000         0.000         0.000         0.000
+ Y3_MATH        0.000         0.000         0.000         0.000         0.000
+ Y5_MATH        0.000         0.000         0.000         0.000         0.000
+ Y7_MATH        0.000         0.000         0.000         0.000         0.000
+
+
+           LAMBDA
+              Y7_M_INT      Y3_MATH       Y5_MATH       Y7_MATH
+              ________      ________      ________      ________
+ Y3_M_JUD       0.000         0.000         0.000         0.000
+ Y5_M_JUD       0.000         0.000         0.000         0.000
+ Y7_M_JUD       0.000         0.000         0.000         0.000
+ Y3_M_INT       0.000         0.000         0.000         0.000
+ Y5_M_INT       0.000         0.000         0.000         0.000
+ Y7_M_INT       1.000         0.000         0.000         0.000
+ Y3_MATH        0.000         1.000         0.000         0.000
+ Y5_MATH        0.000         0.000         1.000         0.000
+ Y7_MATH        0.000         0.000         0.000         1.000
+
+
+           THETA
+              Y3_M_JUD      Y5_M_JUD      Y7_M_JUD      Y3_M_INT      Y5_M_INT
+              ________      ________      ________      ________      ________
+ Y3_M_JUD       0.000
+ Y5_M_JUD       0.000         0.000
+ Y7_M_JUD       0.000         0.000         0.000
+ Y3_M_INT       0.000         0.000         0.000         0.000
+ Y5_M_INT       0.000         0.000         0.000         0.000         0.000
+ Y7_M_INT       0.000         0.000         0.000         0.000         0.000
+ Y3_MATH        0.000         0.000         0.000         0.000         0.000
+ Y5_MATH        0.000         0.000         0.000         0.000         0.000
+ Y7_MATH        0.000         0.000         0.000         0.000         0.000
+
+
+           THETA
+              Y7_M_INT      Y3_MATH       Y5_MATH       Y7_MATH
+              ________      ________      ________      ________
+ Y7_M_INT       0.000
+ Y3_MATH        0.000         0.000
+ Y5_MATH        0.000         0.000         0.000
+ Y7_MATH        0.000         0.000         0.000         0.000
+
+
+           ALPHA
+              Y3_M_JUD      Y5_M_JUD      Y7_M_JUD      Y3_M_INT      Y5_M_INT
+              ________      ________      ________      ________      ________
+                0.000         0.000         0.000         0.000         0.000
+
+
+           ALPHA
+              Y7_M_INT      Y3_MATH       Y5_MATH       Y7_MATH
+              ________      ________      ________      ________
+                0.000         0.000         0.000         0.000
+
+
+           BETA
+              Y3_M_JUD      Y5_M_JUD      Y7_M_JUD      Y3_M_INT      Y5_M_INT
+              ________      ________      ________      ________      ________
+ Y3_M_JUD       0.000         0.000         0.000         0.000         0.000
+ Y5_M_JUD       0.000         0.000         0.000         0.000         0.000
+ Y7_M_JUD       0.000         0.000         0.000         0.000         0.000
+ Y3_M_INT       0.000         0.000         0.000         0.000         0.000
+ Y5_M_INT       0.000         0.000         0.000         0.000         0.000
+ Y7_M_INT       0.000         0.000         0.000         0.000         0.000
+ Y3_MATH        0.000         0.000         0.000         0.000         0.000
+ Y5_MATH        0.000         0.000         0.000         0.000         0.000
+ Y7_MATH        0.000         0.000         0.000         0.000         0.000
+
+
+           BETA
+              Y7_M_INT      Y3_MATH       Y5_MATH       Y7_MATH
+              ________      ________      ________      ________
+ Y3_M_JUD       0.000         0.000         0.000         0.000
+ Y5_M_JUD       0.000         0.000         0.000         0.000
+ Y7_M_JUD       0.000         0.000         0.000         0.000
+ Y3_M_INT       0.000         0.000         0.000         0.000
+ Y5_M_INT       0.000         0.000         0.000         0.000
+ Y7_M_INT       0.000         0.000         0.000         0.000
+ Y3_MATH        0.000         0.000         0.000         0.000
+ Y5_MATH        0.000         0.000         0.000         0.000
+ Y7_MATH        0.000         0.000         0.000         0.000
+
+
+           GAMMA
+              GENDER        SES           GEO           INDIG         LANG
+              ________      ________      ________      ________      ________
+ Y3_M_JUD       0.000         0.000         0.000         0.000         0.000
+ Y5_M_JUD       0.000         0.000         0.000         0.000         0.000
+ Y7_M_JUD       0.000         0.000         0.000         0.000         0.000
+ Y3_M_INT       0.000         0.000         0.000         0.000         0.000
+ Y5_M_INT       0.000         0.000         0.000         0.000         0.000
+ Y7_M_INT       0.000         0.000         0.000         0.000         0.000
+ Y3_MATH        0.000         0.000         0.000         0.000         0.000
+ Y5_MATH        0.000         0.000         0.000         0.000         0.000
+ Y7_MATH        0.000         0.000         0.000         0.000         0.000
+
+
+           PSI
+              Y3_M_JUD      Y5_M_JUD      Y7_M_JUD      Y3_M_INT      Y5_M_INT
+              ________      ________      ________      ________      ________
+ Y3_M_JUD       0.500
+ Y5_M_JUD       0.000         1.000
+ Y7_M_JUD       0.000         0.000         1.000
+ Y3_M_INT       0.000         0.000         0.000         0.500
+ Y5_M_INT       0.000         0.000         0.000         0.000         1.000
+ Y7_M_INT       0.000         0.000         0.000         0.000         0.000
+ Y3_MATH        0.000         0.000         0.000         0.000         0.000
+ Y5_MATH        0.000         0.000         0.000         0.000         0.000
+ Y7_MATH        0.000         0.000         0.000         0.000         0.000
+
+
+           PSI
+              Y7_M_INT      Y3_MATH       Y5_MATH       Y7_MATH
+              ________      ________      ________      ________
+ Y7_M_INT       1.000
+ Y3_MATH        0.000         0.500
+ Y5_MATH        0.000         0.000         0.500
+ Y7_MATH        0.000         0.000         0.000         0.500
+
+
+     Beginning Time:  16:29:13
+        Ending Time:  16:29:14
+       Elapsed Time:  00:00:01
 
 
 
