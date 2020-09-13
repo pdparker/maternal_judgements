@@ -4,35 +4,40 @@ output:
   hrbrthemes::ipsum:
     toc: true
 ---
+
 ```{r include=FALSE, message=FALSE,warning=FALSE, echo=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message=FALSE,warning=FALSE)
 source(here::here("code","packages.R"))
 source(here::here("code","custom_functions.R"))
 library(DT)
 library(hrbrthemes)
 library(drake)
 update_geom_font_defaults(font_rc)
+
 ```
 
 # Model Fits
 
-```{r, message=FALSE,warning=FALSE, echo=FALSE}
+```{r}
 loadd(mplus_sum)
 mplus_sum %>%
   select(Title, ChiSqM_Mean, ChiSqM_DF,
          RMSEA_Mean,TLI_Mean, CFI_Mean) %>%
   set_names(c('Model', 'Chi-sq', 'DF', 'RMSEA', 'TLI','CFI')) %>%
-  mutate(Model = c('Numeracy RI-CLPM', 'Numeracy CLPM',
-                   'Reading CLPM', 'Reading RI-CLPM')) %>%
+  mutate(Model = c('Numeracy RI-CLPM', 'Numeracy CLPM (Lag 1)','Numeracy CLPM (Lag 2)',
+                   'Reading CLPM (Lag 1)', 'Reading CLPM (Lag 2)', 'Reading RI-CLPM')) %>%
   arrange(Model) %>%
   datatable(
     caption = "Table S1. Model Fit Statistics for Within and Between Models."
   )
 ```
-_Notes._ RI-CLPM = Random Intercept Cross-lagged panel model (Within model). 
-    CLPM = Cross-lagged panel model (Between model)
 
+*Notes.* RI-CLPM = Random Intercept Cross-lagged panel model (Within model). CLPM = Cross-lagged panel model (Between model). Lag 1 and 2 relates to autoregressive parameters.
+
+<br><br>
 
 # Full Results for Between Person Model: Reading
+
 ```{r, message=FALSE, warning=FALSE, cache=FALSE, echo=FALSE}
 loadd(mplus_out)
 mplus_out$mediation_read.out$parameters$ci.unstandardized %>%
@@ -60,7 +65,10 @@ mplus_out$mediation_read.out$parameters$ci.unstandardized %>%
   datatable(filter= 'top', caption = "Table S2. Full Reading CLPM (Between) Model Output")
 ```
 
+<br><br>
+
 # Full Results for Between Person Model: Math
+
 ```{r, message=FALSE, warning=FALSE, cache=FALSE, echo=FALSE}
 
 mplus_out$mediation_math.out$parameters$ci.stdyx.standardized %>%
@@ -88,6 +96,7 @@ mplus_out$mediation_math.out$parameters$ci.stdyx.standardized %>%
   datatable(filter = 'top', caption = "Table S2. Full Numeracy CLPM (Between) Model Output")
 ```
 
+<br><br>
 
 # Mediation Effects for Reading Achievement
 
@@ -95,6 +104,8 @@ mplus_out$mediation_math.out$parameters$ci.stdyx.standardized %>%
 reading <- my_extract_indirect()
 datatable(reading, caption = "Table S3. Reading Total, Direct, and Indirect Effects")
 ```
+
+<br><br>
 
 # Mediation Effects for Math
 
@@ -104,11 +115,68 @@ math <- my_extract_indirect(file = here("code", "mplus","mediation_math.out"),
 datatable(math, filter = 'top', caption = "Table S4. Reading Total, Direct, and Indirect Effects")
 ```
 
+<br><br>
+
 # Assumption Checks
+
 ```{r, message=FALSE, warning=FALSE, cache=FALSE, echo=FALSE}
 library(googlesheets4)
 assump <- read_sheet("1qEJvz45Pm6HSDpRQArRQTCF6ecAGidcibhrje3M8iJI")
-
 datatable(assump, filter = 'top', caption = 'Table S5. Assumption Checks')
+```
 
+<br><br>
+
+# Gender by (Urban, Indigenous, SES, and LOTE) Interaction
+
+```{r}
+y = c(3,5,7)
+d = c('math', 'read')
+comb = crossing(d,y)
+loadd(glue("bias_mod_svy_int_{comb$d}_{comb$y}"))
+
+bind_rows(bias_mod_svy_int_math_3$result %>%
+            mutate(Domain = "Math", Year = 3, .before = variable),
+          bias_mod_svy_int_math_5$result %>%
+            mutate(Domain = "Math", Year = 5, .before = variable),
+          bias_mod_svy_int_math_7$result %>%
+            mutate(Domain = "Math", Year = 7, .before = variable),
+          bias_mod_svy_int_read_3$result %>%
+            mutate(Domain = "Read", Year = 3, .before = variable),
+          bias_mod_svy_int_read_5$result %>%
+            mutate(Domain = "Read", Year = 5, .before = variable),
+          bias_mod_svy_int_read_7$result %>%
+            mutate(Domain = "Read", Year = 7, .before = variable)) %>%
+  regex_left_join(variable_rename,c(variable = "variable_regex")) %>%
+  relocate(new, .before = variable) %>%
+  mutate(across(results:`upper)`, exp)) %>%
+  select(-variable, -se, -missInfo,-variable_regex) %>%
+  rename(Predictor = 3 ,`Odds-ratio` = 4,`-95% CI` = 5, `+95% CI` = 6) %>%
+  datatable(filter = "top",
+    caption = "Table S6. Gender Interaction Models."
+  ) %>%
+  formatRound(columns = 4:6, digits = 2)
+  
+```
+
+<br><br>
+
+# Gender by Urban
+
+```{r}
+loadd(bias_mod_urban_math_3,bias_mod_urban_read_7)
+
+bind_rows(bias_mod_urban_math_3$result %>%
+            mutate(Domain = "Math", Year = 3, .before = variable),
+          bias_mod_urban_read_7$result %>%
+            mutate(Domain = "Read", Year = 7, .before = variable)) %>%
+  regex_left_join(variable_rename,c(variable = "variable_regex")) %>%
+  relocate(new, .before = variable) %>%
+  select(-variable, -se, -missInfo,-variable_regex) %>%
+  mutate(across(results:`upper)`, exp)) %>%
+  rename(Predictor = 3 ,`Odds-ratio` = 4,`-95% CI` = 5, `+95% CI` = 6) %>%
+  datatable(filter = "top",
+    caption = "Table S7. Gender by Urban Interaction Models."
+  ) %>%
+  formatRound(columns = 4:6, digits = 2)
 ```

@@ -1,5 +1,5 @@
 
-# Descriptives
+# Descriptives ####
 #drake::loadd(descriptives)
 table1_fun <- function(descriptives) {
   table1 <- descriptives %>%
@@ -13,7 +13,7 @@ table1_fun <- function(descriptives) {
       columns = 4:7
     ) %>%
     tab_header(title = "Table 1",
-               subtitle = md("_Maternal Judgements of their Child’s Academic Achievement_")) %>%
+               subtitle = md("_Maternal Judgements of Child’s Academic Achievement_")) %>%
     cols_label( `subject` = 'Domain',
                 `year` = 'School Year',
                 `level` = 'Maternal Judgement',
@@ -110,7 +110,7 @@ table2_read <- function(bias_mod_svy_read_3,bias_mod_svy_read_5,bias_mod_svy_rea
         rows =  (`-95% CI_Year 7` > 1 | `+95% CI_Year 7` < 1)
       )
     )  %>%
-    tab_source_note(source_note = md('_Notes._ z- indicates that the variables has been z-scored.
+    tab_source_note(source_note = md('_Notes._ z- indicates that the variables have been z-scored.
                                    Bold text indicates that the 95% confidence interval for that parameter does not cross one.
                                    LOTE = child growing up in a household where a language other than English is spoken.'))
   
@@ -185,7 +185,7 @@ table2_math <- function(bias_mod_svy_math_3,bias_mod_svy_math_5,bias_mod_svy_mat
         rows =  (`-95% CI_Year 7` > 1 | `+95% CI_Year 7` < 1)
       )
     ) %>%
-    tab_source_note(source_note = md('_Notes._ z- indicates that the variables has been z-scored.
+    tab_source_note(source_note = md('_Notes._ z- indicates that the variables have been z-scored.
                                    Bold text indicates that the 95% confidence interval for that parameter does not cross one.
                                    LOTE = child growing up in a household where a language other than English is spoken.'))
   
@@ -233,7 +233,7 @@ table3_read <- function(mplus_out){
       columns = 3:5,
       decimals = 2
     ) %>%
-    tab_source_note(source_note = md('_Notes._ All results presented in standardized betas.'))
+    tab_source_note(source_note = md('_Notes._ All results are presented in standardized betas.'))
   
   gtsave(data = table3_read, filename = here("figures",'table3_read.html') )
   webshot2::webshot(here("figures",'table3_read.html'), here("figures",'table3_read.png'),
@@ -276,7 +276,7 @@ table3_math <- function(mplus_out){
       columns = 3:5,
       decimals = 2
     ) %>%
-    tab_source_note(source_note = md('_Notes._ All results presented in standardized betas.'))
+    tab_source_note(source_note = md('_Notes._ All results are presented in standardized betas.'))
   
   gtsave(data = table3_math, filename = here("figures",'table3_math.html') )
   webshot2::webshot(here("figures",'table3_math.html'), here("figures",'table3_math.png'),
@@ -332,9 +332,9 @@ table4_read <- function(mplus_out){
       columns = 3:5,
       decimals = 2
     ) %>%
-    tab_source_note(source_note = md('_Notes._ When Achievement, Interest, and Judgements are outcomes they are z-scored.
+    tab_source_note(source_note = md('_Notes._ When Achievement, Interest, and Judgements are predictors, they are z-scored.
                                    When Interest or Maternal Judgements are outcomes, results are given in Odds ratios.
-                                   When Achievement is an outcome results are given in standardized betas.
+                                   When Achievement is an outcome, results are given in standardized betas.
                                    '))
   
   gtsave(data = table4_read, filename = here("figures",'table4_read.html') )
@@ -369,7 +369,7 @@ table4_math <- function(mplus_out){
     drop_na() %>%
     gt() %>%
     apa_style() %>%
-    tab_header(title = "Table 4b",
+    tab_header(title = "Table 4a",
                subtitle = md("_CLPM Numeracy_")) %>%
     opt_align_table_header(align = 'left') %>%
     tab_style(
@@ -390,9 +390,9 @@ table4_math <- function(mplus_out){
       columns = 3:5,
       decimals = 2
     ) %>%
-    tab_source_note(source_note = md('_Notes._ When Achievement, Interest, and Judgements are outcomes they are z-scored.
+    tab_source_note(source_note = md('_Notes._ When Achievement, Interest, and Judgements are predictors, they are z-scored.
                                    When Interest or Maternal Judgements are outcomes, results are given in Odds ratios.
-                                   When Achievement is an outcome results are given in standardized betas.
+                                   When Achievement is an outcome, results are given in standardized betas.
                                    '))
   
   gtsave(data = table4_math, filename = here("figures",'table4_math.html') )
@@ -510,10 +510,10 @@ figure_math <- function(plot_data){
               alpha = .5) +
     geom_text(aes(1,fct_rev(math.judgement),
                   label = scales::percent(gen_data$girl_prop,accuracy = 0.1)),
-              size = 2) +
+              size = 3) +
     theme_void() +
     facet_wrap(~Grade,ncol = 1) +
-    labs(tag = 'Proportion girls') +
+    labs(tag = 'Proportion that are girls') +
     theme(
       strip.text.x = element_text(hjust = 1, size = 0, face = 'bold'),
       strip.background = element_blank(),
@@ -599,10 +599,10 @@ figure_read <- function(plot_data){
               alpha = .5) +
     geom_text(aes(1,fct_rev(read.judgement),
                   label = scales::percent(gen_data$girl_prop,accuracy = 0.1)),
-              size = 2) +
+              size = 3) +
     theme_void() +
     facet_wrap(~Grade,ncol = 1) +
-    labs(tag = 'Proportion girls') +
+    labs(tag = 'Proportion that are girls') +
     theme(
       strip.text.x = element_text(hjust = 1, size = 0, face = 'bold'),
       strip.background = element_blank(),
@@ -629,9 +629,43 @@ figure_read <- function(plot_data){
   
 }
 
+# Interaction terms ####
+#drake::loadd(list=glue('bias_mod_svy_int_{dom_y}'))
 
-
-
-
-
-
+# bind_rows(bias_mod_svy_int_math_3$result,
+#           bias_mod_svy_int_math_5$result,
+#           bias_mod_svy_int_math_7$result,
+#           .id = 'Model') %>%
+#   mutate(Model = case_when(
+#     Model == 1 ~ 'Year 3',
+#     Model == 2 ~ 'Year 5',
+#     Model == 3 ~ 'Year 7',
+#   )) %>%
+#   filter(str_detect(variable, ":"), `(lower`*`upper)` > 0)
+# 
+# loadd(bias_mod_urban_math_3)
+# c <- coef(bias_mod_urban_math_3$out)
+# v <- vcov(bias_mod_urban_math_3$out)
+# 
+# car::deltaMethod(c,v, g = "exp(gendergirl + `geourban:gendergirl`)")
+# car::deltaMethod(c,v, g = "exp(gendergirl)")
+# 
+# bind_rows(bias_mod_svy_int_read_3$result,
+#           bias_mod_svy_int_read_5$result,
+#           bias_mod_svy_int_read_7$result,
+#           .id = 'Model') %>%
+#   mutate(Model = case_when(
+#     Model == 1 ~ 'Year 3',
+#     Model == 2 ~ 'Year 5',
+#     Model == 3 ~ 'Year 7',
+#   )) %>%
+#   filter(str_detect(variable, ":"), `(lower`*`upper)` > 0)
+# 
+# loadd(bias_mod_urban_read_7)
+# 
+# c <- coef(bias_mod_urban_read_7$out)
+# v <- vcov(bias_mod_urban_read_7$out)
+# 
+# car::deltaMethod(c,v, g = "exp(gendergirl + `geourban:gendergirl`)")
+# car::deltaMethod(c,v, g = "exp(gendergirl)")
+# 

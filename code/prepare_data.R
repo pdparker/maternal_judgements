@@ -187,10 +187,19 @@ return(school_admin)
 } 
 
 child_data <- function(d = list(data_age_4,data_age_8,data_age_10,
-                                   data_age_12,child_admin,school_admin)){
+                                   data_age_12,child_admin,school_admin),
+                       father = FALSE){
   child_data = reduce(d,left_join, by = "cid") %>%
   #focus on children with known qualities at age 8 (i.e., remove home schooled children) and drop fathers
-  filter(y3_grade == 19 & !is.na(y3_stratum) & !is.na(y3_sid) & y3_status != 4 & parent_gender == 'mother')
+  filter(y3_grade == 19 &
+           !is.na(y3_stratum) &
+           !is.na(y3_sid) &
+           y3_status != 4)
+         
+  if(!father){
+    child_data %>%
+      filter(parent_gender == 'mother')
+  }       
     
   return(child_data)
 }
@@ -209,7 +218,7 @@ make_codebook <- function(child_data){
 # as.data.frame added because Amelian does not like tidyverse
 
 child_data_imp <- function(child_data){
-  set.seed(42)
+  set.seed(1234)
   child_data_imp <- amelia(as.data.frame(child_data), m = 5,
                            idvars = c('cid', 'y3_sid', 'y5_sid', 'y7_sid',
                                       'y3_weight', 'parent_gender',

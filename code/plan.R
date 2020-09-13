@@ -35,6 +35,8 @@ plan <- drake_plan(
       y = c(3, 5, 7)
     )
   ),
+  bias_mod_urban_math_3 = bias_svy_urban(data = data_s, domain = 'math', year = 3),
+  bias_mod_urban_read_7 = bias_svy_urban(data = data_s, domain = 'read', year = 7),
   sch_outcome = target(
     sch_model(data_s, domain = dom),
     transform = cross(dom = c("read", "math") )
@@ -58,7 +60,10 @@ plan <- drake_plan(
   figure2 = figure_math(plots)
 )
 
-vis_drake_graph(plan,targets_only = TRUE,file = here("figures","dependency.html"))
+
+vis_drake_graph(plan,targets_only = TRUE,
+                file = here("figures","dependency.html")
+                )
 make(plan)
 #clean()
 

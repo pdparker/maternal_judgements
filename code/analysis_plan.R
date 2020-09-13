@@ -195,8 +195,24 @@ bias_svy_int <- function(data = data_s, year = 3, domain = "read") {
   f1 <- glue("y{year}_{domain}.judgement~I(z(y{year}_{domain}-y{year}_{domain}.sch)) + scale(iq) + scale(ses)*gender + 
               geo*gender + indig*gender + lang*gender")
   model <- with(data, svyolr(f1) )
-  capture.output(out <- summary(MIcombine(model)),file = 'NULL')
-  return(as_tibble(out,rownames = "variable"))
+  out <- MIcombine(model)
+  capture.output(result <- summary(out),file = 'NULL')
+  return(list(result = as_tibble(result,rownames = "variable"),
+              out = out
+              )
+         )
+}
+
+bias_svy_urban <- function(data = data_s, year = 3, domain = "read") {
+  f1 <- glue("y{year}_{domain}.judgement~I(z(y{year}_{domain}-y{year}_{domain}.sch)) + scale(iq) + scale(ses) + 
+              geo*gender + indig + lang")
+  model <- with(data, svyolr(f1) )
+  out <- MIcombine(model)
+  capture.output(result <- summary(out),file = 'NULL')
+  return(list(result = as_tibble(result,rownames = "variable"),
+              out = out
+  )
+  )
 }
 
 sch_model <- function(data = data_s, domain = "read"){

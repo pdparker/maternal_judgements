@@ -1,4 +1,4 @@
-TITLE: Mediation Mod for Reading: Free Cross Paths Lag 2
+TITLE: Mediation Mod for Reading: Free Cross Paths Lag 1
 DATA: FILE = "../../data/mplus_imp.txt";
 TYPE = IMPUTATION;
 VARIABLE: 
@@ -39,10 +39,6 @@ y7_read           ON y5_r_judge y5_r_int y5_read;
 y5_r_judge ON y3_r_judge y3_r_int y3_read;
 y5_r_int  ON y3_r_judge y3_r_int y3_read;
 y5_read           ON y3_r_judge y3_r_int y3_read;
-
-y7_r_judge ON y3_r_judge;
-y7_r_int  ON y3_r_int;
-y7_read           ON y3_read;
 
 y7_r_judge y7_r_int y7_read WITH
 	y7_r_judge y7_r_int y7_read;

@@ -1,4 +1,4 @@
-TITLE: Mediation Mod for Math: Free Cross Paths Lag 2
+TITLE: Mediation Mod for Math: Free Cross Paths Lag 1
 DATA: FILE = "../../data/mplus_imp.txt";
 TYPE = IMPUTATION;
 VARIABLE: 
@@ -37,10 +37,6 @@ y7_math           ON y5_m_judge y5_m_int y5_math;
 y5_m_judge ON y3_m_judge y3_m_int y3_math;
 y5_m_int  ON y3_m_judge y3_m_int y3_math;
 y5_math           ON y3_m_judge y3_m_int y3_math;
-
-y7_m_judge ON y3_m_judge;
-y7_m_int  ON y3_m_int;
-y7_math           ON y3_math;
 
 y7_m_judge y7_m_int y7_math WITH
 	y7_m_judge y7_m_int y7_math;
