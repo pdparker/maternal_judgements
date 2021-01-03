@@ -1,0 +1,217 @@
+---
+title       : "Maternal Judgments of Child Numeracy and Reading Ability Predict Gains in Academic Achievement and Interest"
+authors     : "Parker et al."
+journal     : "Child Development"
+manuscript  : "MS 2019-1026.R1"
+
+class       : "draft"
+
+output      : 
+  papaja::revision_letter_pdf:
+        
+header-includes:
+    - \usepackage {hyperref}
+    - \usepackage[draft]{todonotes}
+    - \hypersetup {colorlinks = true, linkcolor = red, urlcolor = blue, linktoc=all}
+---
+
+Dear Prof. Cimpian,
+
+\todo{Revision due: March 15, 2021}
+
+Thank you very much for taking the time to consider our revision for publication at _Child Development_. We thank you for the positive assesment of our revision and we really appreciate that you noticed the efforts we went to to make the revision letter manageable. We have, since the last revision realized that the revision letter is part of the research project and thus should be part of the reproducible framework we use. This means the letter should also be:
+
+1. reproducible (anyone with access to the code should be able to reproduce it);
+2. integrated in the overall workflow (the letter should be part of the same overall R.Project);
+3. historically traceable (is linked to a version control system like git); and 
+4. persistently linked to the manuscript (here the letter has code behind it that draws the quoted text from manuscript itself; thus ensuring that the letter and manuscript are never inconsistent).
+
+Thus, I hope you will forgive the slight change in format here but we think that long-term this is the best option from an Open Science perspective. 
+
+In the following we address your and each reviewers' concerns point-by-point.
+
+Kind Regards,
+
+Phil Parker
+
+ORCID: [0000-0002-4604-8566](https://orcid.org/0000-0002-4604-8566)
+
+
+\clearpage
+
+\tableofcontents
+
+\clearpage
+
+# Editor 
+
+\RC{First, R1 argues that, in light of your revisions, the theoretical contribution is less clear than it was before. I agree. Please take another pass at the introduction to highlight the distinct contributions of this work}
+
+
+Lean in on causality
+
+\Assignment{Philip Parker}
+\WorkInProgress
+\Easy
+
+\RC{Second, R2 recommends that you drop the CLPM models altogether, which has implications for other parts of the paper (e.g., the mediation analysis). I would trust R2's judgment on this one, but I will leave it up to you how to respond. I will probably consult with R2 again when you submit your revision.}
+
+Just drop CLPM
+
+\Assignment{Philip Parker}
+\WorkInProgress
+\Medium
+
+\RC{Can you estimate whether the *magnitude* of the discrepancy between mothers' judgments and children's achievement matters? Is the relationship between maternal judgments and children's subsequent achievement quasi-linear or does it flatten out or even switch signs as the discrepancy increases? For instance, I can imagine that *moderate* over-estimation predicts longitudinal growth in performance but that the relationship of *extreme* over-estimation with subsequent achievement is either the same or lower than that of moderate over-estimation. I realize that there is a lot of complexity here: Mothers are asked about how the child is progressing, not performing (which is a reason why you switched away from talk of optimism in the first place); the maternal judgments and the achievement measures are on very different scales, so it is difficult to calculate accuracy/discrepancy scores; etc. At the same time, if there's a way to try this, I (and many readers) would find it interesting to understand the shape of the relationship between mothers' judgments and children's achievement. This doesn't have to be the main focus of the paper, obviously, and as long as you're transparent in your reporting, it seems fine to me to make some simplifying assumptions here.}
+
+Add polynomial
+
+
+\Assignment{Philip Parker}
+\WorkInProgress
+\Medium
+
+\RC{Does the LSAC dataset contain other variables on the mothers that might provide additional insight into why positive expectations predict higher subsequent achievement? For example, I can imagine mothers' growth/failure mindsets (e.g., Dweck, 2006) being a moderator here, with maternal judgments predicting increases in achievement particularly for mothers who also endorse the view that children's abilities can grow (rather than being fixed) and that failure provides learning opportunities (rather than signaling low ability). I can imagine a range of other parental attitudes/beliefs playing a similar moderating role. If such variables are available in the LSAC dataset, perhaps you can include the relevant analyses here.}
+
+Lean in on moderation and polynomial. Maybe consider self-concept as mediator?
+
+\Assignment{Philip Parker}
+\WorkInProgress
+\Hard
+
+
+# Reviewer 1
+
+\RC{What I really liked in the initial version of this manuscript was its focus on maternal optimism. For conceptual and methodological reasons, the authors decided to focus on maternal judgments more broadly, without separating optimism from realism and pessimism. I think this was a good call. Yet, it did make the manuscript less innovative. The authors justify their current research focus by noting: “…there has been limited integrative research on how these judgments are systematically related to particular demographics (e.g., gender), and few longitudinal studies that have considered how these judgments may kindle motivation and improve academic achievement.” This statement feels a bit vague (e.g., especially “limited integrative research” and “few longitudinal studies”). Could the authors add a paragraph to their introduction that explains how exactly their work extends prior work, conceptually and/or methodologically?}
+
+Lean in on causality
+
+
+\Assignment{Philip Parker}
+\WorkInProgress
+\Easy
+
+
+\RC{To me, the most important aspect of this work is its ability to show how maternal judgments predict children’s later academic outcomes. In the “Do maternal judgments influence academic outcomes?”-section, the author predict, based on earlier work, that maternal judgments influence academic outcomes, but they don’t discuss possible mechanisms. Why would maternal judgments influence children’s academic outcomes? How do children pick up on these beliefs?}
+
+Pull from previous draft
+
+\Assignment{Philip Parker}
+\WorkInProgress
+\Easy
+
+\RC{I appreciate the authors’ efforts to embrace open science principles (as far as possible, given that they worked with governmental data).}
+
+Thank you. We appreciate this.
+
+\Assignment{Philip Parker}
+\Done
+\Easy
+
+\RC{In the introduction, the authors spend three paragraphs discussing possible sources of “the discrepancy between mothers’ judgments of their child and the child’s objectively measured ability.” Perhaps this can be written more concisely and combined in 1 paragraph, as this doesn’t seem to address a question that’s central in the current paper.}
+
+Easy to do.
+
+\Assignment{Philip Parker}
+\WorkInProgress
+\Easy
+
+\RC{Although I am not an expert in all areas covered by the current manuscript, I have the impression that some recent empirical work on stereotypes and parents’ beliefs about children’s performances/efforts/abilities is missing from the introduction. In its current form, the manuscript seems to build mainly on theoretical work by Eccles and Bandura, which seems a bit narrow given the extensive theory that exists on the nature of optimism, stereotypes, and parental beliefs more broadly.}
+
+Not sure what to do here other than find and integrate more literuature.
+
+\Assignment{Rhiannon Parker}
+\WorkInProgress
+\Medium
+
+\RC{In the Discussion, the authors may consider discussing different types of parental judgments. These judgments are now treated as a continuum from positive to negative, but there are many types of judgments (e.g., focusing on children’s efforts or their abilities), which may have unique implications for motivation and achievement. Testing these possibilities may be an important direction for future work.}
+
+Add sentence or too in limitations.
+
+\Assignment{Rhiannon Parker}
+\WorkInProgress
+\Easy
+
+
+# Reviewer 2
+
+\RC{The authors really dug deep to test the robustness of their estimates.  On one hand, this is super. On the other, it gives the reader a ton to pour over/get hung-up in.  Whatever the authors can do to streamline the overview of their model building and logic behind their ‘preferred’ model, the better.  E.g., We did A –Z (see supplementary material). We chose X specification, based on the following decision rules.}
+
+Should be solved mainly by simplifying the analysis.
+
+\Assignment{Philip Parker}
+\WorkInProgress
+\Easy
+
+\RC{Another way to streamline is to cut the “classic” CLPM results. I realize that there are now a few papers suggesting that it’s reasonable to pick and choose different variations of the RI-CLPM to test different questions. I agree with this completely **as long as the resulting parameters carry some kind of sensible substantive interpretation**. Unfortunately, this is not the case with the “classic” CLPM. So, I have to respectfully disagree with Orth et al. 2020. The lagged relations from the CLPM are *not* between-person relations. They are a blend of within- and between-person relations, weighted as a function of their respective standard errors (see Bryk \& Raudenbush, 1992 Berry \& Willoughby. 2017). There’s no easy substantive interpretation re: between-person rank-order b/c these estimates carry both within- and between-person variation. Now, if the within- and between-person estimates are identical, then this weighted composite effect could, in principle, be reasonable (Bryk and Raudenbush call it ‘convergence’). However, in my mind, even this would be questionable given all of the other conditionalities baked into the data.  i.e., you’d want convergence for all of the time-varying relations before mixing the two type of estimates.
+
+So, in short, I don’t think the authors’ CLPM model is telling them what they think it telling’s them. I don’t mean to be so hard-minded about it, but I think these models do more harm than good.}
+
+\todo{Maybe better to just meekly role over.}
+
+We are happy to remove these estimates, particularly given the consistency in the substantive estimates between the RI-CLPM and the CLPM. We do note, however, that the classic CLPM does have a substantive interpretation. It may not be causal in the sense that the reviewer is referring to here. But the goals of the social science are not purely causal but also descriptive and predictive (see Goldthorpe, 2006 for example). It is this reason we leaning so hard in the previous revision on the 'comparative' interpretation of the CLPM estimates (see for example the emphasis placed on comparative estimates for the sorts of parameters the CLPM estimates in Gelman et al., 2020). Nevertheless, the estimates from both models tell a comparatively similar story.
+
+\Assignment{Philip Parker}
+\WorkInProgress
+\TimeConsuming
+\Medium
+
+\RC{The ‘good news’ is that they show evidence of within-person relations—which, in my mind, is far more interesting b/c we’re looking at actual changes within a mother and child over time (individual development), while adjusting for all possible time-invariant confounds. Although this means that they can’t estimate main effects for child gender, they can consider it as a moderator of the within-child relation.  I’d concentrate the interpretations here.}
+
+Add moderator estimates and consider a LSEM.
+
+\Assignment{Philip Parker}
+\WorkInProgress
+\TimeConsuming
+\Hard
+
+\RC{Ditching the CLPM  would make the mediation analyses (as they stand) moot; however, the authors could consider within-person mediation, where the indirect relations are conditional on gender.}
+
+This is a different paper. Maybe consider self-concept.
+
+\Assignment{Philip Parker}
+\WorkInProgress
+\TimeConsuming
+\Hard
+
+
+\RC{In the extant mediation section, I was confused by their introduction of y*.  It sounds like they’re saying that they modeled their observed ordinal variable as a continuous latent—which is fine, in itself. It’s basically a 2 parameter IRT model.  However, if they’re proposing that parents ‘true’ beliefs about child ability are continuously distributed in the population, why would they use the ordinal observed variables in the other models?  The two measurement approaches imply fundamental differences in the nature of the construct.}
+
+\todo{Maybe better to simply say no longer relevant.}
+
+Apologies for not being clear. This point is no longer relevant given that we have removed the CLPM but for transparency, we wanted to confirm we did model the variables as ordinal. However, ordinal models (including logistic regression models) all assume an underlying 'latent' variable where the observed ordinal variable in a qualitative version of it; this is consistent across probit, logistic regression, and proportional odds models. Because of this estimates from any ordinal model can be transformed into a range of substantively interesting quantities; the most common of which are predicted probability estimates and odds ratios. Sometimes however, its useful to transform the estimates into the metric of the underlying latent continuous variable (see Gelman et al., 2020 for some practical examples of when this is worthwhile). Put simply the mediation estimates on the latent metric and the odds ratios reported in the previous revision come from the same proportional odds model. 
+
+\Assignment{Philip Parker}
+\AlmostDone
+\Easy
+
+\RC{it still seems a little weird to me to be interested in individual achievement change over time, yet standardize on school means b/c it conflates change in the child and changes in the school mean over time. I understand their rationale, given the question they asked the parents is relative to students in the school. It just sits weirdly. Is it really the case that the school means are so different that it’d actually matter?}
+
+We think it is prudent to keep the estimates as is  because of the nature of the question the parents were asked. This is despite the results being slightly 'better' where we dont do this (i.e., consistent significant effects). 
+
+
+\Assignment{Philip Parker}
+\WorkInProgress
+\Easy
+
+\RC{I’d suggest moving the RI-CLPM into figures. The tables are pretty dense.}
+
+Easy to do.
+
+\Assignment{Philip Parker}
+\WorkInProgress
+\TimeConsuming
+\Easy
+
+
+\clearpage
+
+# References
+
+\begingroup
+\setlength{\parindent}{-0.5in}
+\setlength{\leftskip}{0.5in}
+
+<div id = "refs"></div>
+
+\endgroup
