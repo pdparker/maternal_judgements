@@ -200,7 +200,7 @@ Lean in on causality
 
 \RC{Second, R2 recommends that you drop the CLPM models altogether, which has implications for other parts of the paper (e.g., the mediation analysis). I would trust R2's judgment on this one, but I will leave it up to you how to respond. I will probably consult with R2 again when you submit your revision.}
 
-\todo{Should I just remove it?}
+\todo{Should I just remove the CLPMs completely?}
 
 We have now moved the CLPMs to supplementary materials (as well as the mediation models). We have retained the models in supplementary materials in the interests of full reporting. We have added in now an analysis of whether the RI-CLPM differs by gender.
 
@@ -210,7 +210,13 @@ We have now moved the CLPMs to supplementary materials (as well as the mediation
 
 \RC{Can you estimate whether the *magnitude* of the discrepancy between mothers' judgments and children's achievement matters? Is the relationship between maternal judgments and children's subsequent achievement quasi-linear or does it flatten out or even switch signs as the discrepancy increases? For instance, I can imagine that *moderate* over-estimation predicts longitudinal growth in performance but that the relationship of *extreme* over-estimation with subsequent achievement is either the same or lower than that of moderate over-estimation. I realize that there is a lot of complexity here: Mothers are asked about how the child is progressing, not performing (which is a reason why you switched away from talk of optimism in the first place); the maternal judgments and the achievement measures are on very different scales, so it is difficult to calculate accuracy/discrepancy scores; etc. At the same time, if there's a way to try this, I (and many readers) would find it interesting to understand the shape of the relationship between mothers' judgments and children's achievement. This doesn't have to be the main focus of the paper, obviously, and as long as you're transparent in your reporting, it seems fine to me to make some simplifying assumptions here.}
 
-We agree this is interesting. And indeed it makes sense. In some ways, a simple take on this is already present. All models control for actual achievement and thus the effects of judgments on the outcomes of interest are for children of the same level of `objective' ability. This is akin to an discrepancy score-indeed it is identical to a common method of calculating a discrepancy score where judgments are predicted by achievement and the residual saved as the discrepancy/accuracy score The issue of a extremes is more complicated. One way of doing this is to consider non-linear effects. The complicating factor here is that this needs to be done within an RI-CLPM framework where polynomial effects, due to the way these models are paramatized, need to be represented as latent interactions. Another option is to use LSEM (localized SEM). We tried both of these and simply could not get these extremely complicated models to converge. Rather, we have now added an acknowledgment that we could not get these models to converge but that other researchers should try.
+We agree this is interesting. And indeed it makes sense. In some ways, a simple take on this is already present. All models control for actual achievement and thus the effects of judgments on the outcomes of interest are for children of the same level of `objective' ability. This is akin to an discrepancy score-indeed it is identical to a common method of calculating a discrepancy score where judgments are predicted by achievement and the residual saved as the discrepancy/accuracy score.
+
+The issue of a extremes is more complicated. One way of doing this is to consider non-linear effects. The complicating factor here is that this needs to be done within an RI-CLPM framework where polynomial effects--due to the way these models are paramatized--need to be represented as latent interactions. We tried to get a latent polynomial mode to work but we simply could not get these extremely complicated models to converge.
+
+We did manage to get a model to converge that only looked at a polynomial at a single time point (rather than at all time points together). Here only the Year 3 judgment polynomial was significant (1 out of 4 polynomials significant). This effect was consistent with your suggestion. At more extreme values judgements had increasingly smaller effects and at very extreme values turned negative.
+
+Given the piecemeal nature of how we modeled, this we decided not to include it in the results section but as impetus for future researchers to explore this question in more detail; noting for example that a parental judgment question with greater variance would be better suited to accessing this question.
 
 \begin{quote}
 \textless{}\textgreater{}
@@ -311,7 +317,7 @@ We are happy to move these estimates to supplementary materials, particularly gi
 
 \RC{The ‘good news’ is that they show evidence of within-person relations—which, in my mind, is far more interesting b/c we’re looking at actual changes within a mother and child over time (individual development), while adjusting for all possible time-invariant confounds. Although this means that they can’t estimate main effects for child gender, they can consider it as a moderator of the within-child relation.  I’d concentrate the interpretations here.}
 
-We have now looked at a) mediation of judgments on achievement via interest; and b) moderation of cross-lagged estimates (and, given these were not significantly different, mediation paths) across gender. These are now discussed in multiple sections of the paper.
+We have now looked at a) mediation of judgments on achievement via interest; and b) moderation of cross-lagged estimates (and, given these were not significantly different, mediation paths) across gender. Models did not show significant mediation, moderation, or mediated moderation. These are now discussed in multiple sections of the paper.
 
 \begin{quote}
 \textless{}\textgreater{}
@@ -328,7 +334,7 @@ We have now looked at a) mediation of judgments on achievement via interest; and
 
 \RC{Ditching the CLPM  would make the mediation analyses (as they stand) moot; however, the authors could consider within-person mediation, where the indirect relations are conditional on gender.}
 
-We explored mediation via academic interest.
+We explored mediation via academic interest. We chose to implement a very restrictive within person mediation model where Year 3 parental judgments influenced year 7 achievement via year 5 academic interest. This was not significant.
 
 \begin{quote}
 \textless{}\textgreater{}
@@ -353,11 +359,11 @@ Ordinal models (including logistic regression models) all assume an underlying `
 
 \RC{it still seems a little weird to me to be interested in individual achievement change over time, yet standardize on school means b/c it conflates change in the child and changes in the school mean over time. I understand their rationale, given the question they asked the parents is relative to students in the school. It just sits weirdly. Is it really the case that the school means are so different that it’d actually matter?}
 
-\todo{I did check this after the last revision. I will double check again.}
+\todo{Jake and Taren to review}
 
 We think it is prudent to keep the estimates as is because of the nature of the question the parents were asked. The results not standardizing are similar. In a sense this is not surprising given that the RI-CLPM focuses only on within-person variance and thus controls for all between level variance including school-to-school differences. Nevertheless, we think it is important to keep the estimates as is to ensure a clear and consistent interpretation that is consistent with the nature of the parenting question.
 
-\Assignment{Philip Parker}
+\Assignment{Jake and Taren}
 \WorkInProgress
 \Easy
 
