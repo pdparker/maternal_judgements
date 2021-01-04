@@ -1,32 +1,177 @@
----
-title       : "Maternal Judgments of Child Numeracy and Reading Ability Predict Gains in Academic Achievement and Interest"
-authors     : "Parker et al."
-journal     : "Child Development"
-manuscript  : "MS 2019-1026.R1"
+% Taken from https://github.com/mschroen/review_response_letter
+% GNU General Public License v3.0
 
-class       : "draft"
+\documentclass[draft]{article}
 
-output      : 
-  papaja::revision_letter_pdf:
-        
-header-includes:
-    - \usepackage {hyperref}
-    - \usepackage[draft]{todonotes}
-    - \hypersetup {colorlinks = true, linkcolor = red, urlcolor = blue, linktoc=all}
----
+\usepackage[includeheadfoot,top=20mm, bottom=20mm, footskip=2.5cm]{geometry}
 
-Dear Prof. Cimpian,
+% Typography
+\usepackage[T1]{fontenc}
+\usepackage{times}
+%\usepackage{mathptmx} % math also in times font
+\usepackage{amssymb,amsmath}
+\usepackage{microtype}
+\usepackage[utf8]{inputenc}
+
+% Misc
+\usepackage{graphicx}
+\usepackage[hidelinks]{hyperref} %textopdfstring from pandoc
+\usepackage{soul} % Highlight using \hl{}
+
+% Table
+
+\usepackage{adjustbox} % center large tables across textwidth by surrounding tabular with \begin{adjustbox}{center}
+\renewcommand{\arraystretch}{1.5} % enlarge spacing between rows
+\usepackage{caption}
+\captionsetup[table]{skip=10pt} % enlarge spacing between caption and table
+
+% Section styles
+
+\usepackage{titlesec}
+\titleformat{\section}{\normalfont\large}{\makebox[0pt][r]{\bf \thesection.\hspace{4mm}}}{0em}{\bfseries}
+\titleformat{\subsection}{\normalfont}{\makebox[0pt][r]{\bf \thesubsection.\hspace{4mm}}}{0em}{\bfseries}
+\titlespacing{\subsection}{0em}{1em}{-0.3em} % left before after
+
+% Paragraph styles
+
+\setlength{\parskip}{0.6\baselineskip}%
+\setlength{\parindent}{0pt}%
+
+% Quotation styles
+
+\usepackage{framed}
+\let\oldquote=\quote
+\let\endoldquote=\endquote
+\renewenvironment{quote}{\begin{fquote}\advance\leftmargini -2.4em\begin{oldquote}}{\end{oldquote}\end{fquote}}
+
+% \usepackage{xcolor}
+\newenvironment{fquote}
+  {\def\FrameCommand{
+	\fboxsep=0.6em % box to text padding
+	\fcolorbox{black}{white}}%
+	% the "2" can be changed to make the box smaller
+    \MakeFramed {\advance\hsize-2\width \FrameRestore}
+    \begin{minipage}{\linewidth}
+  }
+  {\end{minipage}\endMakeFramed}
+
+% Table styles
+
+\let\oldtabular=\tabular
+\let\endoldtabular=\endtabular
+\renewenvironment{tabular}[1]{\begin{adjustbox}{center}\begin{oldtabular}{#1}}{\end{oldtabular}\end{adjustbox}}
+
+
+% Shortcuts
+
+%% Let textbf be both, bold and italic
+%\DeclareTextFontCommand{\textbf}{\bfseries\em}
+
+%% Add RC and AR to the left of a paragraph
+%\def\RC{\makebox[0pt][r]{\bf RC:\hspace{4mm}}}
+%\def\AR{\makebox[0pt][r]{AR:\hspace{4mm}}}
+
+%% Define that \RC and \AR should start and format the whole paragraph
+\usepackage{suffix}
+\long\def\RC#1\par{\makebox[0pt][r]{\bf RC:\hspace{4mm}}{\bf #1}\par\makebox[0pt][r]{AR:\hspace{10pt}}} %\RC
+\WithSuffix\long\def\RC*#1\par{{\bf #1}\par} %\RC*
+% \long\def\AR#1\par{\makebox[0pt][r]{AR:\hspace{10pt}}#1\par} %\AR
+\WithSuffix\long\def\AR*#1\par{#1\par} %\AR*
+
+
+%%%
+%DIF PREAMBLE EXTENSION ADDED BY LATEXDIFF
+%DIF UNDERLINE PREAMBLE %DIF PREAMBLE
+\RequirePackage[normalem]{ulem} %DIF PREAMBLE
+\RequirePackage{color} %DIF PREAMBLE
+\definecolor{offred}{rgb}{0.867, 0.153, 0.153} %DIF PREAMBLE
+\definecolor{offblue}{rgb}{0.0705882352941176, 0.168627450980392, 0.717647058823529} %DIF PREAMBLE
+\providecommand{\DIFdel}[1]{{\protect\color{offred}\sout{#1}}} %DIF PREAMBLE
+\providecommand{\DIFadd}[1]{{\protect\color{offblue}\uwave{#1}}} %DIF PREAMBLE
+%DIF SAFE PREAMBLE %DIF PREAMBLE
+\providecommand{\DIFaddbegin}{} %DIF PREAMBLE
+\providecommand{\DIFaddend}{} %DIF PREAMBLE
+\providecommand{\DIFdelbegin}{} %DIF PREAMBLE
+\providecommand{\DIFdelend}{} %DIF PREAMBLE
+%DIF FLOATSAFE PREAMBLE %DIF PREAMBLE
+\providecommand{\DIFaddFL}[1]{\DIFadd{#1}} %DIF PREAMBLE
+\providecommand{\DIFdelFL}[1]{\DIFdel{#1}} %DIF PREAMBLE
+\providecommand{\DIFaddbeginFL}{} %DIF PREAMBLE
+\providecommand{\DIFaddendFL}{} %DIF PREAMBLE
+\providecommand{\DIFdelbeginFL}{} %DIF PREAMBLE
+\providecommand{\DIFdelendFL}{} %DIF PREAMBLE
+%DIF END PREAMBLE EXTENSION ADDED BY LATEXDIFF
+
+% Fix pandoc related tight-list error
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+% Add task difficulty and assignment commands from https://github.com/cdc08x/letter-2-reviewers-LaTeX-template
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{ifdraft}
+
+\newcommand{\TaskEstimationBox}[2]{%
+\ifoptiondraft{\parbox{1.0\linewidth}{\hfill \hfill {\colorbox{#2}{\color{White} \textbf{#1}}}}}%
+{}%
+}
+%
+\def\WorkInProgress {\TaskEstimationBox{Work in progress}{Cyan}}
+\def\AlmostDone {\TaskEstimationBox{Almost there}{NavyBlue}}
+\def\Done {\TaskEstimationBox{Done}{Blue}}
+%
+\def\NotEstimated {\TaskEstimationBox{Effort not estimated}{Gray}}
+\def\Easy {\TaskEstimationBox{Feasible}{ForestGreen}}
+\def\Medium {\TaskEstimationBox{Medium effort}{Orange}}
+\def\TimeConsuming {\TaskEstimationBox{Time-consuming}{Bittersweet}}
+\def\Hard {\TaskEstimationBox{Infeasible}{Black}}
+%
+\newcommand{\Assignment}[1]{
+%
+\ifoptiondraft{%
+\vspace{.25\baselineskip} \parbox{1.0\linewidth}{\hfill \hfill \vspace{.25\baselineskip} \normalfont{Assignment:} \normalfont{\textbf{#1}}}%
+}{}%
+}
+
+
+  \usepackage {hyperref}
+  \usepackage[draft]{todonotes}
+  \hypersetup {colorlinks = true, linkcolor = red, urlcolor = blue, linktoc=all}
+
+
+
+\begin{document}
+
+{\Large\bf Author response to reviews of}\\[1em]
+Manuscript MS 2019-1026.R1\\ \\
+{\Large Maternal Judgments of Child Numeracy and Reading Ability Predict Gains in Academic Achievement and Interest}\\[1em]
+{Parker et al.}\\
+{submitted to \it Child Development }\\
+\hrule
+
+\hfill {\bfseries RC:} \textbf{\textit{Reviewer Comment}}\(\quad\) AR: Author Response \(\quad\square\) Manuscript text
+
+\vspace{2em}
+
+Dear Prof.~Cimpian,
 
 \todo{Revision due: March 15, 2021}
 
-Thank you very much for taking the time to consider our revision for publication at _Child Development_. We thank you for the positive assesment of our revision and we really appreciate that you noticed the efforts we went to to make the revision letter manageable. We have, since the last revision realized that the revision letter is part of the research project and thus should be part of the reproducible framework we use. This means the letter should also be:
+Thank you very much for taking the time to consider our revision for publication at \emph{Child Development}. We thank you for the positive assesment of our revision and we really appreciate that you noticed the efforts we went to to make the revision letter manageable. We have, since the last revision realized that the revision letter is part of the research project and thus should be part of the reproducible framework we use. This means the letter should also be:
 
-1. reproducible (anyone with access to the code should be able to reproduce it);
-2. integrated in the overall workflow (the letter should be part of the same overall R.Project);
-3. historically traceable (is linked to a version control system like git); and 
-4. persistently linked to the manuscript (here the letter has code behind it that draws the quoted text from manuscript itself; thus ensuring that the letter and manuscript are never inconsistent).
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  reproducible (anyone with access to the code should be able to reproduce it);
+\item
+  integrated in the overall workflow (the letter should be part of the same overall R.Project);
+\item
+  historically traceable (is linked to a version control system like git); and
+\item
+  persistently linked to the manuscript (here the letter has code behind it that draws the quoted text from manuscript itself; thus ensuring that the letter and manuscript are never inconsistent).
+\end{enumerate}
 
-Thus, I hope you will forgive the slight change in format here but we think that long-term this is the best option from an Open Science perspective. 
+Thus, I hope you will forgive the slight change in format here but we think that long-term this is the best option from an Open Science perspective.
 
 In the following we address your and each reviewers' concerns point-by-point.
 
@@ -34,8 +179,7 @@ Kind Regards,
 
 Phil Parker
 
-ORCID: [0000-0002-4604-8566](https://orcid.org/0000-0002-4604-8566)
-
+ORCID: \href{https://orcid.org/0000-0002-4604-8566}{0000-0002-4604-8566}
 
 \clearpage
 
@@ -43,10 +187,10 @@ ORCID: [0000-0002-4604-8566](https://orcid.org/0000-0002-4604-8566)
 
 \clearpage
 
-# Editor 
+\hypertarget{editor}{%
+\section{Editor}\label{editor}}
 
 \RC{First, R1 argues that, in light of your revisions, the theoretical contribution is less clear than it was before. I agree. Please take another pass at the introduction to highlight the distinct contributions of this work}
-
 
 Lean in on causality
 
@@ -66,10 +210,11 @@ We have now moved the CLPMs to supplementary materials (as well as the mediation
 
 \RC{Can you estimate whether the *magnitude* of the discrepancy between mothers' judgments and children's achievement matters? Is the relationship between maternal judgments and children's subsequent achievement quasi-linear or does it flatten out or even switch signs as the discrepancy increases? For instance, I can imagine that *moderate* over-estimation predicts longitudinal growth in performance but that the relationship of *extreme* over-estimation with subsequent achievement is either the same or lower than that of moderate over-estimation. I realize that there is a lot of complexity here: Mothers are asked about how the child is progressing, not performing (which is a reason why you switched away from talk of optimism in the first place); the maternal judgments and the achievement measures are on very different scales, so it is difficult to calculate accuracy/discrepancy scores; etc. At the same time, if there's a way to try this, I (and many readers) would find it interesting to understand the shape of the relationship between mothers' judgments and children's achievement. This doesn't have to be the main focus of the paper, obviously, and as long as you're transparent in your reporting, it seems fine to me to make some simplifying assumptions here.}
 
-We agree this is interesting. And indeed it makes sense. In some ways, a simple take on this is already present. All models control for actual achievement and thus the effects of judgments on the outcomes of interest are for children of the same level of 'objective' ability. This is akin to an discrepancy score-indeed it is identical to a common method of calculating a discrepancy score where judgments are predicted by achievement and the residual saved as the discrepancy/accuracy score The issue of a extremes is more complicated. One way of doing this is to consider non-linear effects. The complicating factor here is that this needs to be done within an RI-CLPM framework where polynomial effects, due to the way these models are paramatized, need to be represented as latent interactions. Another option is to use LSEM (localized SEM). We tried both of these and simply could not get these extremely complicated models to converge. Rather, we have now added an acknowledgment that we could not get these models to converge but that other researchers should try.
+We agree this is interesting. And indeed it makes sense. In some ways, a simple take on this is already present. All models control for actual achievement and thus the effects of judgments on the outcomes of interest are for children of the same level of `objective' ability. This is akin to an discrepancy score-indeed it is identical to a common method of calculating a discrepancy score where judgments are predicted by achievement and the residual saved as the discrepancy/accuracy score The issue of a extremes is more complicated. One way of doing this is to consider non-linear effects. The complicating factor here is that this needs to be done within an RI-CLPM framework where polynomial effects, due to the way these models are paramatized, need to be represented as latent interactions. Another option is to use LSEM (localized SEM). We tried both of these and simply could not get these extremely complicated models to converge. Rather, we have now added an acknowledgment that we could not get these models to converge but that other researchers should try.
 
-> <<TMP>>
-
+\begin{quote}
+\textless{}\textgreater{}
+\end{quote}
 
 \Assignment{Philip Parker}
 \WorkInProgress
@@ -81,24 +226,24 @@ We agree this is interesting. And indeed it makes sense. In some ways, a simple 
 
 There wasn't anything obvious that we could see measured at the parent level. However, we did include child interest in math and reading. Intrinsic interest is very closely tied to competency self-concept. It is reasonable to think that parents judgments may have both direct and indirect effects on interest/self-concept. For example, parents positive judgments may encourage the child to feel better about themselves and this spurs interest in academic pursuits which leads to increased achievement. We have now explored this exact indirect effect in the RI-CLPM where Year 3 parental judgments predicted year 7 achievement via year 3 interest. For neither reading nor math was this significant. We have now added this to the discussion.
 
-> <<TMP>>
+\begin{quote}
+\textless{}\textgreater{}
+\end{quote}
 
 \Assignment{Philip Parker}
 \WorkInProgress
 \Hard
 
-
-# Reviewer 1
+\hypertarget{reviewer-1}{%
+\section{Reviewer 1}\label{reviewer-1}}
 
 \RC{What I really liked in the initial version of this manuscript was its focus on maternal optimism. For conceptual and methodological reasons, the authors decided to focus on maternal judgments more broadly, without separating optimism from realism and pessimism. I think this was a good call. Yet, it did make the manuscript less innovative. The authors justify their current research focus by noting: “…there has been limited integrative research on how these judgments are systematically related to particular demographics (e.g., gender), and few longitudinal studies that have considered how these judgments may kindle motivation and improve academic achievement.” This statement feels a bit vague (e.g., especially “limited integrative research” and “few longitudinal studies”). Could the authors add a paragraph to their introduction that explains how exactly their work extends prior work, conceptually and/or methodologically?}
 
 Lean in on causality
 
-
 \Assignment{Philip Parker}
 \WorkInProgress
 \Easy
-
 
 \RC{To me, the most important aspect of this work is its ability to show how maternal judgments predict children’s later academic outcomes. In the “Do maternal judgments influence academic outcomes?”-section, the author predict, based on earlier work, that maternal judgments influence academic outcomes, but they don’t discuss possible mechanisms. Why would maternal judgments influence children’s academic outcomes? How do children pick up on these beliefs?}
 
@@ -140,8 +285,8 @@ Add sentence or too in limitations.
 \WorkInProgress
 \Easy
 
-
-# Reviewer 2
+\hypertarget{reviewer-2}{%
+\section{Reviewer 2}\label{reviewer-2}}
 
 \RC{The authors really dug deep to test the robustness of their estimates.  On one hand, this is super. On the other, it gives the reader a ton to pour over/get hung-up in.  Whatever the authors can do to streamline the overview of their model building and logic behind their ‘preferred’ model, the better.  E.g., We did A –Z (see supplementary material). We chose X specification, based on the following decision rules.}
 
@@ -157,7 +302,7 @@ So, in short, I don’t think the authors’ CLPM model is telling them what the
 
 \todo{Maybe better to just meekly role over and delete CLPM completely?}
 
-We are happy to move these estimates to supplementary materials, particularly given the consistency in the substantive estimates between the RI-CLPM and the CLPM. We do note, however, that the classic CLPM does have a substantive interpretation. It may not be causal interpretation in the sense that the reviewer is referring to. But the goals of the social science are not purely causal but also descriptive and predictive (see Goldthorpe, 2006 for example). It is this reason we leant so hard in the previous revision on the 'comparative' interpretation of the CLPM estimates (see for example the emphasis placed on comparative estimates for the sorts of parameters the CLPM estimates in Gelman et al., 2020). Nevertheless, the estimates from both models tell a comparatively similar story.
+We are happy to move these estimates to supplementary materials, particularly given the consistency in the substantive estimates between the RI-CLPM and the CLPM. We do note, however, that the classic CLPM does have a substantive interpretation. It may not be causal interpretation in the sense that the reviewer is referring to. But the goals of the social science are not purely causal but also descriptive and predictive (see Goldthorpe, 2006 for example). It is this reason we leant so hard in the previous revision on the `comparative' interpretation of the CLPM estimates (see for example the emphasis placed on comparative estimates for the sorts of parameters the CLPM estimates in Gelman et al., 2020). Nevertheless, the estimates from both models tell a comparatively similar story.
 
 \Assignment{Philip Parker}
 \WorkInProgress
@@ -168,9 +313,13 @@ We are happy to move these estimates to supplementary materials, particularly gi
 
 We have now looked at a) mediation of judgments on achievement via interest; and b) moderation of cross-lagged estimates (and, given these were not significantly different, mediation paths) across gender. These are now discussed in multiple sections of the paper.
 
-> <<TMP>>
+\begin{quote}
+\textless{}\textgreater{}
+\end{quote}
 
-> <<TMP>>
+\begin{quote}
+\textless{}\textgreater{}
+\end{quote}
 
 \Assignment{Philip Parker}
 \WorkInProgress
@@ -181,21 +330,22 @@ We have now looked at a) mediation of judgments on achievement via interest; and
 
 We explored mediation via academic interest.
 
-> <<TMP>>
+\begin{quote}
+\textless{}\textgreater{}
+\end{quote}
 
 \Assignment{Philip Parker}
 \WorkInProgress
 \TimeConsuming
 \Hard
 
-
 \RC{In the extant mediation section, I was confused by their introduction of y*.  It sounds like they’re saying that they modeled their observed ordinal variable as a continuous latent—which is fine, in itself. It’s basically a 2 parameter IRT model.  However, if they’re proposing that parents ‘true’ beliefs about child ability are continuously distributed in the population, why would they use the ordinal observed variables in the other models?  The two measurement approaches imply fundamental differences in the nature of the construct.}
 
 \todo{Maybe better to simply say no longer relevant. Jake can you review?}
 
-Apologies for not being clear. This point is no longer relevant given that we have moved the CLPM but for transparency, we wanted to confirm we did model the variables as ordinal. 
+Apologies for not being clear. This point is no longer relevant given that we have moved the CLPM but for transparency, we wanted to confirm we did model the variables as ordinal.
 
-Ordinal models (including logistic regression models) all assume an underlying 'latent' variable where the observed ordinal variable in a qualitative version of it; this is consistent across probit, logistic regression, and proportional odds models. Because of this estimates from any ordinal model can be transformed into a range of substantively interesting quantities; the most common of which are predicted probability estimates and odds ratios. Sometimes however, its useful to transform the estimates into the metric of the underlying latent continuous variable (see Gelman et al., 2020 for some practical examples of when this is worthwhile). Put simply the mediation estimates on the latent metric and the odds ratios reported in the previous revision come from the same proportional odds model. 
+Ordinal models (including logistic regression models) all assume an underlying `latent' variable where the observed ordinal variable in a qualitative version of it; this is consistent across probit, logistic regression, and proportional odds models. Because of this estimates from any ordinal model can be transformed into a range of substantively interesting quantities; the most common of which are predicted probability estimates and odds ratios. Sometimes however, its useful to transform the estimates into the metric of the underlying latent continuous variable (see Gelman et al., 2020 for some practical examples of when this is worthwhile). Put simply the mediation estimates on the latent metric and the odds ratios reported in the previous revision come from the same proportional odds model.
 
 \Assignment{Jake Anders}
 \AlmostDone
@@ -206,7 +356,6 @@ Ordinal models (including logistic regression models) all assume an underlying '
 \todo{I did check this after the last revision. I will double check again.}
 
 We think it is prudent to keep the estimates as is because of the nature of the question the parents were asked. The results not standardizing are similar. In a sense this is not surprising given that the RI-CLPM focuses only on within-person variance and thus controls for all between level variance including school-to-school differences. Nevertheless, we think it is important to keep the estimates as is to ensure a clear and consistent interpretation that is consistent with the nature of the parenting question.
-
 
 \Assignment{Philip Parker}
 \WorkInProgress
@@ -221,15 +370,18 @@ Easy to do.
 \TimeConsuming
 \Easy
 
-
 \clearpage
 
-# References
+\hypertarget{references}{%
+\section{References}\label{references}}
 
 \begingroup
 \setlength{\parindent}{-0.5in}
 \setlength{\leftskip}{0.5in}
 
-<div id = "refs"></div>
+\hypertarget{refs}{}
 
 \endgroup
+
+
+\end{document}\grid

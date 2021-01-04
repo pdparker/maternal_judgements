@@ -1,0 +1,113 @@
+TITLE: Math RI-CLPM
+DATA: FILE = "../../data/mplus_imp.txt";
+TYPE = IMPUTATION;
+VARIABLE: 
+NAMES = y3_weight y3_math_interest y3_math_judgement y5_math_interest
+     y5_math_judgement y7_math_interest y7_math_judgement y3_math y5_math y7_math
+     y3_math_sch y5_math_sch y7_math_sch y3_read_interest y3_read_judgement
+     y5_read_interest y5_read_judgement y7_read_interest y7_read_judgement y3_read
+     y5_read y7_read y3_read_sch y5_read_sch y7_read_sch gender ses geo indig lang
+     y3_sid; 
+MISSING=.;
+
+WEIGHT ARE y3_weight;
+
+USEVARIABLES ARE 
+  y3_math y5_math y7_math 
+	y3_math_interest y5_math_interest y7_math_interest
+	y3_math_judgement y5_math_judgement y7_math_judgement;
+
+CLUSTER = y3_sid;
+
+GROUPING = gender (0 = Boy 1 = Girl);
+
+
+DEFINE:
+  STANDARDIZE y3_math y5_math y7_math;
+  !y3_math = y3_math/100;
+  !y5_math = y3_math/100;
+  !y7_math = y3_math/100;
+
+ANALYSIS: ESTIMATOR = MLR; TYPE = complex; MODEL = NOCOV;
+
+MODEL:
+!Random Intercept
+ri_math_int BY y3_math_interest@1 y5_math_interest@1 y7_math_interest@1;
+ri_math BY y3_math@1 y5_math@1 y7_math@1;
+ri_math_jud BY y3_math_judgement@1 y5_math_judgement@1 y7_math_judgement@1;
+
+!within person
+cx3 BY y3_math_interest@1; cx5 BY y5_math_interest@1; cx7 BY y7_math_interest@1;
+cy3 BY y3_math@1; cy5 BY y5_math@1; cy7 BY y7_math@1;
+cw3 BY y3_math_judgement@1; cw5 BY y5_math_judgement@1; cw7 BY y7_math_judgement@1;
+
+!constraints loadings
+  y3_math_interest@0; y5_math_interest@0; y7_math_interest@0;
+  y3_math@0; y5_math@0; y7_math@0;
+  y3_math_judgement@0; y5_math_judgement@0; y7_math_judgement@0;
+
+
+!cross-lagged 
+  cx7 ON cx5 (BP1); cx5 ON cx3 (BP1); 
+  cx7 ON cy5 (BP2); cx5 ON cy3 (BP2); 
+  cx7 ON cw5 (BP3); cx5 ON cw3 (BP3);
+
+  cy7 ON cy5 (BP4); cy5 ON cy3 (BP4); 
+  cy7 ON cx5 (BP5); cy5 ON cx3 (BP5);
+  cy7 ON cw5 (BP6); cy5 ON cw3 (BP6);
+
+  cw7 ON cw5 (BP7); cw5 ON cw3 (BP7); 
+  cw7 ON cx5 (BP8); cw5 ON cx3 (BP8);
+  cw7 ON cy5 (BP9); cw5 ON cy3 (BP9);
+
+! Residual correlations
+  ri_math_int-ri_math_jud WITH ri_math_int-ri_math_jud;
+  
+  cx3 WITH cy3 ;
+  cx5 WITH cy5 ;
+  cx7 WITH cy7 ;
+
+  cw3 WITH cy3 ;
+  cw5 WITH cy5 ;
+  cw7 WITH cy7 ;
+
+  cw3 WITH cx3 ;
+  cw5 WITH cx5 ;
+  cw7 WITH cx7 ;
+  
+ 
+MODEL Boy:
+!cross-lagged 
+  cx7 ON cx5 (BP1); cx5 ON cx3 (BP1); 
+  cx7 ON cy5 (BP2); cx5 ON cy3 (BP2); 
+  cx7 ON cw5 (BP3); cx5 ON cw3 (BP3);
+
+  cy7 ON cy5 (BP4); cy5 ON cy3 (BP4); 
+  cy7 ON cx5 (BP5); cy5 ON cx3 (BP5);
+  cy7 ON cw5 (BP6); cy5 ON cw3 (BP6);
+
+  cw7 ON cw5 (BP7); cw5 ON cw3 (BP7); 
+  cw7 ON cx5 (BP8); cw5 ON cx3 (BP8);
+  cw7 ON cy5 (BP9); cw5 ON cy3 (BP9);
+
+
+MODEL Girl:
+  !cross-lagged 
+  cx7 ON cx5 (BP1); cx5 ON cx3 (BP1); 
+  cx7 ON cy5 (BP2); cx5 ON cy3 (BP2); 
+  cx7 ON cw5 (BP3); cx5 ON cw3 (BP3);
+
+  cy7 ON cy5 (BP4); cy5 ON cy3 (BP4); 
+  cy7 ON cx5 (BP5); cy5 ON cx3 (BP5);
+  cy7 ON cw5 (BP6); cy5 ON cw3 (BP6);
+
+  cw7 ON cw5 (BP7); cw5 ON cw3 (BP7); 
+  cw7 ON cx5 (BP8); cw5 ON cx3 (BP8);
+  cw7 ON cy5 (BP9); cw5 ON cy3 (BP9);
+
+  [y3_math-y7_math_judgement];
+
+  [ri_math_int-ri_math_jud@0];
+  [cx3-cw7@0];
+
+OUTPUT: STDYX; CINTERVAL;
