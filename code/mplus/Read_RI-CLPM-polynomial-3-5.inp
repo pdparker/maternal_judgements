@@ -1,4 +1,4 @@
-TITLE: Reading RI-CLPM
+TITLE: Reading RI-CLPM: Maternal Judgement Polynomial (lag 3-5)
 DATA: FILE = "../../data/mplus_imp.txt";
 TYPE = IMPUTATION;
 VARIABLE: 
@@ -12,14 +12,14 @@ MISSING=.;
 
 WEIGHT ARE y3_weight;
 
-!CLUSTER = y3_sid;
+CLUSTER = y3_sid;
 
 USEVARIABLES ARE 
   y3_read y5_read y7_read 
 	y3_read_interest y5_read_interest y7_read_interest
 	y3_read_judgement y5_read_judgement y7_read_judgement;
 
-ANALYSIS: ESTIMATOR = MLR; TYPE = RANDOM; ALGORITHM=INTEGRATION
+ANALYSIS: ESTIMATOR = MLR; TYPE = RANDOM COMPLEX; ALGORITHM=INTEGRATION
 
 
 MODEL:

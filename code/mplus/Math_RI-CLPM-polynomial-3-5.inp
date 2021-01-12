@@ -1,4 +1,4 @@
-TITLE: Math RI-CLPM
+TITLE: Math RI-CLPM: Maternal Judgement Polynomial (lag 3-5)
 DATA: FILE = "../../data/mplus_imp.txt";
 TYPE = IMPUTATION;
 VARIABLE: 
@@ -17,7 +17,7 @@ USEVARIABLES ARE
 	y3_math_interest y5_math_interest y7_math_interest
 	y3_math_judgement y5_math_judgement y7_math_judgement;
 
-!CLUSTER = y3_sid;
+CLUSTER = y3_sid;
 
 DEFINE:
   STANDARDIZE y3_math y5_math y7_math;
@@ -25,7 +25,7 @@ DEFINE:
   !y5_math = y3_math/100;
   !y7_math = y3_math/100;
 
-ANALYSIS: ESTIMATOR = MLR; TYPE = RANDOM; ALGORITHM=INTEGRATION
+ANALYSIS: ESTIMATOR = MLR; TYPE = RANDOM COMPLEX; ALGORITHM=INTEGRATION
 
 MODEL:
 !Random Intercept

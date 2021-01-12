@@ -83,5 +83,8 @@ cw3 WITH cx3;
 cw5 WITH cx5;
 cw7 WITH cx7;
 
+MODEL INDIRECT:
+cy7 IND cw3;
+
 
 OUTPUT: STDYX; CINTERVAL;

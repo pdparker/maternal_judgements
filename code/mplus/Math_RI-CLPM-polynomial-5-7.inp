@@ -1,4 +1,4 @@
-TITLE: Math RI-CLPM
+TITLE: Math RI-CLPM: Maternal Judgement Polynomial (lag 5-7)
 DATA: FILE = "../../data/mplus_imp.txt";
 TYPE = IMPUTATION;
 VARIABLE: 
@@ -25,7 +25,7 @@ DEFINE:
   !y5_math = y3_math/100;
   !y7_math = y3_math/100;
 
-ANALYSIS: ESTIMATOR = MLR; TYPE = COMPLEX;
+ANALYSIS: ESTIMATOR = MLR; TYPE = RANDOM COMPLEX; ALGORITHM=INTEGRATION
 
 MODEL:
 !Random Intercept
@@ -56,14 +56,21 @@ ri_math_jud WITH cx3@0 cy3@0 cw3@0;
 ri_math_jud WITH cx5@0 cy5@0 cw7@0;
 ri_math_jud WITH cx7@0 cy5@0 cw7@0;
 
+!cw3_2 | cw3 xwith cw3;
+cw5_2 | cw5 xwith cw5;
+
 !cross-lagged 
   cx7 ON cx5 (P1); cx5 ON cx3 (P1); 
   cx7 ON cy5 (P2); cx5 ON cy3 (P2); 
   cx7 ON cw5 (P3); cx5 ON cw3 (P3);
+  cx7 ON cw5_2(Q1); 
+  !cx5 ON cw3_2 (Q1);
 
   cy7 ON cy5 (P4); cy5 ON cy3 (P4); 
   cy7 ON cx5 (P5); cy5 ON cx3 (P5);
   cy7 ON cw5 (P6); cy5 ON cw3 (P6);
+  cy7 ON cw5_2 (Q2); 
+  !cy5 ON cw3_2 (Q2);
 
   cw7 ON cw5 (P7); cw5 ON cw3 (P7); 
   cw7 ON cx5 (P8); cw5 ON cx3 (P8);
@@ -81,9 +88,6 @@ cw7 WITH cy7;
 cw3 WITH cx3;
 cw5 WITH cx5;
 cw7 WITH cx7;
-
-MODEL INDIRECT:
-cy7 IND cw3;
 
 
 OUTPUT: STDYX; CINTERVAL;

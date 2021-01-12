@@ -1,4 +1,4 @@
-TITLE: Reading RI-CLPM
+TITLE: Math RI-CLPM: Maternal Judgement Polynomial (lag 5-7)
 DATA: FILE = "../../data/mplus_imp.txt";
 TYPE = IMPUTATION;
 VARIABLE: 
@@ -19,7 +19,7 @@ USEVARIABLES ARE
 	y3_read_interest y5_read_interest y7_read_interest
 	y3_read_judgement y5_read_judgement y7_read_judgement;
 
-ANALYSIS: ESTIMATOR = MLR; TYPE = COMPLEX;
+ANALYSIS: ESTIMATOR = MLR; TYPE = RANDOM COMPLEX; ALGORITHM=INTEGRATION
 
 
 MODEL:
@@ -51,6 +51,15 @@ ri_read_jud WITH cx3@0 cy3@0 cw3@0;
 ri_read_jud WITH cx5@0 cy5@0 cw7@0;
 ri_read_jud WITH cx7@0 cy5@0 cw7@0;
 
+  !cw3_2 | cw3 xwith cw3;
+  cw5_2 | cw5 xwith cw5;
+  
+  cx7 ON cw5_2(Q1);
+  !cx5 ON cw3_2 (Q1);
+    
+  cy7 ON cw5_2 (Q2);
+  !cy5 ON cw3_2 (Q2);
+
 
 !cross-lagged 
   cx7 ON cx5 (P1); cx5 ON cx3 (P1);
@@ -77,9 +86,6 @@ cw7 WITH cy7;
 cw3 WITH cx3;
 cw5 WITH cx5;
 cw7 WITH cx7;
-
-MODEL INDIRECT:
-cy7 IND cw3;
 
 
 OUTPUT: STDYX; CINTERVAL;

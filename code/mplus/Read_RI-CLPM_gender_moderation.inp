@@ -1,4 +1,4 @@
-TITLE: Math RI-CLPM
+TITLE: Reading RI-CLPM: Moderation by Gender
 DATA: FILE = "../../data/mplus_imp.txt";
 TYPE = IMPUTATION;
 VARIABLE: 

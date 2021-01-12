@@ -8,25 +8,20 @@ class       : "draft"
 
 output      : 
   papaja::revision_letter_pdf:
-        
+
 header-includes:
     - \usepackage {hyperref}
     - \usepackage[draft]{todonotes}
     - \hypersetup {colorlinks = true, linkcolor = red, urlcolor = blue, linktoc=all}
+    
+bibliography: r-references.bib
 ---
 
 Dear Prof. Cimpian,
 
 \todo{Revision due: March 15, 2021}
 
-Thank you very much for taking the time to consider our revision for publication at _Child Development_. We thank you for the positive assesment of our revision and we really appreciate that you noticed the efforts we went to to make the revision letter manageable. We have, since the last revision realized that the revision letter is part of the research project and thus should be part of the reproducible framework we use. This means the letter should also be:
-
-1. reproducible (anyone with access to the code should be able to reproduce it);
-2. integrated in the overall workflow (the letter should be part of the same overall R.Project);
-3. historically traceable (is linked to a version control system like git); and 
-4. persistently linked to the manuscript (here the letter has code behind it that draws the quoted text from manuscript itself; thus ensuring that the letter and manuscript are never inconsistent).
-
-Thus, I hope you will forgive the slight change in format here but we think that long-term this is the best option from an Open Science perspective. 
+Thank you very much for taking the time to consider our revision for publication at *Child Development*. We thank you for the positive assessment of our revision and we really appreciate that you noticed the efforts we went to to make the revision letter manageable. We have, since the last revision realized that the revision letter is part of the research project and thus should be part of the reproducible framework we use. Thus, I hope you will forgive the slight change in format here but we think that long-term this is the best option from an Open Science perspective.
 
 In the following we address your and each reviewers' concerns point-by-point.
 
@@ -36,206 +31,247 @@ Phil Parker
 
 ORCID: [0000-0002-4604-8566](https://orcid.org/0000-0002-4604-8566)
 
-
 \clearpage
 
 \tableofcontents
 
 \clearpage
 
-# Editor 
+# Editor
 
 \RC{First, R1 argues that, in light of your revisions, the theoretical contribution is less clear than it was before. I agree. Please take another pass at the introduction to highlight the distinct contributions of this work}
 
+\todo{think I need to make the theoretical contribution clearer}
 
-Lean in on causality
+We have aimed to make the theoretical contribution clearer. In addition, in response to Reviewer 1 Comment 1 we have more clearly specified the novel contributions of the study that are due to the methodology we use. In particular, we highlight the stronger causal claims we can make as a results of our methodology.
 
+> While there has been longitudinal research on the influence of parental expectations on academic outcomes (Simpkins et al., 2012), such research has important limitations that limit their ability to advance causal claims. In particular, there is a growing recognition that panel data can best address causal questions by focusing on within person variance [(Alison, 2009; Gelman et al., 2020; Orth et al., 2020)](http://sciwheel.com/work/citation?ids=9360503&pre=&suf=&sa=0). Models that focus on within person variance allow for each participant to act as their own control and thus provide insight into more causal questions like "if a parent's expectations are more positive than usual does the child experience an increase in academic achievement or intrinsic interest?".
+
+And in the introduction we write:
+
+> What impact does maternal judgments have on academic outcomes? Few would argue that strongly negative maternal judgements are beneficial. But should mothers err on the side of positive judgments? Bandura (1986) has suggested that optimism may promote motivation and effort and thus enhance positive outcomes. Pesu et al.'s (2016) research also suggests that maternal judgments may directly stimulate child motivation (Pesu et al., 2016). In addition, research by Jussim and Eccles (1992) shows that important others' expectations can explain gains in academic achievement. There are several potential mechanisms that explain the link between parental judgements and academic achievement. Parental beliefs may influence the investment parents make in their child's education. For example, research show that parental judgements are negatively associated with the likelihood that a parent will hire a tutor for their child (Kinsler & Pavan, 2020). Second, parental beliefs may influence the amount (Kinsler & Pavan, 2020) and manner in which parents directly support their child's education (Gunderson et al., 2012). For example, there is evidence that stronger parental stereotypical gender beliefs around math lead to more intrusive and detrimental homework support (Gunderson et al., 2012). Third, parental beliefs influence their child's motivation and self-belief (Pesu et al., 2016; Tiedemann, 2000) and via that influence their academic achievement (Gunderson et al., 2012; Simpkins et al., 2012). Finally, and in contrast to the former mechanisms that expect a positive relationship between parental expectations and academic achievement,  Murayama et al. (2016) has argued that overly positive parental judgments can be damaging because they can lead to over-involvement, controlling behavior, and excessive pressure.
+>
+> While we were unable to assess the first two mechanism, we do address mechanism three by assessing whether parental judgements influence academic achievement via the child's intrinsic interest; a critical motivation variable (Ryan & Deci, 2017). The fourth mechanism we consider by exploring whether there was a polynomial relationship between parental expectations and their influence on academic achievement (holding objective achievement constant). If extremely positive judgements are detrimental, we should see a pronounced inverted U shape relationship between judgements and achievement (and interest) with the turning point---where judgements change from a positive to a negative influence---occurring at more extreme positive levels (holding objective achievement constant).
+
+```{=tex}
 \Assignment{Philip Parker}
 \WorkInProgress
 \Easy
-
+```
 \RC{Second, R2 recommends that you drop the CLPM models altogether, which has implications for other parts of the paper (e.g., the mediation analysis). I would trust R2's judgment on this one, but I will leave it up to you how to respond. I will probably consult with R2 again when you submit your revision.}
 
-\todo{Should I just remove the CLPMs completely?}
+We have now removed the CLPMs as suggested. We have now added, within the RI-CLPM, a test of mediation (via academic interest), moderation by gender, and a test of the effect of extreme positive judgments.
 
-We have now moved the CLPMs to supplementary materials (as well as the mediation models). We have retained the models in supplementary materials in the interests of full reporting. We have added in now an analysis of whether the RI-CLPM differs by gender.
-
+```{=tex}
 \Assignment{Philip Parker}
 \AlmostDone
 \Medium
-
+```
 \RC{Can you estimate whether the *magnitude* of the discrepancy between mothers' judgments and children's achievement matters? Is the relationship between maternal judgments and children's subsequent achievement quasi-linear or does it flatten out or even switch signs as the discrepancy increases? For instance, I can imagine that *moderate* over-estimation predicts longitudinal growth in performance but that the relationship of *extreme* over-estimation with subsequent achievement is either the same or lower than that of moderate over-estimation. I realize that there is a lot of complexity here: Mothers are asked about how the child is progressing, not performing (which is a reason why you switched away from talk of optimism in the first place); the maternal judgments and the achievement measures are on very different scales, so it is difficult to calculate accuracy/discrepancy scores; etc. At the same time, if there's a way to try this, I (and many readers) would find it interesting to understand the shape of the relationship between mothers' judgments and children's achievement. This doesn't have to be the main focus of the paper, obviously, and as long as you're transparent in your reporting, it seems fine to me to make some simplifying assumptions here.}
 
-We agree this is interesting. And indeed it makes sense. In some ways, a simple take on this is already present. All models control for actual achievement and thus the effects of judgments on the outcomes of interest are for children of the same level of 'objective' ability. This is akin to an discrepancy score-indeed it is identical to a common method of calculating a discrepancy score where judgments are predicted by achievement and the residual saved as the discrepancy/accuracy score.
+We agree this is interesting. And indeed it makes sense. In some ways, this is already present. All models control for actual achievement and thus the effects of judgments on the outcomes of interest are for children of the *same* level of 'objective' ability. This is akin to an discrepancy score---indeed it is identical to a common method of calculating a discrepancy score where judgments are predicted by achievement and the residual saved as the discrepancy/accuracy score.
 
-The issue of a extremes is more complicated. One way of doing this is to consider non-linear effects. The complicating factor here is that this needs to be done within an RI-CLPM framework where polynomial effects--due to the way these models are paramatized--need to be represented as latent interactions. We tried to get a latent polynomial mode to work but we simply could not get these extremely complicated models to converge. 
+The issue of a extremes is more complicated. One way of doing this is to consider non-linear effects---quadratic effects of judgments for instance---while holding objective achievement constant. The complicating factor here is that this needs to be done within an RI-CLPM framework where quadratic effects---due to the way these models are paramatized---need to be represented as latent interactions. We tried to get all latent quadratic effects to work in a single model but we simply could not get these extremely complicated models to converge.
 
-We did manage to get a model to converge that only looked at a  polynomial at a single time point (rather than at all time points together). Here only the Year 3 judgment polynomial was significant (1 out of 4 polynomials significant). This effect was consistent with your suggestion. At more extreme values judgements had increasingly smaller effects and at very extreme values turned negative. 
+We did manage to get a model to converge that only looked at a polynomial at a single time lag at a time (e.g., year 3 judgments predicting change in achievement and interest from Year 3 to Year 5). Here only the Year 3 judgment polynomial was significant (1 out of 8 polynomials were significant). This effect was consistent with your suggestion. At more extreme values, judgments did indeed have increasingly smaller effects and at extreme values (.70 above the standard deviation turned negative. We have made it, hopefully, clear in the associated plot notes that values further from zero are more extreme.
 
-Given the piecemeal nature of how we modeled, this we decided not to include it in the results section but as impetus for future researchers to explore this question in more detail; noting for example that a parental judgment question with greater variance would be better suited to accessing this question.
+We have added in a new hypothesis based on previous research:
 
-> <<TMP>>
+> The fourth mechanism we consider by exploring whether there was a polynomial relationship between parental expectations and their influence on academic achievement (holding objective achievement constant). If extremely positive judgements are detrimental, we should see a pronounced inverted U shape relationship between judgements and achievement (and interest) with the turning point---where judgements change from a positive to a negative influence---occurring at more extreme positive levels (holding objective achievement constant)...Maternal judgements that are overly positive (controlling for prior academic achievement) will have a weaker nfluence on later academic achievement as indicated by a significant quadratic relationship between judgements and achievement (H5).
 
+Added in results:
 
+> **H5: Extreme Positive Maternal Judgements May Negatively Impact Children**
+>
+> We next wanted to explore whether extremely positive maternal judgements (controlling for prior achievement) had a weaker or even negative influence on academic achievement and interest. To estimate this quadratic relationship within an RI-CLPM we needed to use a latent interaction. This complex model did not converge when we tried to estimate quadratic effects for both time lags. Thus, we were only able to estimate one quadratic effect at a time. There were four quadratic estimates (two-time lags each for reading and math). Of these four only one was significant; the relationship between maternal reading judgements at Year 3 predicting change in reading achievement from Year 3 to Year 5 (β = -.057 95% CI [-.107, -.007]). Conditional means (setting Year 3 interest and achievement at the mean) indicates that judgements have a positive influence on achievement until .70 of a standard deviation above the mean for Year 3 judgements where the influence of judgements turned negative (see Figure 4 for detailed conditional means).
+
+And discussed the results in the discussion:
+
+> There was small and inconsistent (1 out of 8 significant effects) evidence that extreme positive maternal judgements---that is judgements that are highly discrepant from their child's objective ability---may be neural or even and extremely high levels negative. The one significant quaratic effect we found was consistent with the concerns noted in Murayama et al. (2016). Namely, that for children of average Year 3 achievement, maternal judgements that are \>.7 SD discrepent from their normal levels lead to a decline in achievement. Due to limitations in our ability to model these non-linear effects and, given that these non-linear effects often require considerably more power that simple linear effects to detect, further research with bigger samples should concentrate specifically on this issue.
+
+```{=tex}
 \Assignment{Philip Parker}
 \WorkInProgress
 \Medium
-
+```
 \RC{Does the LSAC dataset contain other variables on the mothers that might provide additional insight into why positive expectations predict higher subsequent achievement? For example, I can imagine mothers' growth/failure mindsets (e.g., Dweck, 2006) being a moderator here, with maternal judgments predicting increases in achievement particularly for mothers who also endorse the view that children's abilities can grow (rather than being fixed) and that failure provides learning opportunities (rather than signaling low ability). I can imagine a range of other parental attitudes/beliefs playing a similar moderating role. If such variables are available in the LSAC dataset, perhaps you can include the relevant analyses here.}
 
 \todo{Could use How often talk to SC about school; or I think that I can make a difference in study child's success at school.}
 
-There wasn't anything obvious that we could see measured at the parent level. However, we did include child interest in math and reading. Intrinsic interest is very closely tied to competency self-concept. It is reasonable to think that parents judgments may have both direct and indirect effects on interest/self-concept. For example, parents positive judgments may encourage the child to feel better about themselves and this spurs interest in academic pursuits which leads to increased achievement. We have now explored this exact indirect effect in the RI-CLPM where Year 3 parental judgments predicted year 7 achievement via year 3 interest. For neither reading nor math was this significant. We have now added this to the discussion.
+There wasn't anything obvious that we could see measured at the parent level. However, we did include child interest in math and reading. Intrinsic interest is very closely tied to competency self-concept. It is reasonable to think that parents judgments may have both direct and indirect effects on interest/self-concept. For example, parents positive judgments may encourage the child to feel better about themselves and this spurs interest in academic pursuits which leads to increased achievement. We have now explored this exact indirect effect in the RI-CLPM where Year 3 parental judgments predicted year 7 achievement via year 3 interest. We now include a hypothesis based on previous research:
 
-> <<TMP>>
+> For example, there is evidence that stronger parental stereotypical gender beliefs around math lead to more intrusive and detrimental homework support (Gunderson et al., 2012). Third, parental beliefs influence their child's motivation and self-belief (Pesu et al., 2016; Tiedemann, 2000) and via that influence their academic achievement (Gunderson et al., 2012; Simpkins et al., 2012). ... While we were unable to assess the first two mechanism, we do address mechanism three by assessing whether parental judgements influence academic achievement via the child's intrinsic interest; a critical motivation variable (Ryan & Deci, 2017)....The effect of maternal judgements on numeracy and reading gains will be mediated by gains in numeracy and reading interest (H4).
 
+added results related to this:
+
+> We next considered if children's academic interest mediated the influence of parental judgements on academic achievement. We specified the mediation path within the RI-CLPM where Year 5 academic interest mediated the link between Year 3 maternal judgements and Year 7 achievement. While a very conservative means of estimating mediation, this approach took best advantage of the causal inference potential of the RI-CLPMs. This mediation path was not significant for reading (β = .002 95% CI [-.002, .006]) or for math (β = .008 95% CI [-.001, .017]). Very small, but significant indirect effects were present via Year 5 achievement for reading (β = .027 95% CI [.010, .043]) and Year 5 maternal judgements for math (β = .019 95% CI [.003, .035]). All other indirect effects were not significant.
+
+and discussed it in the discussion:
+
+> Our analysis further found little evidence that gender moderated the relationship between judgements and academic interest or academic achievement. This was despite notable evidence of gender stereotypes patterns in maternal judgements. The lack of evidence for gender moderation suggests that while gender might influence the means of maternal judgements it does not influence the processes by which maternal judgements influences academic interest and achievement. Despite research and theory suggesting that parental judgements influence achievement via their effect on children's self-beliefs and motivation (Gunderson et al., 2012; Simpkins et al., 2012), we found little evidence of this. This may be due to previous research using cross-sectional data or not disentangling within and between person variance when using panel data.
+
+```{=tex}
 \Assignment{Philip Parker}
 \WorkInProgress
 \Hard
-
-
+```
 # Reviewer 1
 
 \RC{What I really liked in the initial version of this manuscript was its focus on maternal optimism. For conceptual and methodological reasons, the authors decided to focus on maternal judgments more broadly, without separating optimism from realism and pessimism. I think this was a good call. Yet, it did make the manuscript less innovative. The authors justify their current research focus by noting: “…there has been limited integrative research on how these judgments are systematically related to particular demographics (e.g., gender), and few longitudinal studies that have considered how these judgments may kindle motivation and improve academic achievement.” This statement feels a bit vague (e.g., especially “limited integrative research” and “few longitudinal studies”). Could the authors add a paragraph to their introduction that explains how exactly their work extends prior work, conceptually and/or methodologically?}
 
-Lean in on causality
+Yes we agree. We have aimed to make the novel contribution clearer throughout but have added a section on the methodological contribution.
 
+> While there has been longitudinal research on the influence of parental expectations on academic outcomes (Simpkins et al., 2012), such research has important limitations that limit their ability to advance causal claims. In particular, there is a growing recognition that panel data can best address causal questions by focusing on within person variance (Alison, 2009; Gelman et al., 2020; Orth et al., 2020). Models that focus on within person variance allow for each participant to act as their own control and thus provide insight into more causal questions like "if a parent's expectations are more positive than usual does the child experience an increase in academic achievement or intrinsic interest?".
 
+```{=tex}
 \Assignment{Philip Parker}
 \WorkInProgress
 \Easy
-
-
+```
 \RC{To me, the most important aspect of this work is its ability to show how maternal judgments predict children’s later academic outcomes. In the “Do maternal judgments influence academic outcomes?”-section, the author predict, based on earlier work, that maternal judgments influence academic outcomes, but they don’t discuss possible mechanisms. Why would maternal judgments influence children’s academic outcomes? How do children pick up on these beliefs?}
 
-Pull from previous draft which had this.
+We agree and have now added a full section on this.
 
+> There are several potential mechanisms that explain the link between parental judgements and academic achievement. Parental beliefs may influence the investment parents make in their child's education. For example, research show that parental judgements are negatively associated with the likelihood that a parent will hire a tutor for their child (Kinsler & Pavan, 2020). Second, parental beliefs may influence the amount (Kinsler & Pavan, 2020) and manner in which parents directly support their child's education (Gunderson et al., 2012). For example, there is evidence that stronger parental stereotypical gender beliefs around math lead to more intrusive and detrimental homework support (Gunderson et al., 2012). Third, parental beliefs influence their child's motivation and self-belief (Pesu et al., 2016; Tiedemann, 2000) and via that influence their academic achievement (Gunderson et al., 2012; Simpkins et al., 2012). Finally, and in contrast to the former mechanisms that expect a positive relationship between parental expectations and academic achievement, Murayama et al. (2016) has argued that overly positive parental judgments can be damaging because they can lead to over-involvement, controlling behavior, and excessive pressure.
+
+```{=tex}
 \Assignment{Philip Parker}
 \WorkInProgress
 \Easy
-
+```
 \RC{I appreciate the authors’ efforts to embrace open science principles (as far as possible, given that they worked with governmental data).}
 
 Thank you. We appreciate this.
 
+```{=tex}
 \Assignment{Philip Parker}
 \Done
 \Easy
-
+```
 \RC{In the introduction, the authors spend three paragraphs discussing possible sources of “the discrepancy between mothers’ judgments of their child and the child’s objectively measured ability.” Perhaps this can be written more concisely and combined in 1 paragraph, as this doesn’t seem to address a question that’s central in the current paper.}
 
-Easy to do.
+Yes this is a good idea. We have now shortened this entire section to a single paragraph.
 
+> Most of the early literature on this topic in education comes from Miller and colleagues (Delgado-hachey & Miller, 1993; Miller & Davis, 1992; Miller, Manhal, & Mee, 1991). These researchers showed that mothers' judgments were strongly related to their child's objectively measured ability (*r* ≈ .50)---though others has found weaker correlations (*r* ≈ .30; Sonnenschein, Stapleton, & Metzger, 2013). The discrepancy between mothers' judgments of their child and the child's objectively measured ability could stem from several sources. First, mothers may lack access to normative information. This is particularly the case where there is a growing trend for teachers to limit the use of normative assessment for young children (Lohbeck & Möller, 2017). Second, mothers may make judgments that are influenced by a variety of heuristics. For example, Van Zanden et al. (2017) showed that parents engage in heuristics that commonly impact educational psychology constructs when accessing their child's academic performance. Finally, mothers may skew their judgement either as a form of self-enhancement (Gebauer et al., 2013) or as a means of motivating their child.
+
+```{=tex}
 \Assignment{Philip Parker}
 \WorkInProgress
 \Easy
-
+```
 \RC{Although I am not an expert in all areas covered by the current manuscript, I have the impression that some recent empirical work on stereotypes and parents’ beliefs about children’s performances/efforts/abilities is missing from the introduction. In its current form, the manuscript seems to build mainly on theoretical work by Eccles and Bandura, which seems a bit narrow given the extensive theory that exists on the nature of optimism, stereotypes, and parental beliefs more broadly.}
 
-Not sure what to do here other than find and integrate more literature.
+We have done an additional search of the literature, particularly around the search term 'parental beliefs", have have added some additional citations(both from psychology and economics) have been integrated throughout.
 
+```{=tex}
 \Assignment{Rhiannon Parker}
 \WorkInProgress
 \Medium
-
+```
 \RC{In the Discussion, the authors may consider discussing different types of parental judgments. These judgments are now treated as a continuum from positive to negative, but there are many types of judgments (e.g., focusing on children’s efforts or their abilities), which may have unique implications for motivation and achievement. Testing these possibilities may be an important direction for future work.}
 
-Add sentence or too in limitations.
+Yes this is a good point. We have now added a section in the discussion which reads:
 
+> In addition, readers should be aware that parents were asked about their global judgements of their child's progress, but this is not the entirety of parental beliefs that may impact a child's academic achievement. For example, parent's growth mindsets, perceptions of their child's effort, and even parents own academic anxieties can influence children's academic progress (Gunderson et al., 2012; Tiedemann, 2000).
+
+```{=tex}
 \Assignment{Rhiannon Parker}
 \WorkInProgress
 \Easy
-
-
+```
 # Reviewer 2
 
 \RC{The authors really dug deep to test the robustness of their estimates.  On one hand, this is super. On the other, it gives the reader a ton to pour over/get hung-up in.  Whatever the authors can do to streamline the overview of their model building and logic behind their ‘preferred’ model, the better.  E.g., We did A –Z (see supplementary material). We chose X specification, based on the following decision rules.}
 
-Should be solved mainly by simplifying the analysis.
+We have significantly simplified the methodology and information about the sensitivity test. This section now reads:
 
+> There were several assumptions or design decisions that we made in the construction of our models. These included a) only correcting standard errors for school nesting, b) assuming proportional odds for ordinal response variables, and c) treating ordinal predictors as continuous. We assessed the likely impact of these descisions via a series of Bayesian sensitivity analyses reported [here](http://blindedforreview.com/2020_Maternal_Judgement/supplementary_materials.html). Sensitivity to our choices was modelled using the leave-one-out information criteria (LOOIC; and associated standard error). We assumed that if the delta LOOIC that compared models were only a few times larger than the associated standard error, then our results were reasonably robust to our modeling decisions (Bürkner & Vuorre, 2019). Results supported the use of simpler models (i.e., cluster robust standard errors, proportional odds, and continuous predictors). Full details of the analysis can be found [here](https://osf.io/uw5g6/?view_only=b6d23a31cc4e46e09f58d0c9ff6443c3).
+
+```{=tex}
 \Assignment{Philip Parker}
 \WorkInProgress
 \Easy
-
+```
+```{=tex}
 \RC{Another way to streamline is to cut the “classic” CLPM results. I realize that there are now a few papers suggesting that it’s reasonable to pick and choose different variations of the RI-CLPM to test different questions. I agree with this completely **as long as the resulting parameters carry some kind of sensible substantive interpretation**. Unfortunately, this is not the case with the “classic” CLPM. So, I have to respectfully disagree with Orth et al. 2020. The lagged relations from the CLPM are *not* between-person relations. They are a blend of within- and between-person relations, weighted as a function of their respective standard errors (see Bryk \& Raudenbush, 1992 Berry \& Willoughby. 2017). There’s no easy substantive interpretation re: between-person rank-order b/c these estimates carry both within- and between-person variation. Now, if the within- and between-person estimates are identical, then this weighted composite effect could, in principle, be reasonable (Bryk and Raudenbush call it ‘convergence’). However, in my mind, even this would be questionable given all of the other conditionalities baked into the data.  i.e., you’d want convergence for all of the time-varying relations before mixing the two type of estimates.
 
 So, in short, I don’t think the authors’ CLPM model is telling them what they think it telling’s them. I don’t mean to be so hard-minded about it, but I think these models do more harm than good.}
+```
+We have now removed the CLPM as suggested. In there place we have added some additional models as requested by the editor.
 
-\todo{Maybe better to just meekly role over and delete CLPM completely?}
-
-We are happy to move these estimates to supplementary materials, particularly given the consistency in the substantive estimates between the RI-CLPM and the CLPM. We do note, however, that the classic CLPM does have a substantive interpretation. It may not be causal interpretation in the sense that the reviewer is referring to. But the goals of the social science are not purely causal but also descriptive and predictive (see Goldthorpe, 2006 for example). It is this reason we leant so hard in the previous revision on the 'comparative' interpretation of the CLPM estimates (see for example the emphasis placed on comparative estimates for the sorts of parameters the CLPM estimates in Gelman et al., 2020). Nevertheless, the estimates from both models tell a comparatively similar story.
-
+```{=tex}
 \Assignment{Philip Parker}
 \WorkInProgress
 \TimeConsuming
 \Medium
-
+```
 \RC{The ‘good news’ is that they show evidence of within-person relations—which, in my mind, is far more interesting b/c we’re looking at actual changes within a mother and child over time (individual development), while adjusting for all possible time-invariant confounds. Although this means that they can’t estimate main effects for child gender, they can consider it as a moderator of the within-child relation.  I’d concentrate the interpretations here.}
 
-We have now looked at a) mediation of judgments on achievement via interest; and b) moderation of cross-lagged estimates (and, given these were not significantly different, mediation paths) across gender. Models did not show significant mediation, moderation, or mediated moderation. These are now discussed in multiple sections of the paper.
+We have now looked at a) mediation of judgments on achievement via interest; and b) moderation of cross-lagged estimates across gender (and, given these were not significantly different, there was no need to consider moderation of the mediation paths by gender). Models did not show significant mediation or moderation. These are now discussed in multiple sections of the paper. The results are:
 
-> <<TMP>>
+> **Exploratory Analysis: Gender is not a Moderator**. Given that gender was such a consistent predictor of maternal judgements, we explored whether the results from the RI-CLPMs were moderated by gender. This exploratory analysis was conducted via a multigroup model with moderation assessed by considering if regression parameters for boys and girls significantly differed. Significant differences were accessed using the delta method in MODEL CONSTRAINT in Mplus. We found no evidence of significant differences on any of the regression estimates in the RI-CLPMs. This indicates that any longitudinal relationships between maternal judgements, child academic interest, and academic achievement differences by gender were likely to be very small.
 
-> <<TMP>>
+> **H4: Interest Is Not a Significant Mediator between Judgements and Achievement**
+>
+> We next considered if children's academic interest mediated the influence of parental judgements on academic achievement. We specified the mediation path within the RI-CLPM where Year 5 academic interest mediated the link between Year 3 maternal judgements and Year 7 achievement. While a very conservative means of estimating mediation, this approach took best advantage of the causal inference potential of the RI-CLPMs. This mediation path was not significant for reading (β = .002 95% CI [-.002, .006]) or for math (β = .008 95% CI [-.001, .017]). Very small, but significant indirect effects were present via Year 5 achievement for reading (β = .027 95% CI [.010, .043]) and Year 5 maternal judgements for math (β = .019 95% CI [.003, .035]). All other indirect effects were not significant.
 
+> **H5: Extreme Positive Maternal Judgements May Negatively Impact Children**
+>
+> We next wanted to explore whether extremely positive maternal judgements (controlling for prior achievement) had a weaker or even negative influence on academic achievement and interest. To estimate this quadratic relationship within an RI-CLPM we needed to use a latent interaction. This complex model did not converge when we tried to estimate quadratic effects for both time lags. Thus, we were only able to estimate one quadratic effect at a time. There were four quadratic estimates (two-time lags each for reading and math). Of these four only one was significant; the relationship between maternal reading judgements at Year 3 predicting change in reading achievement from Year 3 to Year 5 (β = -.057 95% CI [-.107, -.007]). Conditional means (setting Year 3 interest and achievement at the mean) indicates that judgements have a positive influence on achievement until .70 of a standard deviation above the mean for Year 3 judgements where the influence of judgements turned negative (see Figure 4 for detailed conditional means).
+
+```{=tex}
 \Assignment{Philip Parker}
 \WorkInProgress
 \TimeConsuming
 \Hard
-
+```
 \RC{Ditching the CLPM  would make the mediation analyses (as they stand) moot; however, the authors could consider within-person mediation, where the indirect relations are conditional on gender.}
 
-We explored mediation via academic interest. We chose to implement a very restrictive within person mediation model where Year 3 parental judgments influenced year 7 achievement via year 5 academic interest. This was not significant.
+We explored mediation via academic interest. We chose to implement a very restrictive within person mediation model where Year 3 parental judgments influenced year 7 achievement via year 5 academic interest. This was not significant (see above).
 
-> <<TMP>>
-
+```{=tex}
 \Assignment{Philip Parker}
 \WorkInProgress
 \TimeConsuming
 \Hard
-
-
+```
 \RC{In the extant mediation section, I was confused by their introduction of y*.  It sounds like they’re saying that they modeled their observed ordinal variable as a continuous latent—which is fine, in itself. It’s basically a 2 parameter IRT model.  However, if they’re proposing that parents ‘true’ beliefs about child ability are continuously distributed in the population, why would they use the ordinal observed variables in the other models?  The two measurement approaches imply fundamental differences in the nature of the construct.}
 
 \todo{Maybe better to simply say no longer relevant. Jake can you review?}
 
-Apologies for not being clear. This point is no longer relevant given that we have moved the CLPM but for transparency, we wanted to confirm we did model the variables as ordinal. 
+Apologies for not being clear. This point is no longer relevant given that we have moved the CLPM but for transparency, we wanted to confirm we did model the variables as ordinal.
 
-Ordinal models (including logistic regression models) all assume an underlying 'latent' variable where the observed ordinal variable in a qualitative version of it; this is consistent across probit, logistic regression, and proportional odds models. Because of this estimates from any ordinal model can be transformed into a range of substantively interesting quantities; the most common of which are predicted probability estimates and odds ratios. Sometimes however, its useful to transform the estimates into the metric of the underlying latent continuous variable (see Gelman et al., 2020 for some practical examples of when this is worthwhile). Put simply the mediation estimates on the latent metric and the odds ratios reported in the previous revision come from the same proportional odds model. 
+Ordinal models (including logistic regression models) all assume an underlying 'latent' variable where the observed ordinal variable in a qualitative version of it; this is consistent across probit, logistic regression, and proportional odds models [@gelman2020regression]. Because of this estimates from any ordinal model can be transformed into a range of substantively interesting quantities; the most common of which are predicted probability estimates and odds ratios (which we report in the paper). Sometimes however, its useful to transform the estimates into the metric of the underlying latent continuous variable [for practical example see @gelman2020regression]. Put simply the mediation estimates on the latent metric and the odds ratios reported in the previous revision come from the same proportional odds model. As noted, however, this is no longer relevant given the removal of the classic CLPM.
 
+```{=tex}
 \Assignment{Jake Anders}
 \AlmostDone
 \Easy
-
+```
 \RC{it still seems a little weird to me to be interested in individual achievement change over time, yet standardize on school means b/c it conflates change in the child and changes in the school mean over time. I understand their rationale, given the question they asked the parents is relative to students in the school. It just sits weirdly. Is it really the case that the school means are so different that it’d actually matter?}
 
-\todo{Jake and Taren to review}
+We think it is prudent to keep the estimates as is because of the nature of the question the parents were asked. The results not standardizing by school are similar. In a sense this is not surprising given that the RI-CLPM focuses only on within-person variance and thus controls for all between level variance including school-to-school differences. Nevertheless, we think it is important to keep the estimates as is to ensure a clear and consistent interpretation that is consistent with the nature of the parenting question. We believe that not doing so actually would make the estimates harder to interpret in the context of the parenting question asking about relative rather than absolute progress. We think we are justified by this because research has shown that parents assessments have been shown to be significantly influenced by the local school context even when the questions ask to compare their child to other children in general [@kinsler2020]; rather than in our case where they are asked to compare their child against their class.
 
-We think it is prudent to keep the estimates as is because of the nature of the question the parents were asked. The results not standardizing are similar. In a sense this is not surprising given that the RI-CLPM focuses only on within-person variance and thus controls for all between level variance including school-to-school differences. Nevertheless, we think it is important to keep the estimates as is to ensure a clear and consistent interpretation that is consistent with the nature of the parenting question.
-
-
+```{=tex}
 \Assignment{Jake and Taren}
 \WorkInProgress
 \Easy
-
+```
 \RC{I’d suggest moving the RI-CLPM into figures. The tables are pretty dense.}
 
 Easy to do.
 
+```{=tex}
 \Assignment{Philip Parker}
 \WorkInProgress
 \TimeConsuming
 \Easy
-
-
+```
 \clearpage
 
 # References
 
-\begingroup
-\setlength{\parindent}{-0.5in}
-\setlength{\leftskip}{0.5in}
-
-<div id = "refs"></div>
+::: {#refs}
+:::
 
 \endgroup

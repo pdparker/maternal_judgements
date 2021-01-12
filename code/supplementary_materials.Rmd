@@ -12,20 +12,26 @@ source(here::here("code","custom_functions.R"))
 library(DT)
 library(hrbrthemes)
 library(drake)
+library(MplusAutomation)
 update_geom_font_defaults(font_rc)
-
+mplus_sum <- readModels("./mplus/")
 ```
+
+Domains are Math = Numeracy domain and Read = Reading domain.
+<br><br>
 
 # Model Fits
 
 ```{r}
-loadd(mplus_sum)
+#loadd(mplus_sum)
 mplus_sum %>%
+   map(`[[`, "summaries") %>%
+       map_df(as_tibble) %>% 
+  # Note latent interaction means no fit statistics. Droping models
+  filter(!str_detect(Title,"Polynomial")) %>%
   select(Title, ChiSqM_Mean, ChiSqM_DF,
          RMSEA_Mean,TLI_Mean, CFI_Mean) %>%
   set_names(c('Model', 'Chi-sq', 'DF', 'RMSEA', 'TLI','CFI')) %>%
-  mutate(Model = c('Numeracy RI-CLPM', 'Numeracy CLPM (Lag 1)','Numeracy CLPM (Lag 2)',
-                   'Reading CLPM (Lag 1)', 'Reading CLPM (Lag 2)', 'Reading RI-CLPM')) %>%
   arrange(Model) %>%
   datatable(
     caption = "Table S1. Model Fit Statistics for Within and Between Models."
@@ -36,93 +42,14 @@ mplus_sum %>%
 
 <br><br>
 
-# Full Results for Between Person Model: Reading
-
-```{r, message=FALSE, warning=FALSE, cache=FALSE, echo=FALSE}
-loadd(mplus_out)
-mplus_out$mediation_read.out$parameters$ci.unstandardized %>%
-  as_tibble() %>%
-  filter(str_detect(paramHeader,"ON")) %>%
-  mutate(Outcome = str_remove(paramHeader,"\\..+")) %>%
-  dplyr::select(Outcome, Predictor = param, 
-         Est = est, `-95 CI` = `low2.5`,`+95 CI` = `up2.5`) %>% 
-  mutate(Outcome = case_when(
-    str_detect(Outcome, "JUD") ~ str_replace(Outcome, 'Y(.)_R_JUD', 'Maternal Judgement Year \\1'),
-    str_detect(Outcome, "INT") ~ str_replace(Outcome, 'Y(.)_R_INT', 'Interest Year \\1'),
-    str_detect(Outcome, "READ") ~ str_replace(Outcome, 'Y(.)_READ', 'Achievement Year \\1')
-  ),
-  Predictor = case_when(
-    str_detect(Predictor, "JUD") ~ str_replace(Predictor, 'Y(.)_R_JUDGE', 'Maternal Judgement Year \\1'),
-    str_detect(Predictor, "INT") ~ str_replace(Predictor, 'Y(.)_R_INT', 'Interest Year \\1'),
-    str_detect(Predictor, "READ") ~ str_replace(Predictor, 'Y(.)_READ', 'Achievement Year \\1'),
-    Predictor == 'GENDER' ~ 'Girls',
-    Predictor == 'SES' ~ 'z-Socioeconomic Status',
-    Predictor == 'GEO' ~ 'Urban',
-    Predictor == 'INDIG' ~ 'non-Indigenous',
-    Predictor == 'LANG' ~ 'LOTE',
-  )
-  ) %>%
-  datatable(filter= 'top', caption = "Table S2. Full Reading CLPM (Between) Model Output")
-```
-
-<br><br>
-
-# Full Results for Between Person Model: Math
-
-```{r, message=FALSE, warning=FALSE, cache=FALSE, echo=FALSE}
-
-mplus_out$mediation_math.out$parameters$ci.stdyx.standardized %>%
-  as_tibble() %>%
-  filter(str_detect(paramHeader,"ON")) %>%
-  mutate(Outcome = str_remove(paramHeader,"\\..+")) %>%
-  dplyr::select(Outcome, Predictor = param, 
-         Est = est, `-95 CI` = `low2.5`,`+95 CI` = `up2.5`) %>% 
-  mutate(Outcome = case_when(
-    str_detect(Outcome, "JUD") ~ str_replace(Outcome, 'Y(.)_M_JUD', 'Maternal Judgement Year \\1'),
-    str_detect(Outcome, "INT") ~ str_replace(Outcome, 'Y(.)_M_INT', 'Interest Year \\1'),
-    str_detect(Outcome, "MATH") ~ str_replace(Outcome, 'Y(.)_MATH', 'Achievement Year \\1')
-  ),
-  Predictor = case_when(
-    str_detect(Predictor, "JUD") ~ str_replace(Predictor, 'Y(.)_M_JUDGE', 'Maternal Judgement Year \\1'),
-    str_detect(Predictor, "INT") ~ str_replace(Predictor, 'Y(.)_M_INT', 'Interest Year \\1'),
-    str_detect(Predictor, "MATH") ~ str_replace(Predictor, 'Y(.)_MATH', 'Achievement Year \\1'),
-    Predictor == 'GENDER' ~ 'Girls',
-    Predictor == 'SES' ~ 'z-Socioeconomic Status',
-    Predictor == 'GEO' ~ 'Urban',
-    Predictor == 'INDIG' ~ 'non-Indigenous',
-    Predictor == 'LANG' ~ 'LOTE',
-  )
-  ) %>%
-  datatable(filter = 'top', caption = "Table S2. Full Numeracy CLPM (Between) Model Output")
-```
-
-<br><br>
-
-# Mediation Effects for Reading Achievement
-
-```{r, message=FALSE, warning=FALSE, cache=FALSE, echo=FALSE}
-reading <- my_extract_indirect()
-datatable(reading, caption = "Table S3. Reading Total, Direct, and Indirect Effects")
-```
-
-<br><br>
-
-# Mediation Effects for Math
-
-```{r, message=FALSE, warning=FALSE, cache=FALSE, echo=FALSE}
-math <- my_extract_indirect(file = here("code", "mplus","mediation_math.out"),
-                            type = 'Math')
-datatable(math, filter = 'top', caption = "Table S4. Reading Total, Direct, and Indirect Effects")
-```
-
-<br><br>
-
 # Assumption Checks
 
 ```{r, message=FALSE, warning=FALSE, cache=FALSE, echo=FALSE}
 library(googlesheets4)
-assump <- read_sheet("1qEJvz45Pm6HSDpRQArRQTCF6ecAGidcibhrje3M8iJI")
-datatable(assump, filter = 'top', caption = 'Table S5. Assumption Checks')
+assump <- read_sheet("1qEJvz45Pm6HSDpRQArRQTCF6ecAGidcibhrje3M8iJI") %>%
+  filter(`Model Type` == 'Cross-sectional') %>%
+  select(-`Model Type`)
+datatable(assump, filter = 'top', caption = 'Table S2. Assumption Checks')
 ```
 
 <br><br>
@@ -176,7 +103,89 @@ bind_rows(bias_mod_urban_math_3$result %>%
   mutate(across(results:`upper)`, exp)) %>%
   rename(Predictor = 3 ,`Odds-ratio` = 4,`-95% CI` = 5, `+95% CI` = 6) %>%
   datatable(filter = "top",
-    caption = "Table S7. Gender by Urban Interaction Models."
+    caption = "Table S3. Gender by Urban Interaction Models."
+  ) %>%
+  formatRound(columns = 4:6, digits = 2)
+```
+<br><br>
+
+# Moderation by Gender
+
+```{r}
+cro <- expand.grid(list(a = c('Interest', 'Achievement', 'Maternal Judgement'),
+                  b = c('Interest', 'Achievement', 'Maternal Judgement'))
+)
+
+cro <- bind_rows(cro,cro, .id = "domain") %>%
+  mutate(domain = case_when(
+    domain == 1 ~ 'Math',
+    domain == 2 ~ 'Read'
+  ))
+
+mplus_sum %>%
+  purrr::keep(names(.)== 'Math_RI.CLPM_gender_moderation.out' |names(.)== 'Read_RI.CLPM_gender_moderation.out') %>%
+   map(`[[`, "parameters") %>%
+  map(`[[`, "ci.unstandardized") %>%
+       map_df(as_tibble) %>% 
+  # Note latent interaction means no fit statistics. Droping models
+  filter(str_detect(param, "CONT") ) %>%
+  select(`Estimated Difference` = est, `-95% CI` = low2.5, `+95% CI` = up2.5) %>%
+  mutate(Domain = cro$domain, Contrast =  glue::glue("{cro$b} on {cro$a}"),.before = `Estimated Difference`) %>%
+  datatable(filter = "top",
+    caption = "Table S4. Gender Moderation of RI-CLPM (Unstandardized estimates)."
+  ) %>%
+  formatRound(columns = 4:6, digits = 2)
+```
+
+*Notes.* The estimates are on an unstandardized metric because slightly different variances across lags or groups make comparison on a standardized metric difficult.
+<br><br>
+
+# Polynomials
+
+```{r}
+cro <- data.frame(a = c('Interest Year 5', 'Achievement Year 5',
+                        'Interest Year 7', 'Achievement Year 7'),
+                  b = rep(c('Judgement Year 3', 'Judgement Year 5'), each = 2)
+)
+
+cro <- bind_rows(cro,cro, .id = "domain") %>%
+  mutate(domain = case_when(
+    domain == 1 ~ 'Math',
+    domain == 2 ~ 'Reading'
+  ))
+
+mplus_sum %>%
+  purrr::keep(names(.)== 'Math_RI.CLPM.polynomial.3.5.out' |
+              names(.)== 'Math_RI.CLPM.polynomial.5.7.out' | 
+              names(.)== 'Read_RI.CLPM.polynomial.3.5.out' |
+              names(.)== 'Read_RI.CLPM.polynomial.5.7.out') %>%
+   map(`[[`, "parameters") %>%
+  map(`[[`, "ci.stdyx.standardized") %>%
+       map_df(as_tibble) %>% 
+  filter(str_detect(param, '_2$')) %>%
+  select(`Estimated Difference` = est, `-95% CI` = low2.5, `+95% CI` = up2.5) %>%
+  mutate(Domain = cro$domain, Contrast =  glue::glue("{cro$a} on {cro$b}"),.before = `Estimated Difference`) %>%
+  datatable(filter = "top",
+    caption = "Table S5. Maternal Judgement Polynomails"
+  ) %>%
+  formatRound(columns = 4:6, digits = 2)
+```
+<br><br>
+
+# Mediation
+
+```{r}
+math_med <- my_extract_indirect_2("mplus/Math_RI-CLPM.out",type = 'Math')
+read_med <- my_extract_indirect_2("mplus/Read_RI-CLPM.out",type = 'Read')
+
+bind_rows(math_med, read_med,.id = 'Domain') %>%
+  select(-Effect) %>%
+  mutate(Domain = case_when(
+    Domain == 1 ~ 'Math',
+    Domain == 2 ~ 'Reading'
+  )) %>%
+  datatable(filter = "top",
+    caption = "Table S6. Maternal Judgements Predicting Achievement via Interest"
   ) %>%
   formatRound(columns = 4:6, digits = 2)
 ```

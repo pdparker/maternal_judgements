@@ -114,3 +114,56 @@ dom_y <- cross2(dom, y) %>%  map_chr(paste, sep = "_", collapse = "_")
 # Color pallet
 pal1 <- c('#450c54', '#31688d', '#21908c', '#37b679', '#fde824')
 
+
+my_extract_indirect_2 <- function(file = "code/mplus/Math_RI-CLPM.out",
+                                  type = 'Math') {
+  short <- str_extract(type, ".{1}")
+  # Read lines
+  tmp <- readLines(file)
+  top <- grep("CONFIDENCE INTERVALS OF TOTAL, TOTAL INDIRECT, SPECIFIC INDIRECT, AND DIRECT EFFECTS", tmp)+2
+  bottom <- grep("CONFIDENCE INTERVALS OF STANDARDIZED TOTAL, TOTAL INDIRECT, SPECIFIC INDIRECT, AND DIRECT EFFECTS", tmp)-2
+  # Select Indirect Effects
+  tmp2 <- tmp[top:bottom] 
+  tmp3 <- tmp2[str_detect(tmp2, ".+")]
+  # Turn into data frame
+  tmp4 <- str_split(tmp3, "\\s{2,}",simplify = TRUE) %>%
+    as_tibble() %>%
+    #slice(-1) %>%
+    row_to_names(row_number = 1) %>%
+    clean_names() %>%
+    mutate(x = ifelse(as.character(x)!="", x, NA),
+           x = zoo::na.locf(x),
+           x = str_to_title(x))
+  # Get Paths
+  paths <- paste(tmp4$lower_5_percent,collapse = ',') %>%
+    str_remove_all(.,"Total,|Total indirect,|^,") %>%
+    str_split(., ",Specific", simplify = TRUE) %>%
+    str_replace_all("indirect [0-9]+,", " Indirect: ") %>%
+    str_replace_all(",?Direct", "Direct: ") %>%
+    str_remove_all("Specific") %>%
+    str_replace_all("_", " ") %>%
+    str_to_title() %>%
+    str_replace_all("Cw", "Maternal Judgement") %>%
+    str_replace_all("Cx", "Interest") %>%
+    str_replace_all("Cy", "Achievement") %>%
+    str_replace_all("^,","") %>%
+    str_replace_all(",$","") %>%
+    str_replace_all(": ,",": ") %>%
+    `[`(-19)
+  # Split to add in paths
+  tmp4 <- 
+    tmp4 %>%
+    mutate(across(lower_2_5_percent:upper_5_percent_2, as.numeric)) %>%
+    drop_na() %>%
+    group_split(lower_5_percent)
+  # add paths
+  tmp4[[1]] <-tmp4[[1]] %>%
+    mutate(lower_5_percent = paths)
+  # Put back together
+  tmp5 <- bind_rows(tmp4) %>% 
+    select(x, lower_5_percent, upper_5_percent, lower_5_percent_2, upper_5_percent_2) %>%
+    set_names(c("Effect", "Path", "Estimate", "-95 CI", "+95 CI")) 
+  
+  return(tmp5)
+}
+
