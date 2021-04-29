@@ -13,7 +13,7 @@ library(fs) # For file and directory manipulation
 library(Amelia) # For imputation
 library(brms) # For main models
 library(quantreg) # For quantile regression
-library(survey) # For descriptives and baic models
+library(survey) # For descriptives and basic models
 library(mitools) # for pasting together imputations
 library(patchwork) # For combining plots
 library(fuzzyjoin) # For regular expression joins

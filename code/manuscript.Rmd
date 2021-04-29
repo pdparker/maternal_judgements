@@ -1,0 +1,129 @@
+---
+title: "Maternal Judgments of Child Numeracy and Reading Ability Predict Gains in Academic Achievement and Interest"
+author:
+  
+- name: Philip Parker
+  affiliation: '1'
+  corresponding: yes
+  address: 33 Berry St, North Sydney, NSW, 2060, Australia
+  email: philip.parker@acu.edu.au
+  role:
+  - Conceptualization
+  - Formal Analysis
+  - Data curation
+  - Visualization
+  - Writing - Original Draft Preparation
+  - Writing - Review & Editing
+- name: Taren Sanders
+  affiliation: '1'
+  role:
+  - Conceptualization
+  - Data curation
+  - Visualization
+  - Writing - Original Draft Preparation
+  - Writing - Review & Editing
+- name: Jake Anders
+  affiliation: '2'
+  role:
+  - Conceptualization
+  - Writing - Original Draft Preparation
+  - Writing - Review & Editing
+- name: Jasper Duineveld
+  affiliation: '1'
+  role:
+  - Conceptualization
+  - Writing - Original Draft Preparation
+  - Writing - Review & Editing
+- name: Rhiannon Parker
+  affiliation: '3'
+  role:
+  - Conceptualization
+  - Writing - Original Draft Preparation
+  - Writing - Review & Editing
+shorttitle: "Maternal Judgments"
+
+output:
+  pdf_document:
+    toc: no
+  html_document:
+    fig_caption: yes
+    toc: yes
+  word: papaja::apa6_docx
+  pdf: papaja::apa6_pdf
+  html_notebook:
+    fig_caption: yes
+    toc: yes
+    highlight: haddock
+    theme: spacelab
+authornote: |
+  Add complete departmental affiliations for each author here. Each new line herein must be indented, like this line. Enter author note here.
+  
+abstract: |
+  One or two sentences providing a **basic introduction** to the field,  comprehensible to a scientist in any discipline.
+keywords: keywords
+wordcount: X
+bibliography: r-references.bib
+floatsintext: no
+figurelist: no
+tablelist: no
+footnotelist: no
+linenumbers: yes
+mask: no
+draft: no
+documentclass: apa6
+classoption: man
+affiliation:
+- id: '1'
+  institution: Institute for Positive Psychology and Education, Australian Catholic
+    University
+- id: '2'
+  institution: UCL Institute of Education, UCL
+- id: '3'
+  institution: School of Sociology and Social Policy, University of Sydney
+---
+
+  ```{r setup, include = FALSE}
+# Create Reference List
+library("papaja")
+library("tidyMB")
+r_refs("r-references.bib")
+
+# Set default Knitr Options
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, echo = FALSE, dpi = 300)
+
+# Set tidyverse to quiet
+library("tidyverse")
+options(tidyverse.quiet = TRUE)
+```
+
+# Methods
+
+We report how we determined our sample size, all data exclusions (if any), all manipulations, and all measures in the study. <!-- 21-word solution (Simmons, Nelson & Simonsohn, 2012; retrieved from http://ssrn.com/abstract=2160588) -->
+
+  ## Participants
+
+  ## Material
+
+  ## Procedure
+
+  ## Data analysis
+
+  We used for all our analyses.
+
+# Results
+
+# Discussion
+
+\newpage
+
+# References
+
+```{=tex}
+\begingroup
+\setlength{\parindent}{-0.5in}
+\setlength{\leftskip}{0.5in}
+```
+::: {#refs custom-style="Bibliography"}
+  :::
+
+\endgroup
